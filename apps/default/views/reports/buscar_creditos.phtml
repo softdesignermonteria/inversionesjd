@@ -1,0 +1,37 @@
+<table border="0" cellpadding="1" id="solicitudes" width="100%" class="ui-widget ui-widget-content ui-corner-all">
+   <tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ">
+    <th><div align="center">ID</div></th>
+    <th><div align="center">PREFIJO</div></th>
+    <th><div align="center">CONSECUTIVO</div></th>
+    <th><div align="center">FECHA</div></th>
+    <th><div align="center">%</div></th>
+    <th><div align="center">CAPITAL</div></th>
+    <th><div align="center">CUOTAS</div></th>
+    <th><div align="center">VALOR CUOTAS</div></th>
+    <th><div align="center">TOTAL CREDITO</div></th>
+    <th><div align="center">OBSERVACI&Oacute;N</div></th>
+    <th><div align="center">VER SOLICITUD</div></th>
+   </tr>
+        <?php 
+		 $i=0;
+		 foreach($creditos as $creditos): 
+		 ?>  
+         
+          <tr>
+            <td><div align="center"><?php echo $creditos->id ; ?></div></td>
+            <td><div align="center"><?php echo $creditos->prefijo; ?></div></td>
+            <td><div align="center"><?php echo $creditos->consecutivo; ?></div></td>
+            <td><div align="center"><?php echo $creditos->fecha; ?></div></td>
+            <td><div align="center"><?php echo $creditos->porcentaje; ?></div></td>
+            <td><div align="center"><?php echo number_format($creditos->capital); ?></div></td>
+            <td><div align="center"><?php echo number_format($creditos->cuotas); ?></div></td>
+            <td><div align="center"><?php echo number_format($creditos->valor_cuotas); ?></div></td>
+            <td><div align="center"><?php echo number_format($creditos->total_credito); ?></div></td>
+            <td><div align="center"><?php echo $creditos->observaciones; ?></div></td>
+            <td><div align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspertcredcli/?id_cliente=$creditos->clientes_id&&id_credito=$creditos->id",Tag::image("iconos/pdf.png","width: 25px"),"target: _blank"); ?>
+			</div></td>        
+		  </tr>
+   		
+        <?php $i++; endforeach; ?> 
+ </table>
+<div id="mensajes"></div>

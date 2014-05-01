@@ -1,0 +1,21 @@
+<h4>FORMULARIO MODIFICAR EMPLEADO</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="155" height="0" align="right" valign="middle" >NIT</td>
+    <td width="180" height="0" align="left" valign="middle" scope="col">
+    <?php echo Tag::hiddenField("id", "size: 30","maxlength: 12") ?>
+    <?php echo Tag::numericField("nit", "size: 30","maxlength: 12") ?>
+	</tr>
+ 	  <tr>
+ 	 <td colspan="2" align="center" >
+   		<button type="submit" id="guardar" name="guardar">Modificar</button>     <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button></td>
+    </tr> 
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+<br />

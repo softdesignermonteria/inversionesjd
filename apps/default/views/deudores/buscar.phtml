@@ -1,0 +1,105 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<div id="div_modal_<?php echo Router::getController(); ?>">
+    <table id="filtros" width="100%" class="ui-corner-all ui-content">
+    <thead>
+        <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+            <th colspan="2">Filtros</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Identificacion</th>
+            <td><input type="number" id="nit" name="nit" size="30"  /></td>
+        </tr>
+        <tr>
+            <th>Busqueda por Nombre</th>
+            <td><input type="text" id="nombre" name="nombre" size="50" /></td>
+        </tr>
+    </tbody>
+    </table>
+    <table id="tabla<?php echo Router::getController(); ?>"></table>
+    <div id="pager<?php echo Router::getController(); ?>"></div>
+</div>
+<script>
+jQuery(document).ready(function(){
+		
+		jQuery("#nit").keyup(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								nombre:     jQuery("#nombre").val(), 
+								nit:        jQuery("#nit").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+			
+			jQuery("#nombre").keyup(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								nit:        jQuery("#nit").val(), 
+								nombre:     jQuery("#nombre").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Cedula','Primer Nombre','Segundo Nombre','Primer Apellido','Segundo Apellido'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:200},
+				{ name:'nit',index:'nit', width:200}, 
+				{ name:'nombre1',index:'nombre1', width:500},
+				{ name:'nombre2',index:'nombre2', width:200}, 
+				{ name:'apellido1',index:'apellido1', width:200}, 
+				{ name:'apellido2',index:'apellido2', width:200}
+			], 
+			autoWidth:true,
+			width: jQuery('#content').width()-25,
+			height: 250,
+			rowNum:50, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE CLIENTES",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					if( jQuery("#nit")    ){ jQuery("#nit").val(fila['nit']); }
+					if( jQuery("#nombre1") ){ jQuery("#nombre1").val(fila['nombre1']); } 
+					if( jQuery("#nombre2") ){ jQuery("#nombre2").val(fila['nombre2']); } 
+					if( jQuery("#apellido1") ){ jQuery("#apellido1").val(fila['apellido1']); } 
+					if( jQuery("#apellido2") ){ jQuery("#apellido2").val(fila['apellido2']); } 
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/?id="+fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+					
+       		 }
+		}); 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+	jQuery(window).bind('resize', function() {
+			jQuery("#tabla<?php echo Router::getController(); ?>").setGridWidth(jQuery('#content').width()-25, true);
+	});
+});
+</script>

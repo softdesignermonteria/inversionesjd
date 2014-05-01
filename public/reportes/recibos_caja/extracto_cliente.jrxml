@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="extracto_cliente" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f0a6f36d-7e92-4534-9219-efdf9f075a99">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     empresa.`id` AS empresa_id,
+     empresa.`nombre_corto` AS empresa_nombre_corto,
+     empresa.`nombre_empresa` AS empresa_nombre_empresa,
+     empresa.`nit` AS empresa_nit,
+     empresa.`direccion` AS empresa_direccion,
+     empresa.`logo` AS empresa_logo,
+     empresa.`regimen_id` AS empresa_regimen_id,
+     empresa.`telefonos` AS empresa_telefonos,
+     empresa.`celular` AS empresa_celular,
+     empresa.`web` AS empresa_web,
+     empresa.`correo` AS empresa_correo,
+     empresa.`activo` AS empresa_activo,
+     empresa.`kardex_id_default` AS empresa_kardex_id_default,
+     empresa.`tipo_costeo` AS empresa_tipo_costeo,
+     empresa.`valor_caja_defecto` AS empresa_valor_caja_defecto,
+     empresa.`cobro_tarifa` AS empresa_cobro_tarifa,
+     empresa.`porcentaje` AS empresa_porcentaje,
+     detalle_cxc.`id` AS detalle_cxc_id,
+     detalle_cxc.`creditos_id` AS detalle_cxc_creditos_id,
+     detalle_cxc.`idt` AS detalle_cxc_idt,
+     detalle_cxc.`prefijo` AS detalle_cxc_prefijo,
+     detalle_cxc.`consecutivo` AS detalle_cxc_consecutivo,
+     detalle_cxc.`vencimiento` AS detalle_cxc_vencimiento,
+     detalle_cxc.`codigo` AS detalle_cxc_codigo,
+     detalle_cxc.`tipo_documento_id` AS detalle_cxc_tipo_documento_id,
+     detalle_cxc.`valor` AS detalle_cxc_valor,
+     detalle_cxc.`anulado` AS detalle_cxc_anulado,
+     detalle_cxc.`multiplicar` AS detalle_cxc_multiplicar,
+     clientes.`id` AS clientes_id,
+     clientes.`nit` AS clientes_nit,
+     clientes.`razon_social` AS clientes_razon_social,
+     clientes.`direccion_casa` AS clientes_direccion_casa,
+     clientes.`telefono1` AS clientes_telefono1,
+     clientes.`telefono2` AS clientes_telefono2,
+     clientes.`departamentos_id` AS clientes_departamentos_id,
+     clientes.`municipios_id` AS clientes_municipios_id,
+     clientes.`activo` AS clientes_activo,
+     creditos.`id` AS creditos_id,
+     creditos.`empresa_id` AS creditos_empresa_id,
+     creditos.`clientes_id` AS creditos_clientes_id,
+     creditos.`solicitud_id` AS creditos_solicitud_id,
+     creditos.`tipo_documento_id` AS creditos_tipo_documento_id,
+     creditos.`prefijo` AS creditos_prefijo,
+     creditos.`consecutivo` AS creditos_consecutivo,
+     creditos.`fecha` AS creditos_fecha,
+     creditos.`fecha_cuota` AS creditos_fecha_cuota,
+     creditos.`cuotas` AS creditos_cuotas,
+     creditos.`valor_cuotas` AS creditos_valor_cuotas,
+     creditos.`total_credito` AS creditos_total_credito,
+     clientes.`celular` AS clientes_celular,
+     clientes.`correo` AS clientes_correo,
+     tipo_documento.`nombre` AS tipo_documento_nombre
+FROM
+     `clientes` clientes INNER JOIN `creditos` creditos ON clientes.`id` = creditos.`clientes_id`
+     INNER JOIN `empresa` empresa ON creditos.`empresa_id` = empresa.`id`
+     INNER JOIN `detalle_cxc` detalle_cxc ON creditos.`id` = detalle_cxc.`creditos_id`
+     INNER JOIN `tipo_documento` tipo_documento ON creditos.`tipo_documento_id` = tipo_documento.`id`
+     AND tipo_documento.`id` = detalle_cxc.`tipo_documento_id`]]>
+	</queryString>
+	<field name="empresa_id" class="java.lang.Integer"/>
+	<field name="empresa_nombre_corto" class="java.lang.String"/>
+	<field name="empresa_nombre_empresa" class="java.lang.String"/>
+	<field name="empresa_nit" class="java.lang.String"/>
+	<field name="empresa_direccion" class="java.lang.String"/>
+	<field name="empresa_logo" class="java.lang.String"/>
+	<field name="empresa_regimen_id" class="java.lang.Boolean"/>
+	<field name="empresa_telefonos" class="java.lang.String"/>
+	<field name="empresa_celular" class="java.lang.String"/>
+	<field name="empresa_web" class="java.lang.String"/>
+	<field name="empresa_correo" class="java.lang.String"/>
+	<field name="empresa_activo" class="java.lang.Boolean"/>
+	<field name="empresa_kardex_id_default" class="java.lang.Integer"/>
+	<field name="empresa_tipo_costeo" class="java.lang.String"/>
+	<field name="empresa_valor_caja_defecto" class="java.lang.Double"/>
+	<field name="empresa_cobro_tarifa" class="java.lang.String"/>
+	<field name="empresa_porcentaje" class="java.lang.Integer"/>
+	<field name="detalle_cxc_id" class="java.lang.Integer"/>
+	<field name="detalle_cxc_creditos_id" class="java.lang.Long"/>
+	<field name="detalle_cxc_idt" class="java.lang.Long"/>
+	<field name="detalle_cxc_prefijo" class="java.lang.String"/>
+	<field name="detalle_cxc_consecutivo" class="java.lang.Long"/>
+	<field name="detalle_cxc_vencimiento" class="java.sql.Date"/>
+	<field name="detalle_cxc_codigo" class="java.lang.String"/>
+	<field name="detalle_cxc_tipo_documento_id" class="java.lang.Long"/>
+	<field name="detalle_cxc_valor" class="java.lang.Double"/>
+	<field name="detalle_cxc_anulado" class="java.lang.Integer"/>
+	<field name="detalle_cxc_multiplicar" class="java.lang.Integer"/>
+	<field name="clientes_id" class="java.lang.Integer"/>
+	<field name="clientes_nit" class="java.lang.String"/>
+	<field name="clientes_razon_social" class="java.lang.String"/>
+	<field name="clientes_direccion_casa" class="java.lang.String"/>
+	<field name="clientes_telefono1" class="java.lang.String"/>
+	<field name="clientes_telefono2" class="java.lang.String"/>
+	<field name="clientes_departamentos_id" class="java.lang.Integer"/>
+	<field name="clientes_municipios_id" class="java.lang.Long"/>
+	<field name="clientes_activo" class="java.lang.Boolean"/>
+	<field name="creditos_id" class="java.lang.Long"/>
+	<field name="creditos_empresa_id" class="java.lang.Integer"/>
+	<field name="creditos_clientes_id" class="java.lang.Integer"/>
+	<field name="creditos_solicitud_id" class="java.lang.Integer"/>
+	<field name="creditos_tipo_documento_id" class="java.lang.Long"/>
+	<field name="creditos_prefijo" class="java.lang.String"/>
+	<field name="creditos_consecutivo" class="java.lang.Long"/>
+	<field name="creditos_fecha" class="java.sql.Date"/>
+	<field name="creditos_fecha_cuota" class="java.sql.Date"/>
+	<field name="creditos_cuotas" class="java.lang.Long"/>
+	<field name="creditos_valor_cuotas" class="java.lang.Double"/>
+	<field name="creditos_total_credito" class="java.lang.Double"/>
+	<field name="clientes_celular" class="java.lang.String"/>
+	<field name="clientes_correo" class="java.lang.String"/>
+	<field name="tipo_documento_nombre" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

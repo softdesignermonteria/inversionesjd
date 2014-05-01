@@ -1,0 +1,22 @@
+<table width="395" border="1">
+  <tr>
+    <td>id</td>
+    <td>Nit</td>
+    <td>Nombres y Apellidos</td>
+    <td>Direccion Casa</td>
+    <td>Direccion Oficina</td>
+    <td>Telefono</td>
+  </tr>
+  <?php foreach($clientes as $usuario): ?>
+  <tr>
+    <td><?php echo $usuario->id; ?></td>
+    <td><?php echo $usuario->nit; ?></td>
+    <td><?php echo $usuario->nombre1." ".$usuario->nombre2." ".$usuario->apellido1." ".$usuario->apellido2; ?></td>
+    <td><?php echo $usuario->direccion_casa; ?></td>
+    <td><?php echo $usuario->direccion_oficina; ?></td>
+    <td><?php echo $usuario->telefono1; ?></td>
+  </tr>
+  <?php endforeach; ?>
+</table>
+
+<?php echo View::getContent(); ?>

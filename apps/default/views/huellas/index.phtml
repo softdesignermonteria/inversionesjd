@@ -1,0 +1,35 @@
+<?php $path = $_SERVER['DOCUMENT_ROOT']; ?>
+<?php $path = ""; ?>
+<?php $path .= core::getInstancePath()."public/files/huellas/"; ?>
+<?php //echo $path; ?>
+<object 
+type="application/x-java-applet" 
+width="600" height="400" 
+archive="<?php echo $path; ?>Huellero.jar, 
+        <?php echo $path; ?>lib/dpfpenrollment.jar, 
+        <?php echo $path; ?>lib/dpfpverification.jar, 
+        <?php echo $path; ?>lib/dpotapi.jar, 
+        <?php echo $path; ?>lib/dpotjni.jar, 
+        <?php echo $path; ?>lib/mysql-connector-java-5.1.18-bin.jar" 
+code="<?php //echo $path; ?>huellero.HuellerosRemote.class">
+<?php 
+$config = CoreConfig::readEnviroment();
+		//print_r(CoreConfig::readEnviroment());
+		//modificad
+		$host = "";
+		$user = "";
+		$psw  = "";
+		$bd   = "";
+ 
+ 		foreach($config->development as $key=>$val):
+				if($key == "database.server"     ){ $host = $val; }
+				if($key == "database.username" ){ $user = $val; }
+				
+				if($key == "database.name"     ){ $bd   = $val; }
+		endforeach;
+		
+?>
+<param name="server" value="<?php echo $host; ?>" />
+<param name="user" value="<?php echo $user; ?>" />
+<param name="db" value="<?php echo $bd; ?>" />
+</object>

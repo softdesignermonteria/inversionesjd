@@ -1,0 +1,39 @@
+<h1>FORMULARIO PARA MODIFICAR ESTADOS DE LA SOLICITUD</h1>
+
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="425" border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="222" height="0" align="right" valign="middle" >ID</td>
+    <td width="193" height="0" align="left" valign="middle" scope="col"><?php echo Tag::NumericField("id", "size: 30","maxlength: 12") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">NUEVO ESTADO SOLICITUD</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("estado_solicitud", "size: 30","maxlength: 20","placeholder: Nuevo estado solicitud") ?></td>
+    </tr>
+ 	 <tr>
+ 	   <td colspan="2" ><div align="center"><?php echo Tag::submitButton('Guardar', 'id: guardar', 'name: guardar') ?><?php echo Tag::button("Cancelar","id: cancelar","name: cancelar","onClick: doccancelar(".core::getInstancePath().",'".Router::getController()."');"); ?></div>
+       </td>
+</table>
+
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<script>
+
+jQuery(document).ready(function(){
+   jQuery("#dptos").change(function(evento){
+      //elimino el comportamiento por defecto del enlace
+  	 evento.preventDefault();
+      //Aquí pondría el código de la llamada a Ajax
+	 	url = 	"<?php echo core::getInstancePath(); ?>clientes/traer_municipios/"+$('dptos').value; 
+		jQuery("#traer_municipios2").load(url);
+			  
+   });
+   
+}); 
+
+</script>

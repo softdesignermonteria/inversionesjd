@@ -1,0 +1,289 @@
+<div align="center" id="menuapp_mod" class="menuapp_mod">
+<!-- Formulario Modificar-->
+<div id="div_modificar" >
+            
+	<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes_mod", "id: fx_mod","name: fx_mod"); ?>
+    
+    <table border="0" align="center" cellpadding="1">
+    <tr>
+    	<td width="153" height="0" align="right" valign="middle" >ID</td>
+	    <td width="167" height="0" align="left" valign="middle" scope="col"><?php echo Tag::textField("id_mod", "size: 12","maxlength: 12") ?></td>
+	    <td colspan="2" align="left" scope="col">(Autoincremental no modifcificar si es nuevo dejar en blanco)</td>
+    </tr>
+    <tr>
+    	<td height="0" align="right" valign="middle">APLICACION</td>
+	    <td height="0" colspan="3" align="left" valign="middle">
+		<?php 
+        $apl = new Aplicaciones();
+        echo Tag::select('aplicaciones_mod',$apl->find(), 'using: aplicacion,aplicacion', 'useDummy: no');
+        ?>
+    </td>
+    
+    </tr>
+    <tr>
+        <td height="0" align="right" valign="middle">POSICION</td>
+        <td height="0" align="left" valign="middle">
+        <?php 
+        $apl = new Posiciones();
+        echo Tag::select('posiciones_mod',$apl->find(), 'using: posicion,posicion', 'useDummy: yes');
+        ?></td>
+        <td colspan="2" align="left">(Izquierda - Navegacion - aplicaciones)</td>
+    </tr>
+    <tr>
+        <td height="0" align="right" valign="middle">POSICION_X</td>
+        <td height="0" colspan="3" align="left" valign="middle">
+        <?php echo Tag::numericField("posicion_x_mod", "size: 10","maxlength: 20") ?>
+        <button type="button" id="px_mod" name="px_mod">Ver Menus</button>(ASIGNELE UN NUMERO SI ES MENU PRINCIPAL, SI ES ITEM 0)
+        </td>
+    </tr>
+    <tr>
+        <td height="0" align="right" valign="middle">POSICION_Y</td>
+        <td height="0" colspan="3" align="left" valign="middle">
+        <?php echo Tag::numericField("posicion_y_mod", "size: 10","maxlength: 20") ?>
+        <button type="button" id="py_mod" name="py_mod">Ver Items</button>(ASIGNELE UN NUMERO SI ES UN ITEM, SI ES MENU PRINCIPAL 0)
+        </td>
+    </tr>
+    <tr>
+    	<td height="0" align="right" valign="middle">ORDEN</td>
+	    <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::numericField("orden_mod", "size: 40","maxlength: 100") ?></td>
+    </tr>
+    <tr>
+    	<td height="0" align="right" valign="middle">DESCRIPCION</td>
+	    <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::textField("descripcion_mod", "size: 40","maxlength: 100") ?></td>
+    </tr>
+    <tr>
+    	<td height="0" align="right" valign="middle">TITULO</td>
+	    <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::textField("titulo_mod", "size: 40","maxlength: 100") ?></td>
+    </tr>
+    <tr>
+    	<td height="0" align="right" valign="middle">URL</td>
+	    <td height="0" align="left" valign="middle"><?php echo Tag::textField("url_mod", "size: 15","maxlength: 20") ?></td>
+    <td colspan="2" align="left">(ejemplo: controlador/accion)</td>
+    </tr>
+    <tr>
+    	<td height="0" align="right" valign="middle">&nbsp;</td>
+	    <td height="0" align="left" valign="middle">&nbsp;</td>
+    	<td width="128" align="left">&nbsp;</td>
+    	<td width="328" align="left">&nbsp;</td>
+    </tr>
+    
+    <tr>
+  	      <td height="0" align="right" valign="middle">SECCION</td>
+   		 <td height="0" align="left" valign="middle">
+		<?php 
+        $apl = new Secciones();
+        echo Tag::select('secciones_mod',$apl->find(), 'using: seccion,seccion', 'useDummy: yes');
+        ?></td>
+        <td colspan="2" align="left">(Nombre de la seccion)</td>
+    </tr>
+    <tr>
+        <td height="0" align="right" valign="middle">URL IMAGE</td>
+        <td height="0" colspan="3" align="left" valign="middle">
+        <?php echo Tag::textField("urlimage_mod", "size: 50","readonly: readonly","value: aplicaciones/agenda.jpg") ?>
+        <button type="button" id="imagen_mod" name="imagen_mod">Buscar Imagen</button></td>
+    </tr>
+    <tr>
+   		 <td colspan="4" align="center" >&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="4" align="center" >
+        <button type="submit" id="guardar_mod" name="guardar_mod">Modificar</button>
+        
+        <button type="button" id="cancelar_mod" name="cancelar_mod" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+        </td>
+    </tr> 
+    </table>
+    <?php echo Tag::endForm() ?>
+    
+    <div id="mensajes_mod"></div>
+            
+<!-- dialogo mensajes -->
+<div id="buscar_imagen_mod">
+
+    <div align="center">
+    <h1>ESCOJA UNA IMAGEN O ICONO</h1>
+    <?php
+    $archivos1 = scandir($_SERVER['DOCUMENT_ROOT'].core::getInstancePath()."public/img/iconos");
+    if(count($archivos1)==2){
+        Flash::error("NO SE ENCONTRO NINGUNA IMAGEN EL EL DIRECTORIO LOGO...");
+    }
+    //print_r($archivos1);
+    for($i=0;$i<=count($archivos1)-1;$i++){
+        if($i%10==0){
+            echo "<br />";
+            echo "<br />";
+        }
+        if($archivos1[$i]!='.' && $archivos1[$i]!='..'){
+            echo Tag::image("iconos/".$archivos1[$i],"width: 50px","heigth: 50px","border: 1","style: padding: 5px;","onClick: jQuery('#urlimage_mod').val('iconos/".$archivos1[$i]."');jQuery('#buscar_imagen_mod').dialog('close');"); 
+        }
+    }?>
+    <?php echo view::getContent(); ?>
+    
+    </div>
+
+</div>
+<!-- fin dialogo mensajes -->
+                
+</div>
+<!-- Fin Formulario Modificar -->
+        
+        
+<!--  Formulario buscar -->
+
+<div id="div_buscar_modificar">
+
+<?php echo Tag::formRemote(Router::getController()."/detalle_buscar", "update: detalles_menu_modificar", "id: fx2","name: fx2"); ?>
+
+<table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all">
+<tr >
+    <td height="0" align="right" valign="middle">APLICACION</td>
+    <td height="0" colspan="3" align="left" valign="middle">
+        <?php 
+            $apl = new Aplicaciones();
+            echo Tag::select('aplicaciones_mod',$apl->find(), 'using: aplicacion,aplicacion', 'useDummy: no');
+       ?>
+</td>
+
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">POSICION</td>
+    <td height="0" align="left" valign="middle">
+        <?php 
+            $apl = new Posiciones();
+            echo Tag::select('posiciones_mod',$apl->find(), 'using: posicion,posicion', 'useDummy: yes');
+       ?></td>
+    <td colspan="2" align="left"></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">POSICION_X</td>
+    <td height="0" colspan="3" align="left" valign="middle">
+            <?php echo Tag::numericField("posicion_x_mod", "size: 10","maxlength: 20") ?>
+            
+            </td>
+    </tr>
+  <tr>
+    <td height="0" colspan="4" align="center" valign="middle">
+        <button type="submit" id="buscar_mod2" name="buscar_mod2">Consultar</button>
+    </td>
+  </tr>
+</table>
+
+<div id="detalles_menu_modificar"></div>
+
+<?php echo Tag::endForm() ?>   
+</div>
+
+<!-- Fin  Formulario buscar -->
+
+</div>
+
+
+
+<div id="div_posicion_x_mod"></div>
+<div id="div_posicion_y_mod"></div>
+
+
+<script language="JavaScript">
+                    
+
+
+jQuery(document).ready(function(e) {
+	
+jQuery("#div_modificar").hide();	
+	
+aplicar_css("menuapp_mod");
+
+function escoger(url){
+jQuery("#urlimage_mod").val(url);
+jQuery("#buscar_imagen_mod").dialog("close");
+}
+
+
+jQuery("#buscar_imagen_mod").dialog({  autoOpen: false, width: 600 , height: 400 , title: "Escoger una Imagen" }); 
+jQuery("#div_posicion_x_mod").dialog({ autoOpen: false, width: 600 , height: 400 , title: "Menu" }); 
+jQuery("#div_posicion_y_mod").dialog({ autoOpen: false, width: 600 , height: 400 , title: "Items" }); 
+
+aplicar_css("menuapp_mod");
+
+if( jQuery( "#buscar_mod"     ) ){ jQuery( "#buscar_mod"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#buscar_mod2"     ) ){ jQuery( "#buscar_mod2"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#px_mod"         ) ){ jQuery( "#px_mod"            ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#py_mod"         ) ){ jQuery( "#py_mod"            ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#imagen_mod"     ) ){ jQuery( "#imagen_mod"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#enviar_mod"     ) ){ jQuery( "#enviar_mod"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#guardar_mod"    ) ){ jQuery( "#guardar_mod"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#cancelar_mod"   ) ){ jQuery( "#cancelar_mod"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+jQuery("#imagen_mod").click(function(){
+jQuery( "#buscar_imagen_mod" ).dialog("open");	
+});
+
+
+jQuery("#px_mod").click(function(){
+
+jQuery( "#div_posicion_x_mod" ).html("");	
+
+	if(jQuery("#aplicaciones_mod").val() != '@' && jQuery("#posiciones_mod").val() != '@' ){
+		var jqXHR = jQuery.ajax({
+				url:"<?php echo core::getInstancePath(); ?>menuapp/posicion_x/",
+				type:"POST",
+				
+				data:{
+						aplicaciones:        jQuery("#aplicaciones_mod").val(),
+						posiciones:          jQuery("#posiciones_mod").val()
+					},
+					fail:function(){
+						alert("error");
+					},
+					error:function(jqXHR,textStatus,errorThrown){
+						alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+					}
+		});
+
+		jqXHR.done(function(data){
+			jQuery( "#div_posicion_x_mod" ).html(data);
+			jQuery( "#div_posicion_x_mod" ).dialog("open");
+		});
+	}else{
+		jQuery( "#dialogo_mensajes" ).html("");
+		jQuery( "#dialogo_mensajes" ).html("Error Escoja una aplicacion y una posicion");
+		jQuery( "#dialogo_mensajes" ).dialog("open");
+		}
+});
+
+jQuery("#py_mod").click(function(){
+	jQuery( "#div_posicion_y_mod" ).html("");	
+		if( jQuery("#aplicaciones_mod").val() != '@' && jQuery("#posiciones_mod").val() != '@' && jQuery("#posicion_x_mod").val() != ''  ){
+			var jqXHR = jQuery.ajax({
+				url:"<?php echo core::getInstancePath(); ?>menuapp/posicion_y/",
+				type:"POST",
+				
+				data:{
+						aplicaciones:        jQuery("#aplicaciones_mod").val(),
+						posiciones:          jQuery("#posiciones_mod").val(),
+						posicion_x:          jQuery("#posicion_x_mod").val(),
+						posicion_y:          jQuery("#posicion_y_mod").val()
+					},
+					fail:function(){
+						alert("error");
+					},
+					error:function(jqXHR,textStatus,errorThrown){
+						alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+					}
+					});
+			
+				 jqXHR.done(function(data){
+					jQuery( "#div_posicion_y_mod" ).html(data);
+					jQuery( "#div_posicion_y_mod" ).dialog("open");
+				});
+		}else{
+			jQuery( "#dialogo_mensajes" ).html("");
+			jQuery( "#dialogo_mensajes" ).html("Error Escoja una aplicacion, una posicion y un menu ");
+			jQuery( "#dialogo_mensajes" ).dialog("open");
+		}
+});	
+
+
+});
+
+</script>

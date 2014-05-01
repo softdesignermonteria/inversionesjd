@@ -1,0 +1,81 @@
+<h4>FORMULARIO MODIFICAR EMPRESA</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="874" border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="155" height="0" align="right" valign="middle" >NIT</td>
+    <td width="180" height="0" align="left" valign="middle" scope="col"><?php echo Tag::hiddenField("id", "size: 12","maxlength: 12") ?><?php echo Tag::textField("nit", "size: 30","maxlength: 20") ?></td>
+    <td width="136" align="right" scope="col">&nbsp;</td>
+    <td width="349" scope="col">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">NOMBRE CORTO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textField("nombre_corto", "size: 30","maxlength: 40") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">NOMBRE EMPRESA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("nombre_empresa", "size: 30","maxlength: 60") ?></td>
+    <td align="right">DIRECCI&Oacute;N</td>
+    <td><?php echo Tag::textUpperField("direccion", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">TELEFONOS</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textField("telefonos","size: 30","maxlength: 20") ?></td>
+    <td align="right" valign="middle">CELULAR</td>
+    <td align="left" valign="middle"><?php echo Tag::textField("celular","size: 30","maxlength: 20") ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PAGINA WEB</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textField("web", "size: 30","maxlength: 100") ?></td>
+    <td align="right">EMAIL</td>
+    <td><?php echo Tag::numericField("correo", "size: 30","maxlength: 40") ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">INTERES(%)</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("porcentaje", "size: 15","maxlength: 3") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+      <tr>
+          <td height="0">&nbsp;</td>
+          <td height="0" align="right">TIPO DOCUMENTO CREDITO</td>
+          <td height="0"><?php 
+                $tp = new TipoDocumento();
+          echo Tag::select("tipo_documento_id_creditos",$tp->find("empresa_id = '".Session::get("id_empresa")."'"),'using: id,nombre','useDummy=yes' ) ?></td>
+          <td height="0">&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="0">&nbsp;</td>
+      <td height="0" align="right">TIPO DOCUMENTO NOTAS DEBITO</td>
+      <td height="0"><?php 
+            $tp = new TipoDocumento();
+      echo Tag::select("tipo_documento_id_notas_debito",$tp->find("empresa_id = '".Session::get("id_empresa")."'"),'using: id,nombre','useDummy=yes' ) ?></td>
+      <td height="0">&nbsp;</td>
+    </tr>
+   <tr>
+   <td align="right">CAPTURAR HUELLA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::selectStatic('huellas', 
+											    array('' => 'Seleccione...',
+													  '0' => 'SI',
+													  '1' => 'NO')) ?></td>
+    <td align="right">CAPTURAR FOTO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::selectStatic('foto', 
+											    array('' => 'Seleccione...',
+													  '0' => 'SI',
+													  '1' => 'NO')) ?></td>
+  </tr>
+ 	 <tr>
+ 	 <td colspan="4" align="center" >
+     		<button type="submit" id="enviar" name="enviar">Modificar</button>
+            <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+    </tr> 
+     
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>

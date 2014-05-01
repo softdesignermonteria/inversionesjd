@@ -1,0 +1,34 @@
+<h1>FORMULARIO PARA ELIMINAR ESTADOS DE LA SOLICITUD</h1>
+
+<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="425" border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="222" height="0" align="right" valign="middle" >ID</td>
+    <td width="193" height="0" align="left" valign="middle" scope="col"><?php echo Tag::NumericField("id", "size: 30","maxlength: 12") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">NUEVO ESTADO SOLICITUD</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("estado_solicitud", "size: 30","maxlength: 20","placeholder: Nuevo estado solicitud") ?></td>
+    </tr>
+ 	 <tr>
+ 	   <td colspan="2" ><div align="center"><?php echo Tag::submitButton('Eliminar', 'id: eliminar', 'name: eliminar') ?><?php echo Tag::button("Cancelar","id: cancelar","name: cancelar","onClick: doccancelar(".core::getInstancePath().",'".Router::getController()."');"); ?></div>
+       </td>
+</table>
+
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<script>
+	
+	jQuery(document).ready(function(e) {
+		
+        jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#estado_solicitud").attr("readOnly","ReadOnly");
+	
+    });
+	
+</script>

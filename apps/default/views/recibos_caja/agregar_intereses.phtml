@@ -1,0 +1,26 @@
+<?php echo view::getContent(); ?>
+<div id="ventana_unica1" class="ventana_unica1">
+<table width="70%" cellpadding="2" cellspacing="2" align="center">
+   <tr>
+      <td>Id</td>
+       <td colspan="2">
+            <input type="text"  id="tmpint_id"          name="tmpint_id" size="10" readonly="readonly" />
+            <input type="hidden"  id="tmpint_codigo"      name="tmpint_codigo" size="10" readonly="readonly" value="int" />
+            <input type="hidden"  id="tmpint_detalle_cxc" name="tmpint_detalle_cxc" size="10" readonly="readonly" value="" />
+       </td>
+    </tr>
+    <tr>
+        <td>FECHA VENCIMIENTO</td>
+        <td colspan="2"><input type="text"  id="tmpint_vencimiento"  name="tmpint_vencimiento" readonly="readonly" value="<?php echo $fecha_recibo; ?>" /></td>
+    </tr>
+     <tr>
+        <td>DESCRIPCION</td>
+        <td colspan="2"><input type="text"  id="tmpint_descripcion"  name="tmpint_descripcion"  readonly="readonly" value="INTERESES" /></td>
+    </tr>
+    <tr>
+        <td>VALOR INTERESES</td>
+        <td colspan="2"><input type="text"  id="tmpint_valor"  name="tmpint_valor" value="<?php echo $valor_int; ?>"/></td>
+    </tr>
+</table>
+</div>
+<script>aplicar_css('ventana_unica1');</script>

@@ -1,0 +1,176 @@
+<div align="center" id="menuapp_del" class="menuapp_del">
+	<!-- Formulario Modificar-->
+	<div id="div_delete">
+    			
+					<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes_del", "id: fx_del","name: fx_del"); ?>
+                    
+                    <table border="0" align="center" cellpadding="1">
+                      <tr>
+                        <td width="153" height="0" align="right" valign="middle" >ID</td>
+                        <td width="167" height="0" align="left" valign="middle" scope="col"><?php echo Tag::textField("id_del", "size: 12","maxlength: 12") ?></td>
+                        <td colspan="2" align="left" scope="col">(Autoincremental no modifcificar si es nuevo dejar en blanco)</td>
+                        </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">APLICACION</td>
+                        <td height="0" colspan="3" align="left" valign="middle">
+                            <?php 
+                                $apl = new Aplicaciones();
+                                echo Tag::select('aplicaciones_del',$apl->find(), 'using: aplicacion,aplicacion', 'useDummy: no');
+                           ?>
+                    </td>
+                    
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">POSICION</td>
+                        <td height="0" align="left" valign="middle">
+                            <?php 
+                                $apl = new Posiciones();
+                                echo Tag::select('posiciones_del',$apl->find(), 'using: posicion,posicion', 'useDummy: yes');
+                           ?></td>
+                        <td colspan="2" align="left">(Izquierda - Navegacion - aplicaciones)</td>
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">POSICION_X</td>
+                        <td height="0" colspan="3" align="left" valign="middle">
+                                <?php echo Tag::numericField("posicion_x_del", "size: 10","maxlength: 20") ?>
+                               
+                                </td>
+                        </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">POSICION_Y</td>
+                        <td height="0" colspan="3" align="left" valign="middle">
+                                <?php echo Tag::numericField("posicion_y_del", "size: 10","maxlength: 20") ?>
+                                
+                                </td>
+                        </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">ORDEN</td>
+                        <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::numericField("orden_del", "size: 40","maxlength: 100") ?></td>
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">DESCRIPCION</td>
+                        <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::textField("descripcion_del", "size: 40","maxlength: 100") ?></td>
+                        </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">TITULO</td>
+                        <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::textField("titulo_del", "size: 40","maxlength: 100") ?></td>
+                        </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">URL</td>
+                        <td height="0" align="left" valign="middle"><?php echo Tag::textField("url_del", "size: 15","maxlength: 20") ?></td>
+                        <td colspan="2" align="left">(ejemplo: controlador/accion)</td>
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">&nbsp;</td>
+                        <td height="0" align="left" valign="middle">&nbsp;</td>
+                        <td width="128" align="left">&nbsp;</td>
+                        <td width="328" align="left">&nbsp;</td>
+                      </tr>
+                      
+                      <tr>
+                        <td height="0" align="right" valign="middle">SECCION</td>
+                        <td height="0" align="left" valign="middle">
+                            <?php 
+                                $apl = new Secciones();
+                                echo Tag::select('secciones_del',$apl->find(), 'using: seccion,seccion', 'useDummy: yes');
+                           ?></td>
+                        <td colspan="2" align="left">(Nombre de la seccion)</td>
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">URL IMAGE</td>
+                        <td height="0" colspan="3" align="left" valign="middle">
+                                <?php echo Tag::textField("urlimage_del", "size: 50","readonly: readonly","value: aplicaciones/agenda.jpg") ?>
+                                       </td>
+                        </tr>
+                        <tr>
+                          <td colspan="4" align="center" >&nbsp;</td>
+                        </tr>
+                        <tr>
+                         <td colspan="4" align="center" >
+                                <button type="submit" id="guardar_del" name="guardar_del">Eliminar</button>
+                               
+                                <button type="button" id="cancelar_del" name="cancelar_del" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+                         </td>
+                        </tr> 
+                    </table>
+                    
+                    <div id="mensajes_del"></div>
+                    
+                   
+                    <?php echo Tag::endForm() ?>
+                        
+                    
+
+    
+    </div>
+    
+    	<!-- Fin Formulario Modificar -->
+        
+        <div id="div_buscar_delete">
+        	
+        	<?php echo Tag::formRemote(Router::getController()."/detalle_buscar_delete", "update: detalles_menu_delete", "id: fx3","name: fx3"); ?>
+            	
+                <table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all">
+                	<tr >
+                        <td height="0" align="right" valign="middle">APLICACION</td>
+                        <td height="0" colspan="3" align="left" valign="middle">
+                            <?php 
+                                $apl = new Aplicaciones();
+                                echo Tag::select('aplicaciones_del',$apl->find(), 'using: aplicacion,aplicacion', 'useDummy: no');
+                           ?>
+                    </td>
+                    
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">POSICION</td>
+                        <td height="0" align="left" valign="middle">
+                            <?php 
+                                $apl = new Posiciones();
+                                echo Tag::select('posiciones_del',$apl->find(), 'using: posicion,posicion', 'useDummy: yes');
+                           ?></td>
+                        <td colspan="2" align="left"></td>
+                      </tr>
+                      <tr>
+                        <td height="0" align="right" valign="middle">POSICION_X</td>
+                        <td height="0" colspan="3" align="left" valign="middle">
+                                <?php echo Tag::numericField("posicion_x_del", "size: 10","maxlength: 20") ?>
+                                
+                                </td>
+                        </tr>
+                      <tr>
+                        <td height="0" colspan="4" align="center" valign="middle">
+                        	<button type="submit" id="buscar3" name="buscar3">Consultar</button>
+                        </td>
+                      </tr>
+                </table>
+                
+                <div id="detalles_menu_delete"></div>
+            
+            <?php echo Tag::endForm() ?>   
+  </div>
+
+</div>
+
+ 
+<script language="JavaScript">
+                    
+
+
+jQuery(document).ready(function(e) {
+	jQuery("#div_delete").hide();
+	aplicar_css("menuapp_del");
+	jQuery("#div_delete").find("input").attr("readonly","readonly");
+	
+	
+if( jQuery( "#buscar_del"     ) ){ jQuery( "#buscar_del"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#buscar_del2"    ) ){ jQuery( "#buscar_del2"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#px_del"         ) ){ jQuery( "#px_del"            ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#py_del"         ) ){ jQuery( "#py_del"            ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#imagen_del"     ) ){ jQuery( "#imagen_del"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#enviar_del"     ) ){ jQuery( "#enviar_del"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#guardar_del"    ) ){ jQuery( "#guardar_del"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#cancelar_del"   ) ){ jQuery( "#cancelar_del"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+});
+
+</script>

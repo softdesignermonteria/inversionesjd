@@ -1,0 +1,47 @@
+<?php echo View::getContent(); ?>
+<table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all" >
+	<tr class="ui-dialog-titlebar ui-widget-header ui-corner-all">
+  		<td>Consecutivo</td>
+        <td>Y</td>
+        <td>Orden</td>
+        <td>Descripcion</td>
+        <td>Url</td>
+        <td>Url - Imagen</td>
+        <td>Modificar</td>
+    </tr>
+	<?php foreach($detalles as $detalles): ?>
+    <tr>
+    	<td><?php echo $detalles->id; ?></td>
+        <td><?php echo $detalles->posicion_y; ?></td>
+        <td><?php echo $detalles->orden; ?></td>
+        <td><?php echo $detalles->descripcion; ?></td>
+        <td><?php echo $detalles->url; ?></td>
+        <td><?php echo Tag::image($detalles->urlimage,"width: 25px"); ?></td>
+        <td>
+        	<button type="button" id="btn<?php echo $detalles->id; ?>" name="btn<?php echo $detalles->id; ?>" >Escoger</button>
+        	<script>
+				jQuery(document).ready(function(e) {
+                    
+		                jQuery("#btn<?php echo $detalles->id; ?>").button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       }); 
+						jQuery("#btn<?php echo $detalles->id; ?>").click(function(){
+								jQuery("#id_mod").val('<?php echo $detalles->id; ?>');
+								jQuery("#aplicaciones_mod").val('<?php echo $detalles->aplicacion; ?>');
+								jQuery("#posiciones_mod").val('<?php echo $detalles->posicion; ?>');
+								jQuery("#posicion_x_mod").val('<?php echo $detalles->posicion_x; ?>');
+								jQuery("#posicion_y_mod").val('<?php echo $detalles->posicion_y ?>');
+								jQuery("#orden_mod").val('<?php echo $detalles->orden; ?>');
+								jQuery("#descripcion_mod").val('<?php echo $detalles->descripcion; ?>');
+								jQuery("#titulo_mod").val('<?php echo $detalles->tittle; ?>');
+								jQuery("#url_mod").val('<?php echo $detalles->url; ?>');
+								jQuery("#secciones_mod").val('<?php echo $detalles->seccion; ?>');
+								jQuery("#urlimage_mod").val('<?php echo $detalles->urlimage; ?>');
+								jQuery("#div_modificar").css("display","");
+								jQuery("#div_buscar_modificar").css("display","none");
+						});
+					
+				 });	
+            </script>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>

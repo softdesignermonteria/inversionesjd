@@ -1,0 +1,18 @@
+<?php
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: 0');
+header('Content-Type: application/json');
+$clientes = new Clientes();
+$i=0;
+foreach($clientes->find() as $clientes):
+	$responce[]=array(
+								"id"=>$clientes->id,
+								"nombres"=>utf8_encode($clientes->nombre1." ".$clientes->nombre2." ".$clientes->apellido1." ".$clientes->apellido2),
+								"direccion_oficina"=>$clientes->direccion_oficina,"direccion_casa"=>$clientes->direccion_casa,
+								"telefono1"=>$clientes->telefono1
+							); 						
+	$i++;
+endforeach;
+echo json_encode($responce);
+		
+?>			

@@ -1,0 +1,27 @@
+<table border="0" cellpadding="1" id="solicitudes" width="100%">
+   <tr>
+    <th><div align="center">ID</div></th>
+    <th><div align="center">PREFIJO</div></th>
+    <th><div align="center">CONSECUTIVO</div></th>
+    <th><div align="center">FECHA</div></th>
+    <th><div align="center">OBSERVACI&Oacute;N</div></th>
+    <th><div align="center">VER SOLICITUD</div></th>
+   </tr>
+        <?php 
+		 $i=0;
+		 foreach($solicitud as $sol): 
+		 ?>  
+         
+          <tr>
+            <td><div align="center"><?php echo $sol->id ; ?></div></td>
+            <td><div align="center"><?php echo $sol->prefijo; ?></div></td>
+            <td><div align="center"><?php echo $sol->consecutivo; ?></div></td>
+            <td><div align="center"><?php echo $sol->fecha; ?></div></td>
+            <td><div align="center"><?php echo $sol->observacion; ?></div></td>
+            <td><div align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspertSol/?id_sol=$sol->id&&id_cliente=$sol->clientes_id",Tag::image("iconos/pdf.png","width: 25px"),"target: _blank"); ?>
+			</div></td>        
+		  </tr>
+   		
+        <?php $i++; endforeach; ?> 
+ </table>
+<div id="mensajes"></div>

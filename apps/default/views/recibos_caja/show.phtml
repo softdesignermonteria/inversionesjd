@@ -1,0 +1,270 @@
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+
+<h1>AGREGAR <?php echo  strtoupper( str_replace("_"," ",Router::getController()) ); ?></h1>
+
+<h4>
+	<?php echo $tipo_documento; 
+	echo " - "; 
+	echo $tipo_documento_id; 
+	echo "EMPRESA: ".Tag::textField("nombre_empresa","size: 30","readOnly: readOnly","style: background: #cccccc;","value: ".Session::get("nombre_empresa")); ?>
+</h4>
+
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+
+   <tr>
+     
+     <td align="right"><div align="right">CLIENTE:</div></td>
+     
+     <td align="left" valign="middle" id="aclientes">
+        <?php echo Tag::hiddenField("id"); ?> 
+
+		<?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+
+        <?php echo Tag::hiddenField("empresa_id"); ?> 
+
+        <?php echo Tag::hiddenField("prefijo"); ?> 
+
+        <?php echo Tag::hiddenField("consecutivo"); ?> 
+      <?php echo Tag::textFieldExt("clientes","size: 30"); ?>
+   </tr>
+   
+   <tr>
+
+    <td align="right" valign="top">CREDITO</td>
+
+    <td><?php echo Tag::textFieldExt("creditos","size: 30"); ?></td>
+
+  </tr>
+
+
+  <tr>
+
+    <td align="right" valign="top">FECHA</td>
+
+    <td><?php echo Tag::textField("fecha","size: 20"); ?></td>
+
+  </tr>
+
+
+ 
+    
+     <tr>
+       <td align="right" valign="top">BANCO</td>
+       <td>
+	   		<?php echo Tag::textUpperField("banco","size: 30","maxlenth: 100"); ?>
+			 CHEQUE: 
+			<?php echo Tag::textUpperField("cheque","size: 30","maxlenth: 100"); ?>
+       </td>
+     </tr>
+    
+ <tr>
+
+    <td align="right" valign="top">OBSERVACIONES</td>
+
+    <td><?php echo Tag::textArea("observaciones","size: 20"); ?></td>
+
+    </tr>
+
+</table>
+
+<div id="detalles_items" style="display:none;"></div>
+
+<table id="grid_<?php echo Router::getController(); ?>"></table>
+
+<div id="pag<?php echo Router::getController(); ?>"></div>
+
+<button id="agregar_item" type="button">Agregar</button>
+
+<button id="intereses_item" type="button">Calcular Intereses</button>
+
+<button id="modificar_item" type="button">Modificar</button>
+
+<button id="borrar_item" type="button">Borrar</button>
+
+ <br />
+
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+
+  <tr>
+
+    <td width="50%">&nbsp;</td>
+
+    <th align="right">TOTAL </th>
+
+    <td><?php echo Tag::numericField("total","size: 50","readonly: readonly"); ?></td>
+
+  </tr>
+
+</table>
+
+	<div align="center">
+
+    	<button id="guardar" type="button">Guardar</button>
+
+        <button id="cancelar" type="button">Cancelar</button>
+
+    </div>
+
+
+
+<p>&nbsp;</p>
+
+	<table width="400px" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front">
+
+    	<tr>
+
+        	
+            <td align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspert/$id",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
+            
+
+        </tr>
+
+        <tr>
+
+        	
+            <td align="center">Imprimir</td>
+            
+
+        </tr>
+
+    </table>
+
+    
+
+<?php echo Tag::endForm(); ?>
+<div id="mensajes"></div>
+<?php echo view::getContent(); ?>
+
+
+
+<script type="text/javascript">
+
+var detalles = [];
+
+jQuery("#fx").find("input,textarea").attr("readonly","readonly");
+jQuery("#fx").find("input[button],button").attr("style","Display: none");
+
+
+function reload_grid(){
+
+	jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('setGridParam',
+
+		{ 	datatype: 'local',
+
+			data:detalles
+
+		}).trigger("reloadGrid");
+	totalizar();
+}
+
+
+
+
+function totalizar(){
+	var total = 0;
+	for(i=0;i<detalles.length;i++) {  
+		if(detalles[i].anulado=='NO'){
+			total += parseFloat(detalles[i].valor);	
+		}
+	}
+	jQuery("#total").val(total);
+}
+	
+	
+jQuery(document).ready(function(){
+	
+
+	
+	<?php foreach($detalles as $detalles): ?>
+			detalles.push(
+				{
+					 id              : '<?php echo $detalles->id; ?>'
+					,detalle_cxc_id  : '<?php echo $detalles->detalle_cxc_id; ?>'
+					,descripcion     : '<?php echo $detalles->descripcion; ?>'
+					,valor           : '<?php echo $detalles->valor; ?>'
+					,anulado: '<?php if($detalles->anulado==0){ echo "NO"; }else{ echo "SI"; }?>'
+		
+				});
+	<?php endforeach; ?>
+		reload_grid();
+
+	
+	if( jQuery( "#buscar_item"     ) ){ jQuery( "#buscar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#intereses_item"     ) ){ jQuery( "#intereses_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#agregar_item"     ) ){ jQuery( "#agregar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#modificar_item"    ) ){ jQuery( "#modificar_item"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#borrar_item"   ) ){ jQuery( "#borrar_item"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+	
+ <?php 
+		$entidad = new RecibosCaja();
+		
+		foreach( $entidad->getPrimaryKeyAttributes() as $filas):
+			echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
+		endforeach;	
+		
+		foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
+				foreach( $entidad->getNonPrimaryKeyAttributes() as $filas2):
+					if($filas==$filas2){ echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n"; break;} 
+				endforeach;	
+				
+		endforeach;	
+		
+	?> 	
+
+/*inicializamos variable local*/
+//var detalles = [];
+
+
+
+/*------------------------------------------------ Configurar Grilla de Entradas especiales --------------------------------------------------------------------*/
+
+/*grib maestros de clientes*/
+
+function config_gridCompras(){
+
+		grid_fndCompras = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid({
+			datatype:"local",
+			data: detalles,
+			height:200,
+			rowNum:25,
+			autowidth:true,
+			pager:"#pag<?php echo Router::getController(); ?>",
+			colNames:['Id','Detalle Cxc Id','Descripcion','Valor',"Anulado"],
+			colModel:[
+				{   name:'id',               index:'id',             sorttype:'text'        ,width: 50          },
+				{	name:'detalle_cxc_id',	 index:'detalle_cxc_id', sorttype:'integer'	    ,width: 50          },
+			
+				{	name:'descripcion',	     index:'descripcion',	 sorttype:'text'	    ,width: 300         },
+				{	name:'valor',	         index:'valor',	     	 formatter:"number"     ,width: 100         },
+				
+				{	name:'anulado',		     index:'anulado',  	     sorttype:'text'        ,width: 50          }
+			],
+			multiselect:false,
+			caption:"Detalle <?php echo Router::getController(); ?>",
+			sortname: 'id', 
+			viewrecords: true, 
+			sortorder: "desc",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+
+			}
+		});
+	}
+
+
+config_gridCompras();
+
+
+});
+
+
+jQuery("#clientes_id").val("<?php echo $clientes_id; ?>");
+jQuery("#creditos_id").val("<?php echo $creditos_id; ?>");
+	
+</script>
+
+
+
+

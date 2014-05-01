@@ -1,0 +1,33 @@
+
+<br />
+<table  align="center" cellpadding="2" cellspacing="2" width="100%" class="ui-widget ui-widget-content ui-corner-all">
+ <tr>
+    <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+   		 Turnos de los Empleados
+    </th>
+</tr>
+<tr>
+	<th>Id</th>
+    <th>Usuario</th>
+    <th>Pasword</th>
+    <th>Nombre Empleado</th>
+    <th>Modificar</th>
+    <th><!--Ver Registro--></th>
+</tr>
+
+<?php 
+$emp = new Empleado();
+foreach($admin as $admin): ?>
+ 	<tr>
+    	<td><?php echo $admin->id; ?></td>
+        <td><?php echo $admin->username; ?></td>
+        <td>******************</td>
+        <td><?php echo $emp->findFirst("id = '$admin->empleado_id'")->nombre_completo; ?></td>
+        <td align="center"><?php echo Tag::linkTo("administrador/modificar/?id=$admin->id", Tag::image("iconos/bd.png","width: 25")) ?></td> 
+        <td align="center"><?php //echo Tag::linkTo("turnos/show/$turnos->id", Tag::image("iconos/entrar.png"),"target: _blank") ?></td>
+	</tr>
+ <?php endforeach; ?>
+</table>
+
+
+

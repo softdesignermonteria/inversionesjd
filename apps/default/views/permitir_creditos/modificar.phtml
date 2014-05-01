@@ -1,0 +1,31 @@
+<h4>FORMULARIO PERMITIR CLIENTES-DEUDORES</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="155" height="0" align="right" valign="middle" >PERMITIR CLIENTE</td>
+    <td height="0" align="left" valign="middle" scope="col"><?php echo Tag::hiddenField("id", "size: 12","maxlength: 12") ?><?php echo Tag::textFieldExt("clientes", "size: 20","maxlength: 20","placeholder: INGRESE CLIENTE") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PERMITIR DEUDOR</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textFieldExt("deudores", "size: 20","maxlength: 20","placeholder: INGRESE DEUDOR") ?></td>
+    </tr>
+    <tr>
+      <td align="right" >ESTADO</td>
+      <td align="left" ><?php echo Tag::selectStatic('estado', 
+												array('' => 'Seleccione...',
+													  '0' => 'ACTIVO',
+													  '1' => 'INACTIVO')) ?></td>
+    </tr>
+    <tr>
+ 	 <td colspan="2" align="center" >
+     		<button type="submit" id="guardar" name="guardar">Modificar</button>
+           
+            <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+    </tr> 
+</table>
+
+<div id="mensajes"></div>
+<?php echo Tag::endForm() ?>

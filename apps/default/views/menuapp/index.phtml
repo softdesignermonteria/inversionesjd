@@ -1,0 +1,37 @@
+<script>
+jQuery(function() {
+	jQuery( "#tabs" ).tabs({
+		ajaxOptions: {
+			error: function( xhr, status, index, anchor ) {
+				jQuery( anchor.hash ).html(
+					"Couldn't load this tab. We'll try to fix this as soon as possible. " +
+					"If this wouldn't be a demo." );
+			}
+		}
+	});
+	
+
+});
+</script>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs1">Inicio</a></li>
+        <li><?php echo Tag::linkTo("menuapp/agregar","Agregar"); ?></li>
+        <li><?php echo Tag::linkTo("menuapp/modificar","Modificar"); ?></li>
+        <li><?php echo Tag::linkTo("menuapp/eliminar","Eliminar"); ?></li>
+        <li><?php echo Tag::linkTo("menuapp/show","Ver"); ?></li>
+    </ul>
+	
+    <div style="height:450px" id="tabs1"> 
+    
+    		<h4>Administracion del Menu de la Aplicacion</h4>
+            
+            <p>Navegue por los distintos tag para modificar el menu de la aplicacion</p>
+            
+    </div>
+
+</div>
+
+
+
+

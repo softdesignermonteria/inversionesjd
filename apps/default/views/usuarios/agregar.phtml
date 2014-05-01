@@ -1,0 +1,71 @@
+<h4>AGREGAR USUARIO AL SISTEMA</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" height="160"  align="center" cellpadding="2" cellspacing="2">
+  <tr>
+    <td width="29%" align="right">Nombre Usuario</td>
+    <td width="38%" align="left"><?php echo Tag::textField("username", "size: 25","maxlength: 20") ?></td>
+    <td width="33%" align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Clave</td>
+    <td align="left"><?php echo Tag::PasswordField("password", "size: 25","maxlength: 20") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Confirmar Clave</td>
+    <td align="left"><?php echo Tag::PasswordField("confirmar", "size: 25","maxlength: 20") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Nombre Empleado</td>
+    <td align="left" colspan="2"><?php echo Tag::textFieldExt("empleado","size: 10 ");?></td>
+
+  </tr>
+  <tr>
+    <td align="right">Tipo de Usuario</td>
+    <td align="left"><?php $rol = new Role();
+      echo Tag::select('role',$rol->find(), 'using: role,role','useDummy=yes'); 
+	  ?>    </td>
+    <td align="left">&nbsp;</td>
+  </tr>
+   <tr>
+ 	 <td colspan="4" align="center" >
+     		<button type="submit" id="guardar" name="guardar">Guardar</button>
+           
+            <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+    </tr> 
+
+</table>
+
+<div id="mensajes"></div>
+
+<?php echo Tag::endForm() ?>
+
+<script type="text/javascript">
+
+jQuery(document).ready(function(e) {
+			
+		<?php 
+			
+			$entidad = new Admin();
+			
+			foreach( $entidad->getPrimaryKeyAttributes() as $filas):
+				echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
+			endforeach;	
+			
+			//foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
+					foreach( $entidad->getNotNullAttributes() as $filas2):
+						//if($filas==$filas2){ 
+						echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n";
+						// break;} 
+					endforeach;	
+					
+			//endforeach;	
+			
+		?> 	
+	
+    });
+</script>

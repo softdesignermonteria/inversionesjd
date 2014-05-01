@@ -1,0 +1,10 @@
+<?php
+	 
+	 $sql = "SELECT foto FROM deudores WHERE id='".$_REQUEST['id']."'";
+	 $res = mysql_query($sql);
+	 $fila = mysql_fetch_assoc($res);
+	 $imagen = $fila[foto];
+	 header('Content-Type: image/jpg');
+	 print base64_decode($imagen);
+ 
+?>

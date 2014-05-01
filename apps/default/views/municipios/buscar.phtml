@@ -1,0 +1,95 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<div id="div_modal_<?php echo Router::getController(); ?>">
+    <table id="filtros" width="100%" class="ui-corner-all ui-content">
+    <thead>
+        <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+            <th colspan="2">Filtros</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Codigo</th>
+            <td><input type="number" id="codigo_municipio" name="codigo_municipio" size="30"  /></td>
+        </tr>
+        <tr>
+            <th>Busqueda por Nombre</th>
+            <td><input type="text" id="nombre_municipio" name="nombre_municipio" size="50" /></td>
+        </tr>
+    </tbody>
+    </table>
+    <table id="tabla<?php echo Router::getController(); ?>"></table>
+    <div id="pager<?php echo Router::getController(); ?>"></div>
+</div>
+<script>
+jQuery(document).ready(function(){
+		
+		jQuery("#codigo_municipio").keyup(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								nombre:     jQuery("#nombre_municipio").val(), 
+								codigo:     jQuery("#codigo_municipio").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+			
+			jQuery("#nombre_municipio").keyup(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								codigo:     jQuery("#codigo_municipio").val(), 
+								nombre:     jQuery("#nombre_municipio").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Codigo Municipio','Nombre Municipio','Codigo Departamento','Nombre Departamento'], 
+			colModel:[ 
+				{ name:'id'               ,index:'id'               , width:200 }, 
+				{ name:'municipio'        ,index:'municipio'        , width:500 },
+				{ name:'departamentos_id' ,index:'departamentos_id' , width:200 }, 
+				{ name:'departamento'     ,index:'departamento'     , width:350 },
+				
+			], 
+			autoWidth:true,
+			width: jQuery('#content').width()-25,
+			height: 250,
+			rowNum:20, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'municipio', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de los Municipios Registrados",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					if( jQuery("#municipios_id")    ){ jQuery("#municipios_id").val(fila['id']); }
+					if( jQuery("#municipio")        ){ jQuery("#municipio").val(fila['municipio']);         } 
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+						redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/" + fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+					
+       		 }
+		}); 
+		
+		jQuery(window).bind('resize', function() {
+			jQuery("#tabla<?php echo Router::getController(); ?>").setGridWidth(jQuery('#content').width()-25, true);
+		});
+		
+});
+</script>

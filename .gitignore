@@ -1,0 +1,10 @@
+apps/default/config/environment.ini
+apps/default/logs/
+apps/default/temp/
+public/temp/
+Thumbs.db
+*.DS_Store
+*.txt
+*.log
+*.BAK
+

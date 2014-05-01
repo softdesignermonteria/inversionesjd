@@ -1,0 +1,118 @@
+<?php echo View::getContent(); ?>
+
+<div align="center"> 
+	<button id="boton_left" type="button">Menu Left</button>
+    <button id="boton_navegacion" type="button">Menu Navegacion</button>
+    <button id="boton_aplicaciones" type="button">Menu Aplicaciones</button>
+</div>
+
+<div id="div_left">
+<table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all" >
+	<tr class="ui-dialog-titlebar ui-widget-header ui-corner-all">
+  		<td>Consecutivo</td>
+        <td>X</td>
+        <td>Y</td>
+        <td>Orden</td>
+        <td>Descripcion</td>
+        <td>Url</td>
+        <td>Url - Imagen</td>
+       
+    </tr>
+	<?php foreach($left as $detalles): ?>
+    <tr>
+    	<td><?php echo $detalles->id; ?></td>
+        <td><?php echo $detalles->posicion_x; ?></td>
+        <td><?php echo $detalles->posicion_y; ?></td>
+        <td><?php echo $detalles->orden; ?></td>
+        <td><?php echo $detalles->descripcion; ?></td>
+        <td><?php echo $detalles->url; ?></td>
+        <td><?php echo Tag::image($detalles->urlimage,"width: 32px"); ?></td>
+       
+    </tr>
+    <?php endforeach; ?>
+</table>
+</div>
+
+<div id="div_navegacion">
+<table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all" >
+	<tr class="ui-dialog-titlebar ui-widget-header ui-corner-all">
+  		<td>Consecutivo</td>
+        <td>X</td>
+        <td>Y</td>
+        <td>Orden</td>
+        <td>Descripcion</td>
+        <td>Url</td>
+        <td>Url - Imagen</td>
+       
+    </tr>
+	<?php foreach($navegacion as $detalles): ?>
+    <tr>
+    	<td><?php echo $detalles->id; ?></td>
+        <td><?php echo $detalles->posicion_x; ?></td>
+        <td><?php echo $detalles->posicion_y; ?></td>
+        <td><?php echo $detalles->orden; ?></td>
+        <td><?php echo $detalles->descripcion; ?></td>
+        <td><?php echo $detalles->url; ?></td>
+        <td><?php echo Tag::image($detalles->urlimage,"width: 32px"); ?></td>
+       
+    </tr>
+    <?php endforeach; ?>
+</table>
+</div>
+
+<div id="div_aplicaciones">
+<table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all" >
+	<tr class="ui-dialog-titlebar ui-widget-header ui-corner-all">
+  		<td>Consecutivo</td>
+        <td>X</td>
+        <td>Y</td>
+        <td>Orden</td>
+        <td>Descripcion</td>
+        <td>Url</td>
+        <td>Url - Imagen</td>
+       
+    </tr>
+	<?php foreach($aplicaciones as $detalles): ?>
+    <tr>
+    	<td><?php echo $detalles->id; ?></td>
+        <td><?php echo $detalles->posicion_x; ?></td>
+        <td><?php echo $detalles->posicion_y; ?></td>
+        <td><?php echo $detalles->orden; ?></td>
+        <td><?php echo $detalles->descripcion; ?></td>
+        <td><?php echo $detalles->url; ?></td>
+        <td><?php echo Tag::image($detalles->urlimage,"width: 32px"); ?></td>
+       
+    </tr>
+    <?php endforeach; ?>
+</table>
+</div>
+
+<script>
+	jQuery(document).ready(function(e) {
+		
+					jQuery("#div_navegacion").hide();
+					jQuery("#div_aplicaciones").hide();
+					jQuery("#div_left").hide();
+					
+			if( jQuery( "#boton_left"               ) ){ jQuery( "#boton_left"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+			if( jQuery( "#boton_aplicaciones"       ) ){ jQuery( "#boton_aplicaciones"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+			if( jQuery( "#boton_navegacion"         ) ){ jQuery( "#boton_navegacion"            ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+			
+			jQuery("#boton_left").click(function(e) {
+                	jQuery("#div_navegacion").hide();
+					jQuery("#div_aplicaciones").hide();
+					jQuery("#div_left").show();
+            });
+			jQuery("#boton_navegacion").click(function(e) {
+                	jQuery("#div_navegacion").show();
+					jQuery("#div_aplicaciones").hide();
+					jQuery("#div_left").hide();
+            });
+			jQuery("#boton_aplicaciones").click(function(e) {
+                	jQuery("#div_navegacion").hide();
+					jQuery("#div_aplicaciones").show();
+					jQuery("#div_left").hide();
+            });
+	
+    });
+</script>

@@ -1,0 +1,54 @@
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar/?<?php echo $_REQUEST["opcion"]; ?>=<?php echo $_REQUEST["valor"]; ?>', 
+			datatype: "json", 
+			colNames:['Id','Cedula','Nombre Completo','Fecha','Consecutivo','Total Nota Debito'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:200},
+				{ name:'nit',index:'nit', width:200}, 
+				{ name:'razon_social',index:'razon_social', width:500},
+				{ name:'fecha',index:'nombre2', width:200}, 
+				{ name:'consecutivo',index:'consecutivo', width:200}, 
+				{ name:'tnd',index:'tnd', width:200}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:50, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE CREDITOS POR CLIENTES",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+				
+								
+					jQuery("#creditos_id").val(fila['id']);
+					jQuery("#creditos").val(fila['consecutivo']);
+
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					
+       		 }
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

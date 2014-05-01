@@ -1,0 +1,134 @@
+<h4>AGREGAR USUARIO AL SISTEMA</h4>
+<table width="80%" height="160"  align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <th><?php echo Tag::hiddenField("id"); ?></th>
+</tr>
+
+  <tr>
+    <td width="29%" align="right">Nombre Usuario</td>
+    <td width="38%" align="left"><?php echo Tag::textField("username", "size: 25","maxlength: 20") ?></td>
+    <td width="33%" align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Clave</td>
+    <td align="left"><?php echo Tag::PasswordField("password", "size: 25","maxlength: 20") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Confirmar Clave</td>
+    <td align="left"><?php echo Tag::PasswordField("confirmar", "size: 25","maxlength: 20") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Nombre Completo</td>
+    <td align="left" colspan="2"><?php echo Tag::textFieldExt("empleado","size: 10 ");?></td>
+
+  </tr>
+  <tr>
+    <td align="right">Tipo de Usuario</td>
+    <td align="left"><?php $rol = new Role();
+      echo Tag::select('role',$rol->find(), 'using: role,role','useDummy=yes'); 
+	  ?>    </td>
+    <td align="left">&nbsp;</td>
+  </tr>
+
+</table>
+<br />
+<div align="center"><button id="guardar">Guardar</button><button id="cancelar">Cancelar</button></div>
+
+<br /><br />
+
+<div id="div_mensajes"></div>
+
+
+<?php 
+$admin =  new Admin();
+
+
+	if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){
+			$idt = $_REQUEST["id"];
+			$encabezado       = $admin->findFirst(" id = '$idt' ");
+			$id               = $encabezado->id; 
+			$username         = $encabezado->username; 
+			$password         = $encabezado->password; 
+			$confirmar        = $encabezado->password; 
+			$nombre_completo  = $encabezado->empleado; 
+			$empleado_id      = $encabezado->empleado_id; 
+			$rol              = $encabezado->role; 
+				
+		}
+	}
+?>
+
+<script>
+
+jQuery(document).ready(function(){
+
+	<?php if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){ ?>
+			
+			jQuery("#id").val("<?php echo $id; ?>");
+			jQuery("#username").val("<?php echo $username; ?>");
+			
+			jQuery("#empleado").val("<?php echo $nombre_completo; ?>");
+			jQuery("#password").val("<?php echo $password; ?>");
+			jQuery("#confirmar").val("<?php echo $confirmar; ?>");
+
+			jQuery("#empleado_id").val("<?php echo $empleado_id; ?>");
+			jQuery("#rol").val("<?php echo $rol; ?>");
+<?php	
+			}
+	}
+	
+	?>
+	
+
+jQuery("#guardar").click(function(){
+	guardar();
+});
+
+function guardar(){
+var datos = "";
+jQuery( '#mensajes' ).html("");
+jQuery( "#progressbar" ).progressbar({ value: 50 });	
+var jqXHR = jQuery.ajax({
+	type: "POST",
+	url: "<?php echo core::getInstancePath(); ?>administrador/add",
+	data: {
+			id:                   jQuery("#id").val(),
+			username:             jQuery("#username").val(),
+			password:             jQuery("#password").val(),
+			confirmar:            jQuery("#confirmar").val(),
+			empleado:             jQuery("#empleado").val(),
+			empleado_id:          jQuery("#empleado_id").val(),
+			role:                 jQuery("#role").val(),
+			
+	},
+	success: function(data) {
+		jQuery( '#div_mensajes' ).html("");
+		//jQuery( "#progressbar" ).progressbar({ value: 90 });
+		jQuery( '#div_mensajes' ).html(data);
+	},
+	error: function(data) {
+		jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+		jQuery( "#progressbar" ).progressbar({ value: 0 });
+		jQuery('#dialogo_mensajes').dialog("open");
+	}
+});
+
+ jqXHR.done(function(data){
+	//jQuery( "#progressbar" ).progressbar({ value: 0 });
+	jQuery( '#div_mensajes' ).html("");
+		//jQuery( "#progressbar" ).progressbar({ value: 90 });
+		jQuery( '#div_mensajes' ).html(data);
+});
+
+}
+
+
+});
+
+
+</script>
+

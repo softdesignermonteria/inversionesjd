@@ -1,0 +1,133 @@
+<h1>FORMULARIO PARA ELIMINAR DATOS DEL CLIENTE</h1>
+
+
+<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes", "id: fx","name: fx"); ?>
+<table border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="152" height="0" align="right" valign="middle" >ID</td>
+    <td width="130" height="0" align="left" valign="middle" scope="col"><?php echo Tag::textField("id", "size: 12","readonly:false","maxlength: 12") ?></td>
+    <td width="150" align="right" scope="col">IDENTIFICACION</td>
+    <td width="349" scope="col"><?php echo Tag::textField("nit", "size: 12","maxlength: 12") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PRIMER NOMBRE</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("nombre1", "size: 20","maxlength: 20") ?></td>
+    <td align="right">SEGUNDO NOMBRE</td>
+    <td><?php echo Tag::textUpperField("nombre2", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PRIMER APELLIDO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("apellido1", "size: 20","maxlength: 20") ?></td>
+    <td align="right">SEGUNDO APELLIDO</td>
+    <td><?php echo Tag::textUpperField("apellido2", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">RAZ&Oacute;N SOCIAL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("razon_social", "size: 40","maxlength: 100") ?></td>
+    <td align="right" valign="middle">&nbsp;</td>
+    <td align="left" valign="middle">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION CASA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion_casa", "size: 40","maxlength: 100") ?></td>
+    <td align="right"></td>
+    <td></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION OFICINA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion_oficina", "size: 40","maxlength: 100") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">TELEFONO FIJO(1)</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("telefono1", "size: 15","maxlength: 20") ?></td>
+    <td align="right">TELEFONO FIJO(2)</td>
+    <td><?php echo Tag::numericField("telefono2", "size: 15","maxlength: 15") ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">SUELDO MENSUAL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("sueldo", "size: 15","maxlength: 20") ?></td>
+    <td align="right">OTROS INGRESOS</td>
+    <td><?php echo Tag::numericField("otros_ingresos", "size: 15","maxlength: 20") ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">CASA PROPIA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::selectStatic('casa', 
+												array('' => 'Seleccione...',
+													  'S' => 'SI',
+													  'N' => 'NO')) ?></td>
+    <td align="right">VEHICULOS</td>
+    <td><?php echo Tag::textUpperField("vehiculos", "size: 15","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">CELULAR</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("celular", "size: 15","maxlength: 15") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DEPARTAMENTOS</td>
+    <td height="0" align="left" valign="middle">
+	  	<?php echo Tag::textField("departamentos_id","readOnly: readOnly","size: 5"); ?> 
+	    <?php echo Tag::textField("nombre_dpto","readOnly: readOnly","size: 15"); ?>
+        <button id="buscar_dpto" type="button">Buscar</button>
+      </td>
+    <td align="right">MUNICIPIOS</td>
+    <td>
+       <?php echo Tag::textField("municipios_id","readOnly: readOnly","size: 5"); ?> 
+	   <?php echo Tag::textField("nombre_mun","readOnly: readOnly","size: 15"); ?>
+       <button id="buscar_mun" type="button">Buscar</button></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">EMAIL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("email", "size: 30","maxlength: 100") ?></td>
+    <td align="right">PAGINA WEB</td>
+    <td><?php echo Tag::textUpperField("web", "size: 30","maxlength: 50") ?></td>
+    <tr>
+ 	 <td colspan="4" align="center" >
+     		<button type="submit" id="enviar" name="enviar">Eliminar</button>
+            <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+    </tr> 
+ 
+</table>
+
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<script>
+	
+	jQuery(document).ready(function(e) {
+		
+        jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#nit").attr("readOnly","ReadOnly");
+		jQuery("#nombre1").attr("readOnly","ReadOnly");
+		jQuery("#nombre2").attr("readOnly","ReadOnly");
+		jQuery("#apellido1").attr("readOnly","ReadOnly");
+		jQuery("#apellido2").attr("readOnly","ReadOnly");
+		jQuery("#razon_social").attr("readOnly","ReadOnly");
+		jQuery("#direccion_casa").attr("readOnly","ReadOnly");
+		jQuery("#direccion_oficina").attr("readOnly","ReadOnly");
+		jQuery("#telefono1").attr("readOnly","ReadOnly");
+		jQuery("#telefono2").attr("readOnly","ReadOnly");
+		jQuery("#sueldo").attr("readOnly","ReadOnly");
+		jQuery("#otros_ingresos").attr("readOnly","ReadOnly");
+		jQuery("#casa").prop('disabled', true);
+		jQuery("#vehiculos").attr("readOnly","ReadOnly");
+		jQuery("#celular").attr("readOnly","ReadOnly");
+		jQuery("#departamentos_id").attr("readOnly","ReadOnly");
+		jQuery("#nombre_dpto").attr("readOnly","ReadOnly");
+		jQuery("#buscar_dpto").prop('disabled', true);
+		jQuery("#municipios_id").attr("readOnly","ReadOnly");
+		jQuery("#nombre_mun").attr("readOnly","ReadOnly");
+		jQuery("#buscar_mun").prop('disabled', true);
+		jQuery("#email").attr("readOnly","ReadOnly");
+	
+
+    });
+	
+</script>

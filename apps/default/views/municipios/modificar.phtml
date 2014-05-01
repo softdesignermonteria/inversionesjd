@@ -1,0 +1,82 @@
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<h1>AGREGAR </h1>
+
+<table width="100%">
+      <tr>
+    	  <th height="25" colspan="4">FORMULARIO PARA AGREGAR </th>
+   	  </tr>
+    	<tr>
+    	  
+    	  <th width="30%" align="right">CODIGO :</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("id","size: 50","maxlength: 50"); ?></td>
+    	  
+   	  </tr>
+      <!--<tr>
+    	  
+    	  <th width="30%" align="right">PAIS:</th>
+    	  <td width="64%" align="left">
+		    <?php // echo Tag::textField("codigo_pais","size: 10","readonly: readonly"); ?>
+         	<?php // echo Tag::textField("nombre_pais","size: 50","readonly: readonly"); ?>
+            <button id="buscar_pais" name="buscar_pais" type="button" >Buscar</button>
+          </td>
+    	  
+   	  </tr> -->
+     
+        <tr>
+    	  
+    	  <th width="30%" align="right">DEPARTAMENTO :</th>
+    	  <td width="64%" align="left">
+		    <?php  echo Tag::textField("departamentos_id","size: 10"); ?>
+         	<?php  echo Tag::textField("departamento","size: 50","readonly: readonly"); ?>
+            <button id="buscar_departamentos" name="buscar_departamentos" type="button" >Buscar</button>
+          </td>
+    	  
+   	  </tr>
+      
+        <tr>
+    	  
+    	  <th width="30%" align="right">NOMBRE :</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("municipio","size: 50"); ?></td>
+    	  
+   	  </tr>
+      <tr>
+    	  
+    	  <th width="30%" align="right">CODIGO DANE :</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("codigo_dane","size: 50"); ?></td>
+    	  
+   	  </tr>
+      <tr>
+    	  <td colspan="4" align="center"><button id="guardar" name="guardar">Guardar</button></td>
+   	  </tr>
+  </table>
+
+<?php echo Tag::endForm(); ?>
+<div id="mensajes"></div>
+<?php echo view::getContent(); ?>
+
+<script>
+/*campos requeridos*/
+jQuery(document).ready(function(e) {
+	
+   <?php 
+		$entidad = new Municipios();
+		
+		foreach( $entidad->getPrimaryKeyAttributes() as $filas):
+			echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
+		endforeach;	
+		
+		foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
+				foreach( $entidad->getNonPrimaryKeyAttributes() as $filas2):
+					if($filas==$filas2){ echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n"; break;} 
+				endforeach;	
+				
+		endforeach;	
+		
+	?> 
+	
+	
+});
+
+
+</script>

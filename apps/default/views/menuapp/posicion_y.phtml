@@ -1,0 +1,21 @@
+<?php echo View::getContent(); ?>
+<table width="100%" cellpadding="2" cellspacing="2" class=" ui-corner-all" >
+	<tr class="ui-dialog-titlebar ui-widget-header ui-corner-all">
+  		<td>Consecutivo</td>
+        <td>Y</td>
+        <td>Orden</td>
+        <td>Descripcion</td>
+        <td>Url</td>
+        <td>Url - Imagen</td>
+    </tr>
+	<?php foreach($detalles as $detalles): ?>
+    <tr>
+    	<td><?php echo $detalles->id; ?></td>
+        <td><?php echo $detalles->posicion_y; ?></td>
+        <td><?php echo $detalles->orden; ?></td>
+        <td><?php echo $detalles->descripcion; ?></td>
+        <td><?php echo $detalles->url; ?></td>
+        <td><?php echo Tag::image($detalles->urlimage,"width: 25px"); ?></td>
+    </tr>
+    <?php endforeach; ?>
+</table>

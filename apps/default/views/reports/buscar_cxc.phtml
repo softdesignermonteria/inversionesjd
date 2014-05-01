@@ -1,0 +1,27 @@
+<table border="0" cellpadding="1" id="solicitudes" width="100%">
+   <tr>
+    <th><div align="center">ID</div></th>
+    <th><div align="center">PREFIJO</div></th>
+    <th><div align="center">CONSECUTIVO</div></th>
+    <th><div align="center">FECHA</div></th>
+    <th><div align="center">OBSERVACI&Oacute;N</div></th>
+    <th><div align="center">VER SOLICITUD</div></th>
+   </tr>
+        <?php 
+		 $i=0;
+		 foreach($creditos as $creditos): 
+		 ?>  
+         
+          <tr>
+            <td><div align="center"><?php echo $creditos->id ; ?></div></td>
+            <td><div align="center"><?php echo $creditos->prefijo; ?></div></td>
+            <td><div align="center"><?php echo $creditos->consecutivo; ?></div></td>
+            <td><div align="center"><?php echo $creditos->fecha; ?></div></td>
+            <td><div align="center"><?php echo $creditos->observaciones; ?></div></td>
+            <td><div align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspertcxcres/?id_cliente=$creditos->clientes_id&&id_credito=$creditos->id",Tag::image("iconos/pdf.png","width: 25px"),"target: _blank"); ?>
+			</div></td>        
+		  </tr>
+   		
+        <?php $i++; endforeach; ?> 
+ </table>
+<div id="mensajes"></div>

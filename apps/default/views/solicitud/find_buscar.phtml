@@ -1,0 +1,66 @@
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar/?<?php echo $_REQUEST["opcion"]; ?>=<?php echo $_REQUEST["valor"]; ?>', 
+			datatype: "json", 
+			colNames:['Id','Consecutivo','Fecha','Cedula','Razón Social','Capital','Nro Cuotas','Valor Cuotas','Total Crédito','Porcentaje'], 
+			colModel:[ 
+				{ name:'id'                ,index:'id'                 },
+				{ name:'consecutivo'       ,index:'consecutivo'        },
+				{ name:'fecha'             ,index:'fecha'              },
+				{ name:'nit'               ,index:'nit'                }, 
+				{ name:'nombre_completo'   ,index:'razon_social'       },
+				{ name:'capital'           ,index:'capital'            }, 
+				{ name:'numero_cuotas'     ,index:'numero_cuotas'      }, 
+				{ name:'valor_cuotas'      ,index:'valor_cuotas'       },
+				{ name:'total_credito'     ,index:'total_credito'      },
+				{ name:'porcentaje'        ,index:'porcentaje'         }
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE SOLICITUDES POR CLIENTE",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+				
+					jQuery("#solicitud_id").val(fila['id']);
+					jQuery("#solicitud").val(fila['consecutivo']);
+					
+					jQuery("#capital").val(fila['capital']);
+					jQuery("#numero_cuotas").val(fila['numero_cuotas']);
+					jQuery("#valor_cuotas").val(fila['valor_cuotas']);
+					jQuery("#total_credito").val(fila['numero_cuotas']*fila['valor_cuotas']);
+					
+					//jQuery("#clientes_id").val(fila['nit']);
+					//jQuery("#clientes").val(fila['nombre_completo']);
+					
+					jQuery("#solicitud").val(fila['consecutivo']);
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					
+       		 }
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

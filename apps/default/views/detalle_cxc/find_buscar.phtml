@@ -1,0 +1,126 @@
+<table id="tabladetalles_cxc"></table>
+<div id="pagerdetalles_cxc"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tabladetalles_cxc").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>detalle_cxc/find_detalle_buscar/?clientes_id=<?php echo $_REQUEST["clientes_id"]; ?>', 
+			datatype: "json", 
+
+			colNames:['Id','Cod. Creditos','Prefijo','Consecutivos','Numero Credito','Fecha','Vencimiento','Codigo Cuota','Saldo'], 
+			colModel:[ 
+				{ name:'id'                 ,index:'id'             }, 
+				{ name:'creditos_id'        ,index:'creditos_id'    },
+				{ name:'prefijo'            ,index:'prefijo'        },
+				{ name:'consecutivo'        ,index:'consecutivo'    },
+				{ name:'numero_credito'     ,index:'numero_credito' },
+				{ name:'fecha'              ,index:'fecha'          },
+				{ name:'vencimiento'        ,index:'vencimiento'    },
+				{ name:'codigo'             ,index:'codigo'         },
+				{ name:'valor'              ,index:'valor'          }
+			], 
+			autoWidth:true,
+			width: 600,
+			height: 300,
+			rowNum:20, 
+			rowList:[20,40,60,80,100], 
+			pager: '#pagerdetalles_cxc', 
+			sortname: 'vencimiento', 
+			multiselect: true,
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Detalles del Credito ",
+			onSelectAll : function(aSel,selected) { 
+				if(selected){ 
+						var value =0; 
+						for(var i=0;i < aSel.length;i++){ 
+							var data = jQuery("#tabladetalles_cxc").jqGrid('getRowData',aSel[i]); 
+							//value += parseFloat(data.total); 
+							
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>recibos_caja/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											detalle_cxc_id	 :  data.id,
+											codigo           :  data.codigo,
+											numero_credito   :  data.numero_credito,
+											valor            :  data.valor,
+											descripcion      :  data.descripcion,
+											vencimiento      :  data.vencimiento,
+											anulado          : "NO"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+							});
+							
+							//agregar_item(data);
+						} 
+							//jQuery("#total_ingresos").val(value.toFixed(2)); 
+						} else { 
+							//jQuery("#total_ingresos").val('0.00'); 
+						} 
+					}, 
+			onSelectRow : 
+				function(rowid, selected){ 
+					var data = jQuery("#tabladetalles_cxc").jqGrid('getRowData',rowid); 
+					//var value = parseFloat(jQuery.trim(jQuery("#totamt").html())); 
+					//var value = parseFloat( jQuery.trim( jQuery("#total_ingresos").val() ) );
+					if(selected) { 
+							//value += parseFloat(data.total); 
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>recibos_caja/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											detalle_cxc_id	 :  data.id,
+											codigo           :  data.codigo,
+											numero_credito   :  data.numero_credito,
+											valor            :  data.valor,
+											descripcion      :  data.descripcion,
+											vencimiento      :  data.vencimiento,
+											anulado          : "NO"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+							});
+							
+						} else { 
+								//value -= parseFloat(data.total); 
+								
+							} 
+							//jQuery("#total_ingresos").val(value.toFixed(2)); 
+			}
+		}); 
+		jQuery("#tabladetalles_cxc").jqGrid('navGrid','#pagerdetalles_cxc',{edit:false,add:false,del:false}); 
+		jQuery("#tabladetalles_cxc").jqGrid('navButtonAdd','#pagerdetalles_cxc',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabladetalles_cxc").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

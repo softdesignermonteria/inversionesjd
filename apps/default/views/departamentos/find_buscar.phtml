@@ -1,0 +1,88 @@
+<div id="div_modal_<?php echo Router::getController(); ?>">
+    <table id="filtros" width="100%" class="ui-corner-all ui-content">
+    <thead>
+        <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+            <th colspan="2">Filtros</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Codigo</th>
+            <td><input type="number" id="codigo_departamento" name="codigo_departamento" size="30"  /></td>
+        </tr>
+        <tr>
+            <th>Busqueda por Nombre</th>
+            <td><input type="text" id="nombre_departamento" name="nombre_departamento" size="50" /></td>
+        </tr>
+    </tbody>
+    </table>
+    <table id="tabla<?php echo Router::getController(); ?>"></table>
+    <div id="pager<?php echo Router::getController(); ?>"></div>
+</div>
+<script>
+jQuery(document).ready(function(){
+
+		jQuery("#codigo_departamento").keyup(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								nombre:     jQuery("#nombre_departamento").val(), 
+								codigo:     jQuery("#codigo_departamento").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+			
+			jQuery("#nombre_departamento").keyup(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								codigo:     jQuery("#codigo_departamento").val(), 
+								nombre:     jQuery("#nombre_departamento").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+			
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/find_detalle_buscar/?<?php echo $_REQUEST["opcion"]; ?>=<?php echo $_REQUEST["valor"]; ?>', 
+			datatype: "json", 
+			colNames:['Id','Departamento'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'departamento',index:'departamento', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:50, 
+			/**rowList:[10,20,30,40,50], **/
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'departamento', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Departamentos",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#departamentos_id").val("");
+					jQuery("#departamento").val("");
+					jQuery("#municipios_id").val("");
+					jQuery("#municipio").val("");
+					jQuery("#departamentos_id").removeAttr("disabled");
+					jQuery("#departamento").removeAttr("disabled");
+					jQuery("#municipios_id").removeAttr("disabled");
+					jQuery("#municipio").removeAttr("disabled");
+					
+					
+					jQuery("#departamentos_id").val(fila['id']);
+					jQuery("#departamento").val(fila['departamento']);
+					
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+       		 }
+		}); 
+	
+});
+</script>

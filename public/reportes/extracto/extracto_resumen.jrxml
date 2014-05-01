@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="extracto_resumen" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7e00d4f1-3900-44a3-ac65-00e8dd8342d9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha_corte" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     cxc.`id` AS cxc_id,
+     cxc.`creditos_id` AS cxc_creditos_id,
+     cxc.`prefijo` AS cxc_prefijo,
+     cxc.`consecutivo` AS cxc_consecutivo,
+     cxc.`tipo_documento_id` AS cxc_tipo_documento_id,
+     cxc.`fecha` AS cxc_fecha,
+     cxc.`valor_total` AS cxc_valor_total,
+     cxc.`pagado` AS cxc_pagado,
+     cxc.`anulado` AS cxc_anulado,
+     creditos.`id` AS creditos_id,
+     creditos.`empresa_id` AS creditos_empresa_id,
+     creditos.`clientes_id` AS creditos_clientes_id,
+     creditos.`solicitud_id` AS creditos_solicitud_id,
+     creditos.`tipo_documento_id` AS creditos_tipo_documento_id,
+     creditos.`prefijo` AS creditos_prefijo,
+     creditos.`consecutivo` AS creditos_consecutivo,
+     creditos.`fecha_act` AS creditos_fecha_act,
+     creditos.`fecha` AS creditos_fecha,
+     creditos.`anulado` AS creditos_anulado,
+     creditos.`observaciones` AS creditos_observaciones,
+     creditos.`fecha_cuota` AS creditos_fecha_cuota,
+     creditos.`cuotas` AS creditos_cuotas,
+     creditos.`valor_cuotas` AS creditos_valor_cuotas,
+     creditos.`total_credito` AS creditos_total_credito,
+     creditos.`porcentaje` AS creditos_porcentaje,
+     clientes.`id` AS clientes_id,
+     clientes.`nit` AS clientes_nit,
+     clientes.`nombre1` AS clientes_nombre1,
+     clientes.`nombre2` AS clientes_nombre2,
+     clientes.`apellido1` AS clientes_apellido1,
+     clientes.`apellido2` AS clientes_apellido2,
+     clientes.`foto` AS clientes_foto,
+     clientes.`url` AS clientes_url,
+     clientes.`razon_social` AS clientes_razon_social,
+     clientes.`direccion_casa` AS clientes_direccion_casa,
+     clientes.`direccion_oficina` AS clientes_direccion_oficina,
+     clientes.`telefono1` AS clientes_telefono1,
+     clientes.`telefono2` AS clientes_telefono2,
+     clientes.`sueldo` AS clientes_sueldo,
+     clientes.`otros_ingresos` AS clientes_otros_ingresos,
+     clientes.`eps` AS clientes_eps,
+     clientes.`casa` AS clientes_casa,
+     clientes.`vehiculos` AS clientes_vehiculos,
+     clientes.`celular` AS clientes_celular,
+     clientes.`departamentos_id` AS clientes_departamentos_id,
+     clientes.`municipios_id` AS clientes_municipios_id,
+     clientes.`activo` AS clientes_activo,
+     clientes.`correo` AS clientes_correo,
+     clientes.`web` AS clientes_web,
+     empresa.`id` AS empresa_id,
+     empresa.`nombre_corto` AS empresa_nombre_corto,
+     empresa.`nombre_empresa` AS empresa_nombre_empresa,
+     empresa.`nit` AS empresa_nit,
+     empresa.`direccion` AS empresa_direccion,
+     empresa.`logo` AS empresa_logo,
+     empresa.`regimen_id` AS empresa_regimen_id,
+     empresa.`telefonos` AS empresa_telefonos,
+     empresa.`celular` AS empresa_celular,
+     empresa.`web` AS empresa_web,
+     empresa.`correo` AS empresa_correo,
+     empresa.`activo` AS empresa_activo,
+     empresa.`kardex_id_default` AS empresa_kardex_id_default,
+     empresa.`tipo_costeo` AS empresa_tipo_costeo,
+     empresa.`valor_caja_defecto` AS empresa_valor_caja_defecto,
+     empresa.`cobro_tarifa` AS empresa_cobro_tarifa,
+     empresa.`porcentaje` AS empresa_porcentaje,
+     $P{fecha_corte} AS fecha_corte,
+     ( select r.fecha from recibos_caja r, detalle_recibos_caja dr
+            where r.id = dr.recibos_caja_id
+            and dr.anulado = '0'
+            and dr.descripcion like 'INTERESES%'
+            and r.clientes_id = clientes.id
+            and r.creditos_id = creditos.id
+      order by r.fecha desc limit 1 ) AS fecha_recibo_caja,
+     ifnull(prestamos_mes(creditos.id,clientes.id,$P{fecha_corte},'valor' ),0) as valor_prestado_mes,
+     ifnull(prestamos_mes(creditos.id,clientes.id,$P{fecha_corte},'intereses' ),0) as valor_prestado_intereses,
+     ifnull(prestamos_mes(creditos.id,clientes.id,$P{fecha_corte},'dias' ),0) as dias_prestado_intereses,
+     (
+	round(
+            (
+              (
+                (cxc.valor_total +  cxc.pagado - ifnull(prestamos_mes(creditos.id,clientes.id,$P{fecha_corte},'valor' ),0)
+              )
+              * ( creditos.porcentaje /100 ) ) /30
+            )
+              * (datediff($P{fecha_corte},
+                   case
+		when ifnull((select r.fecha from recibos_caja r, detalle_recibos_caja dr
+           	 	where r.id = dr.recibos_caja_id
+            		and dr.anulado = '0'
+            		and dr.descripcion like 'INTERESES%'
+            		and r.clientes_id = clientes.id
+		          and r.creditos_id = creditos.id
+		          order by r.fecha desc limit 1),0)=0 then creditos.fecha
+		else
+			(select r.fecha from recibos_caja r, detalle_recibos_caja dr
+           	 	where r.id = dr.recibos_caja_id
+            		and dr.anulado = '0'
+            		and dr.descripcion like 'INTERESES%'
+            		and r.clientes_id = clientes.id
+		          and r.creditos_id = creditos.id
+		          order by r.fecha desc limit 1)
+		end) + 1)
+          ,-3)
+    ) as intereses,
+ifnull((select sum(dr.valor) from recibos_caja r, detalle_recibos_caja dr
+           	 	where r.id = dr.recibos_caja_id
+            		and dr.anulado = '0'
+            		and dr.descripcion not like 'INTERESES%'
+            		and r.clientes_id = clientes.id
+		          and r.creditos_id = creditos.id
+			and concat(year(r.fecha),month(r.fecha)) = concat(year($P{fecha_corte}),month($P{fecha_corte}))
+		          ),0) as abonos_mes,
+(datediff($P{fecha_corte},
+                   case
+		when ifnull((select r.fecha from recibos_caja r, detalle_recibos_caja dr
+           	 	where r.id = dr.recibos_caja_id
+            		and dr.anulado = '0'
+            		and dr.descripcion like 'INTERESES%'
+            		and r.clientes_id = clientes.id
+		          and r.creditos_id = creditos.id
+		          order by r.fecha desc limit 1),0)=0 then creditos.fecha
+		else
+			(select r.fecha from recibos_caja r, detalle_recibos_caja dr
+           	 	where r.id = dr.recibos_caja_id
+            		and dr.anulado = '0'
+            		and dr.descripcion like 'INTERESES%'
+            		and r.clientes_id = clientes.id
+		          and r.creditos_id = creditos.id
+		          order by r.fecha desc limit 1)
+		end) + 1) as dias_atraso
+FROM
+     `creditos` creditos INNER JOIN `cxc` cxc ON creditos.`id` = cxc.`creditos_id`
+     INNER JOIN `clientes` clientes ON creditos.`clientes_id` = clientes.`id`
+     INNER JOIN `empresa` empresa ON creditos.`empresa_id` = empresa.`id`
+where
+ cxc.`valor_total` +  cxc.`pagado` <> 0]]>
+	</queryString>
+	<field name="cxc_id" class="java.lang.Integer"/>
+	<field name="cxc_creditos_id" class="java.lang.Long"/>
+	<field name="cxc_prefijo" class="java.lang.String"/>
+	<field name="cxc_consecutivo" class="java.lang.Long"/>
+	<field name="cxc_tipo_documento_id" class="java.lang.Long"/>
+	<field name="cxc_fecha" class="java.sql.Date"/>
+	<field name="cxc_valor_total" class="java.lang.Double"/>
+	<field name="cxc_pagado" class="java.lang.Double"/>
+	<field name="cxc_anulado" class="java.lang.Boolean"/>
+	<field name="creditos_id" class="java.lang.Long"/>
+	<field name="creditos_empresa_id" class="java.lang.Integer"/>
+	<field name="creditos_clientes_id" class="java.lang.Integer"/>
+	<field name="creditos_solicitud_id" class="java.lang.Integer"/>
+	<field name="creditos_tipo_documento_id" class="java.lang.Long"/>
+	<field name="creditos_prefijo" class="java.lang.String"/>
+	<field name="creditos_consecutivo" class="java.lang.Long"/>
+	<field name="creditos_fecha_act" class="java.sql.Timestamp"/>
+	<field name="creditos_fecha" class="java.sql.Date"/>
+	<field name="creditos_anulado" class="java.lang.Boolean"/>
+	<field name="creditos_observaciones" class="java.lang.String"/>
+	<field name="creditos_fecha_cuota" class="java.sql.Date"/>
+	<field name="creditos_cuotas" class="java.lang.Long"/>
+	<field name="creditos_valor_cuotas" class="java.lang.Double"/>
+	<field name="creditos_total_credito" class="java.lang.Double"/>
+	<field name="creditos_porcentaje" class="java.lang.Integer"/>
+	<field name="clientes_id" class="java.lang.Integer"/>
+	<field name="clientes_nit" class="java.lang.String"/>
+	<field name="clientes_nombre1" class="java.lang.String"/>
+	<field name="clientes_nombre2" class="java.lang.String"/>
+	<field name="clientes_apellido1" class="java.lang.String"/>
+	<field name="clientes_apellido2" class="java.lang.String"/>
+	<field name="clientes_foto" class="java.lang.Object"/>
+	<field name="clientes_url" class="java.lang.String"/>
+	<field name="clientes_razon_social" class="java.lang.String"/>
+	<field name="clientes_direccion_casa" class="java.lang.String"/>
+	<field name="clientes_direccion_oficina" class="java.lang.String"/>
+	<field name="clientes_telefono1" class="java.lang.String"/>
+	<field name="clientes_telefono2" class="java.lang.String"/>
+	<field name="clientes_sueldo" class="java.lang.Double"/>
+	<field name="clientes_otros_ingresos" class="java.lang.Double"/>
+	<field name="clientes_eps" class="java.lang.String"/>
+	<field name="clientes_casa" class="java.lang.String"/>
+	<field name="clientes_vehiculos" class="java.lang.String"/>
+	<field name="clientes_celular" class="java.lang.String"/>
+	<field name="clientes_departamentos_id" class="java.lang.Integer"/>
+	<field name="clientes_municipios_id" class="java.lang.Long"/>
+	<field name="clientes_activo" class="java.lang.Boolean"/>
+	<field name="clientes_correo" class="java.lang.String"/>
+	<field name="clientes_web" class="java.lang.String"/>
+	<field name="empresa_id" class="java.lang.Integer"/>
+	<field name="empresa_nombre_corto" class="java.lang.String"/>
+	<field name="empresa_nombre_empresa" class="java.lang.String"/>
+	<field name="empresa_nit" class="java.lang.String"/>
+	<field name="empresa_direccion" class="java.lang.String"/>
+	<field name="empresa_logo" class="java.lang.String"/>
+	<field name="empresa_regimen_id" class="java.lang.Boolean"/>
+	<field name="empresa_telefonos" class="java.lang.String"/>
+	<field name="empresa_celular" class="java.lang.String"/>
+	<field name="empresa_web" class="java.lang.String"/>
+	<field name="empresa_correo" class="java.lang.String"/>
+	<field name="empresa_activo" class="java.lang.Boolean"/>
+	<field name="empresa_kardex_id_default" class="java.lang.Integer"/>
+	<field name="empresa_tipo_costeo" class="java.lang.String"/>
+	<field name="empresa_valor_caja_defecto" class="java.lang.Double"/>
+	<field name="empresa_cobro_tarifa" class="java.lang.String"/>
+	<field name="empresa_porcentaje" class="java.lang.Integer"/>
+	<field name="fecha_corte" class="java.lang.Object"/>
+	<field name="fecha_recibo_caja" class="java.sql.Date"/>
+	<field name="valor_prestado_mes" class="java.lang.Float"/>
+	<field name="valor_prestado_intereses" class="java.lang.Float"/>
+	<field name="dias_prestado_intereses" class="java.lang.Float"/>
+	<field name="intereses" class="java.lang.Double"/>
+	<field name="abonos_mes" class="java.lang.Double"/>
+	<field name="dias_atraso" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="106" y="2" width="288" height="27" uuid="10046444-cafd-4118-8415-4a1de3cf60fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Extracto Resumen con intereses]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="486" y="3" width="100" height="20" uuid="91659887-face-42c0-91d0-efae31147dea"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="2" width="80" height="20" uuid="0834db59-0669-47bf-84b6-5d8e1c5c8fb7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="696" y="2" width="40" height="20" uuid="2db9dd83-d093-410e-98bf-a28116179bc6"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="15" width="55" height="20" uuid="f4e41152-0182-40b8-a78f-4308476b625c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[IDENT.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="55" y="15" width="145" height="20" uuid="56227fb8-649a-422f-9ffc-0f4733177953"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="15" width="60" height="21" uuid="342192a2-3c25-43c6-8507-500e4bde6a01"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Deuda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="2" width="31" height="34" uuid="888b37d5-5011-402a-ae77-7404953b2dfb"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DIAS DDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="289" y="15" width="60" height="20" uuid="1cecdd14-66de-49ab-b353-2bb34ac436ce"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PREST/MES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="15" width="30" height="20" uuid="a13d49a0-eaf2-4e43-863d-851ed057f0da"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="15" width="60" height="20" uuid="4a493339-766c-4386-bbad-2ab636ccf8b1"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ABONOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="498" y="15" width="60" height="20" uuid="a2c6c5ee-d63a-4755-967e-8eb5dc6d7273"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[SALDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="689" y="1" width="60" height="34" uuid="4e84a964-54b4-4055-bfd3-1aa087d08f51"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL SALDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="557" y="15" width="15" height="20" uuid="94123e48-63c4-464f-8846-48ca7fd46a48"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="14" width="60" height="21" uuid="329cc487-8084-4a8c-9f53-71bd04f6e479"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL INT.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="571" y="15" width="60" height="20" uuid="dc15beb1-3f81-4511-b681-746e25b14079"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[INT.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="379" y="2" width="60" height="33" uuid="850fcbc7-ff16-4bfb-89c7-9f8c5ca5a05b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[INT. DIAS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="1" width="55" height="20" uuid="b05e8225-0e92-40e9-94e7-1ce575369461"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="1" width="145" height="20" uuid="4c538a64-3649-4df2-af5d-f83f180d81af"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_razon_social}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="198" y="1" width="60" height="20" isRemoveLineWhenBlank="true" uuid="66f8c08c-b4b2-4d6e-ade3-c49c14e65dd3"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cxc_valor_total}+$F{cxc_pagado}+$F{abonos_mes}-$F{valor_prestado_mes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="257" y="1" width="31" height="20" isRemoveLineWhenBlank="true" uuid="bc3dcc66-3a95-4dd1-9537-1e71f4ab2474"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dias_atraso}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="288" y="1" width="61" height="20" isRemoveLineWhenBlank="true" uuid="d53d714a-e695-43f1-8fa2-134efcae3fa0"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_prestado_mes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="349" y="1" width="30" height="20" isRemoveLineWhenBlank="true" uuid="2d37f215-0b16-4540-bf76-4be6691b8494"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dias_prestado_intereses}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="437" y="1" width="60" height="20" uuid="e04ce30c-85ed-4f62-8e44-d39fac3e8be7"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{abonos_mes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="498" y="1" width="60" height="20" isRemoveLineWhenBlank="true" uuid="9a73e640-0248-4afc-a7e8-4b221c000598"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{cxc_valor_total}+$F{cxc_pagado}+$F{abonos_mes}-$F{valor_prestado_mes})-$F{abonos_mes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="556" y="1" width="16" height="20" uuid="5360063b-08ec-4799-935d-2d1e72791599"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{creditos_porcentaje}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="629" y="1" width="60" height="20" uuid="8ca3f8dc-0b98-4e37-85b0-1a476decb298"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_prestado_intereses}+$F{intereses}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="688" y="1" width="60" height="20" uuid="69802ff2-4f93-4cfa-a76f-a5f2c48b114c"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{cxc_valor_total}+$F{cxc_pagado}+$F{abonos_mes}-$F{valor_prestado_mes})-$F{abonos_mes}) + $F{valor_prestado_mes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="570" y="1" width="60" height="20" uuid="8ee667bf-c5f2-4967-915c-16945df65450"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{intereses}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement x="378" y="1" width="60" height="20" isRemoveLineWhenBlank="true" uuid="2f02f89f-fb9f-4cdd-9421-34982b473415"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_prestado_intereses}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="notas_debito" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bc14518a-2d81-4ec0-8457-4a8458411524">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="empresa_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="notas_debito_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     clientes.`id` AS clientes_id,
+     clientes.`nit` AS clientes_nit,
+     clientes.`nombre1` AS clientes_nombre1,
+     clientes.`nombre2` AS clientes_nombre2,
+     clientes.`apellido1` AS clientes_apellido1,
+     clientes.`apellido2` AS clientes_apellido2,
+     clientes.`foto` AS clientes_foto,
+     clientes.`url` AS clientes_url,
+     clientes.`razon_social` AS clientes_razon_social,
+     clientes.`direccion_casa` AS clientes_direccion_casa,
+     clientes.`direccion_oficina` AS clientes_direccion_oficina,
+     clientes.`telefono1` AS clientes_telefono1,
+     clientes.`telefono2` AS clientes_telefono2,
+     clientes.`sueldo` AS clientes_sueldo,
+     clientes.`otros_ingresos` AS clientes_otros_ingresos,
+     clientes.`eps` AS clientes_eps,
+     clientes.`casa` AS clientes_casa,
+     clientes.`vehiculos` AS clientes_vehiculos,
+     clientes.`celular` AS clientes_celular,
+     clientes.`departamentos_id` AS clientes_departamentos_id,
+     clientes.`municipios_id` AS clientes_municipios_id,
+     clientes.`activo` AS clientes_activo,
+     clientes.`correo` AS clientes_correo,
+     clientes.`web` AS clientes_web,
+     empresa.`id` AS empresa_id,
+     empresa.`nombre_corto` AS empresa_nombre_corto,
+     empresa.`nombre_empresa` AS empresa_nombre_empresa,
+     empresa.`nit` AS empresa_nit,
+     empresa.`direccion` AS empresa_direccion,
+     empresa.`logo` AS empresa_logo,
+     empresa.`regimen_id` AS empresa_regimen_id,
+     empresa.`telefonos` AS empresa_telefonos,
+     empresa.`celular` AS empresa_celular,
+     empresa.`web` AS empresa_web,
+     empresa.`correo` AS empresa_correo,
+     empresa.`activo` AS empresa_activo,
+     empresa.`kardex_id_default` AS empresa_kardex_id_default,
+     empresa.`tipo_costeo` AS empresa_tipo_costeo,
+     empresa.`valor_caja_defecto` AS empresa_valor_caja_defecto,
+     empresa.`cobro_tarifa` AS empresa_cobro_tarifa,
+     empresa.`porcentaje` AS empresa_porcentaje,
+     detalle_notas_debito.`id` AS detalle_notas_debito_id,
+     detalle_notas_debito.`notas_debito_id` AS detalle_notas_debito_notas_debito_id,
+     detalle_notas_debito.`codigo` AS detalle_notas_debito_codigo,
+     detalle_notas_debito.`valor` AS detalle_notas_debito_valor,
+     detalle_notas_debito.`vencimiento` AS detalle_notas_debito_vencimiento,
+     detalle_notas_debito.`anulado` AS detalle_notas_debito_anulado,
+     detalle_notas_debito.`multiplicar` AS detalle_notas_debito_multiplicar,
+     notas_debito.`id` AS notas_debito_id,
+     notas_debito.`prefijo` AS notas_debito_prefijo,
+     notas_debito.`consecutivo` AS notas_debito_consecutivo,
+     notas_debito.`tipo_documento_id` AS notas_debito_tipo_documento_id,
+     notas_debito.`empresa_id` AS notas_debito_empresa_id,
+     notas_debito.`clientes_id` AS notas_debito_clientes_id,
+     notas_debito.`creditos_id` AS notas_debito_creditos_id,
+     notas_debito.`fecha` AS notas_debito_fecha,
+     notas_debito.`fecha_act` AS notas_debito_fecha_act,
+     notas_debito.`hora` AS notas_debito_hora,
+     notas_debito.`hora_act` AS notas_debito_hora_act,
+     notas_debito.`observaciones` AS notas_debito_observaciones,
+     notas_debito.`anulado` AS notas_debito_anulado
+FROM
+     `empresa` empresa INNER JOIN `notas_debito` notas_debito ON empresa.`id` = notas_debito.`empresa_id`
+     INNER JOIN `clientes` clientes ON notas_debito.`clientes_id` = clientes.`id`
+     INNER JOIN `detalle_notas_debito` detalle_notas_debito ON notas_debito.`id` = detalle_notas_debito.`notas_debito_id`
+WHERE
+     notas_debito.id = $P{notas_debito_id}
+     and empresa.id = $P{empresa_id}
+GROUP BY
+     detalle_notas_debito.`vencimiento`]]>
+	</queryString>
+	<field name="clientes_id" class="java.lang.Integer"/>
+	<field name="clientes_nit" class="java.lang.String"/>
+	<field name="clientes_nombre1" class="java.lang.String"/>
+	<field name="clientes_nombre2" class="java.lang.String"/>
+	<field name="clientes_apellido1" class="java.lang.String"/>
+	<field name="clientes_apellido2" class="java.lang.String"/>
+	<field name="clientes_foto" class="java.lang.Object"/>
+	<field name="clientes_url" class="java.lang.String"/>
+	<field name="clientes_razon_social" class="java.lang.String"/>
+	<field name="clientes_direccion_casa" class="java.lang.String"/>
+	<field name="clientes_direccion_oficina" class="java.lang.String"/>
+	<field name="clientes_telefono1" class="java.lang.String"/>
+	<field name="clientes_telefono2" class="java.lang.String"/>
+	<field name="clientes_sueldo" class="java.lang.Double"/>
+	<field name="clientes_otros_ingresos" class="java.lang.Double"/>
+	<field name="clientes_eps" class="java.lang.String"/>
+	<field name="clientes_casa" class="java.lang.String"/>
+	<field name="clientes_vehiculos" class="java.lang.String"/>
+	<field name="clientes_celular" class="java.lang.String"/>
+	<field name="clientes_departamentos_id" class="java.lang.Integer"/>
+	<field name="clientes_municipios_id" class="java.lang.Long"/>
+	<field name="clientes_activo" class="java.lang.Boolean"/>
+	<field name="clientes_correo" class="java.lang.String"/>
+	<field name="clientes_web" class="java.lang.String"/>
+	<field name="empresa_id" class="java.lang.Integer"/>
+	<field name="empresa_nombre_corto" class="java.lang.String"/>
+	<field name="empresa_nombre_empresa" class="java.lang.String"/>
+	<field name="empresa_nit" class="java.lang.String"/>
+	<field name="empresa_direccion" class="java.lang.String"/>
+	<field name="empresa_logo" class="java.lang.String"/>
+	<field name="empresa_regimen_id" class="java.lang.Boolean"/>
+	<field name="empresa_telefonos" class="java.lang.String"/>
+	<field name="empresa_celular" class="java.lang.String"/>
+	<field name="empresa_web" class="java.lang.String"/>
+	<field name="empresa_correo" class="java.lang.String"/>
+	<field name="empresa_activo" class="java.lang.Boolean"/>
+	<field name="empresa_kardex_id_default" class="java.lang.Integer"/>
+	<field name="empresa_tipo_costeo" class="java.lang.String"/>
+	<field name="empresa_valor_caja_defecto" class="java.lang.Double"/>
+	<field name="empresa_cobro_tarifa" class="java.lang.String"/>
+	<field name="empresa_porcentaje" class="java.lang.Integer"/>
+	<field name="detalle_notas_debito_id" class="java.lang.Long"/>
+	<field name="detalle_notas_debito_notas_debito_id" class="java.lang.Long"/>
+	<field name="detalle_notas_debito_codigo" class="java.lang.String"/>
+	<field name="detalle_notas_debito_valor" class="java.lang.Double"/>
+	<field name="detalle_notas_debito_vencimiento" class="java.sql.Date"/>
+	<field name="detalle_notas_debito_anulado" class="java.lang.Integer"/>
+	<field name="detalle_notas_debito_multiplicar" class="java.lang.Integer"/>
+	<field name="notas_debito_id" class="java.lang.Long"/>
+	<field name="notas_debito_prefijo" class="java.lang.String"/>
+	<field name="notas_debito_consecutivo" class="java.lang.Long"/>
+	<field name="notas_debito_tipo_documento_id" class="java.lang.Long"/>
+	<field name="notas_debito_empresa_id" class="java.lang.Integer"/>
+	<field name="notas_debito_clientes_id" class="java.lang.Integer"/>
+	<field name="notas_debito_creditos_id" class="java.lang.Long"/>
+	<field name="notas_debito_fecha" class="java.sql.Date"/>
+	<field name="notas_debito_fecha_act" class="java.sql.Timestamp"/>
+	<field name="notas_debito_hora" class="java.sql.Time"/>
+	<field name="notas_debito_hora_act" class="java.sql.Time"/>
+	<field name="notas_debito_observaciones" class="java.lang.String"/>
+	<field name="notas_debito_anulado" class="java.lang.Boolean"/>
+	<variable name="valor_total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{detalle_notas_debito_valor}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="total_pagina" class="java.lang.Float" resetType="Page" incrementType="Report" calculation="Sum"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="de295a0d-8c6e-4f57-9364-bf1dca8cd5ef" x="175" y="2" width="199" height="18"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nota Debito]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="30aed20f-5d31-4ef5-9881-9b1110e23e8e" x="151" y="20" width="254" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_nombre_empresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="18467e64-e066-4e4c-9ffb-06d541e7c380" x="403" y="2" width="105" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ecf84b9b-7d30-4efd-a1ad-38023b571891" x="508" y="2" width="64" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4836c59f-2eff-41a8-8e75-863c73abb5de" x="151" y="39" width="254" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bd965da9-ec28-4737-8769-c1bb5030cd2c" x="151" y="58" width="254" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_telefonos}.toString()+ " " + $F{empresa_celular}.toString() + " " + $F{empresa_web}.toString()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement uuid="bb87e849-8e27-4eb6-9dbd-89ac7be749bb" x="405" y="22" width="167" height="17"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement uuid="86c47855-811b-4826-81bf-5a2d580d6ade" x="389" y="17" width="183" height="16"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{notas_debito_prefijo}+$F{notas_debito_consecutivo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8855e6a0-01a0-4a94-988a-70bf68d20fda" x="389" y="1" width="183" height="16"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3317256a-509f-4d8c-8b07-efa649ee9ec5" x="1" y="1" width="101" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="98fa1c01-3615-4176-a08d-55fb2bc70927" x="101" y="1" width="289" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_razon_social}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement uuid="bb87e849-8e27-4eb6-9dbd-89ac7be749bb" x="100" y="16" width="214" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{notas_debito_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ebcb3a39-1f3e-4985-a265-848bbd47c828" x="0" y="16" width="100" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA PAGO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="cfad0d57-3fc6-4955-91de-704b322a34ac" x="3" y="10" width="127" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSECUTIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3acc9270-c14b-40d1-bf46-c7cb89720598" x="131" y="10" width="298" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2f9f7b7b-99cf-4b00-9757-0a20b558e439" x="428" y="10" width="144" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4aa5d1d7-3f51-42f2-a10b-7a4a2c5ed050" x="0" y="0" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_notas_debito_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b1565b4c-7520-4c8a-9a0c-30e6a8163403" x="130" y="0" width="299" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Prestamo adicional por valor de "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0f979149-d590-40b5-b4fc-391deb57cfa9" x="428" y="0" width="144" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_notas_debito_valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="27" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement uuid="3e6e01c0-ca75-4b48-a725-6130611c5119" x="362" y="0" width="210" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valor_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="58105627-51d1-484a-94ac-f985a7a474ac" x="132" y="1" width="231" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL RECIBO DE CAJA]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

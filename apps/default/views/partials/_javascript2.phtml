@@ -1,0 +1,137 @@
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+	/*cuadros*/
+	
+<?php 
+$cuadros = new CuadroDialogo(); 
+foreach($cuadros->find() as $cuadros): 
+?>
+	jQuery("body").append('<div id="dialogo_<?php echo $cuadros->div_id; ?>"></div>');
+	
+	jQuery("#dialogo_<?php echo $cuadros->div_id; ?>").dialog(
+			{ autoOpen: false 
+			 <?php if($cuadros->ancho!=0){ 
+					echo ", width: $cuadros->ancho"; 
+					}
+				  if($cuadros->alto!=0){ 
+				  		echo ", height: $cuadros->alto"; 
+					} ?>
+				,title: " <?php echo $cuadros->tittle; ?>" 
+				,modal: true
+				,buttons: {
+					"Cerrar": function() {
+						jQuery( this ).dialog( "close" );
+						}
+				}
+	 });
+	 
+	<?php if($cuadros->controlador!=''){ ?>
+	
+	 if( jQuery( "#buscar_<?php echo $cuadros->div_id; ?>"     ) ){     
+	       
+	  jQuery( "#buscar_<?php echo $cuadros->div_id; ?>"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });  
+			if(jQuery("#buscar_<?php echo $cuadros->div_id; ?>")){ 
+				jQuery("#buscar_<?php echo $cuadros->div_id; ?>").click(function(){ 
+						sw=0;
+						opc = "<?php echo $cuadros->div_id; ?>";
+						valor = "0";
+						
+						<?php if( $cuadros->opcion_validar != "" ){ ?>
+						if(jQuery("#<?php echo $cuadros->opcion_validar;  ?>").val()==''){ 
+							sw=1;
+							
+						}else{
+							opc   = "<?php echo $cuadros->opcion_validar;  ?>";
+							valor = jQuery("#<?php echo $cuadros->opcion_validar;  ?>").val();
+						}
+						
+						<?php } ?> 
+						
+						if(sw==0){
+							buscar_dialogo("<?php echo $cuadros->controlador; ?>",opc,valor); 
+						}else{ 
+							jQuery("#dialogo_mensajes").html(""); 
+							jQuery("#dialogo_mensajes").html("<?php echo $cuadros->mensaje_error; ?>"); 
+							jQuery("#dialogo_mensajes").dialog("open");	
+						}
+				}); 
+						
+				<?php //if(Router::getAction()!='agregar'){ ?>
+					 if( jQuery("#<?php echo $cuadros->controlador; ?>_id").length ){ 
+						
+							 if( jQuery("#<?php echo $cuadros->controlador; ?>_id").val()!='' ){
+								 validar('<?php echo $cuadros->controlador; ?>','<?php echo $cuadros->opcion; ?>',jQuery("#<?php echo $cuadros->valor; ?>").val());
+							 }
+						
+					 }
+			 	 <?php //} ?>	
+		
+				 jQuery("#<?php echo $cuadros->div_id; ?>_id").blur(function() {
+					 if(jQuery("#<?php echo $cuadros->valor; ?>").val()!=''){
+					 	validar('<?php echo $cuadros->controlador; ?>','<?php echo $cuadros->opcion; ?>',jQuery("#<?php echo $cuadros->valor; ?>").val());
+					 }else{
+						 	jQuery("#dialogo_mensajes").html(""); 
+							/*jQuery("#dialogo_mensajes").html("Ojo Escribar un Valor"); 
+							jQuery("#dialogo_mensajes").dialog("open");	*/
+						 }
+				 }); 
+
+			} 
+		
+	 }  
+	
+<?php 
+	}
+endforeach;
+
+?>
+	
+		
+	/*desabilita progressbar*/
+	jQuery( "#progressbar" ).progressbar({ disable: true });
+	jQuery( "#progressbarWrapper" ).resizable();
+
+	/*Date Picker utilizados en el sistema*/
+	if( jQuery( "#fecha"      ) ){ jQuery( "#fecha"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+	if( jQuery( "#desde"      ) ){ jQuery( "#desde"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+	if( jQuery( "#hasta"      ) ){ jQuery( "#hasta"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+		
+	/*Botones Utilizados en el sistema*/
+	if( jQuery( ".boton"  ) ){ jQuery( ".boton"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+	/*Proyecto investigacion dialogo objetivo_socioeconomico*/
+	
+	if( jQuery( "#buscar"     ) ){ jQuery( "#buscar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#enviar"     ) ){ jQuery( "#enviar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#guardar"    ) ){ jQuery( "#guardar"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#cancelar"   ) ){ jQuery( "#cancelar"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+	if( jQuery( "#generar"        ) ){ jQuery( "#generar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#copiar"         ) ){ jQuery( "#copiar"         ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	if( jQuery( "#camara"        ) ){ jQuery( "#camara"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }	
+	if( jQuery( "#huella"        ) ){ jQuery( "#huella"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }	
+	if( jQuery( "#inicio"         ) ){ jQuery( "#inicio"         ).button({ icons: {primary:'ui-icon ui-icon-person' ,secondary:'ui-icon ui-icon-power'}       });   }
+
+
+	if( jQuery( "#empresa"         ) ){ jQuery( "#empresa"         ).chosen({disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#tipo_documento_id2"         ) ){ jQuery( "#tipo_documento_id2"         ).chosen({disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#activo"         ) ){ jQuery( "#activo"         ).chosen({disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+		
+		
+		/*Proyecto de Investigacion Roles*/
+		if(jQuery("#buscar_roles")){
+				jQuery("#buscar_roles").click(function(){
+						buscar_dialogo("roles_de_usuario","true","true");
+				});
+		}
+
+	
+		
+
+		
+
+});
+
+</script>

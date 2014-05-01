@@ -1,0 +1,168 @@
+<h4>FORMULARIO AGREGAR SOLICITUD</h4>
+
+<?php $admin_id=Session::get('usuarios_id'); ?>
+
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td  align="right">CLIENTES</td>
+    <td  align="left">
+    <?php echo Tag::hiddenField("id"); ?> 
+	<?php echo Tag::hiddenField("tipo_documento_id","value: $tipo_documento"); ?> 
+    <?php echo Tag::hiddenField("empresa_id","value: ".Session::get("id_empresa")); ?> 
+    <?php echo Tag::hiddenField("prefijo","value: $prefijo"); ?> 
+	<?php echo Tag::textFieldExt("clientes", "size: 20","maxlength: 20","placeholder: INGRESE CLIENTE") ?><?php //echo Tag::button('Validar Clientes', 'id: validar_clientes', 'name: validar_clientes',"onClick: validar_cliente()") ?>
+    </td>
+    <td align="right">&nbsp;</td>
+  </tr>
+   <tr>
+    <td  align="right">DEUDOR 1</td>
+    <td  align="left"><?php echo Tag::textFieldExt("deudores", "size: 20","maxlength: 20","placeholder: INGRESE DEUDOR") ?><?php //echo Tag::button('Validar Deudores', 'id: validar_deudores', 'name: validar_deudores',"onClick: validar_deudor()") ?>
+    </td>
+    <td align="right">&nbsp;</td>
+  </tr>
+  <tr>
+     <td  align="right" valign="middle">DEUDOR 2</td>
+     <td align="left" valign="middle"><?php echo Tag::textFieldExt("deudores2", "size: 20","maxlength: 20","placeholder: INGRESE DEUDOR") ?><?php //echo Tag::button('Validar Deudores', 'id: validar_deudores', 'name: validar_deudores',"onClick: validar_deudor2()") ?></td>
+     <td align="left" valign="middle">&nbsp;</td>
+  </tr>
+  <tr>
+     <td  align="right" valign="middle">DEUDOR 3</td>
+     <td align="left" valign="middle"><?php echo Tag::textFieldExt("deudores3", "size: 20","maxlength: 20","placeholder: INGRESE DEUDOR") ?><?php //echo Tag::button('Validar Deudores', 'id: validar_deudores', 'name: validar_deudores',"onClick: validar_deudor('3')") ?></td>
+     <td align="left" valign="middle">&nbsp;</td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">FECHA SOLICITUD</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::textField("fecha", "size: 30","maxlength: 20","placeholder: INGRESE FECHA") ?>
+    </td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">OBSERVACI&Oacute;N</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::textArea("observacion", "cols: 27","rows: 30","placeholder: INGRESE OBSERVACI&Oacute;N") ?><?php echo Tag::hiddenField("admin_id", "size: 30","maxlength: 20","value: $admin_id") ?></td>
+    </tr>
+  <tr>
+    <td  align="right" valign="middle">ESTADO SOLICITUD</td>
+    <td  colspan="2" align="left" valign="middle"><?php $estado_solicitud=new EstadoSolicitud(); 
+		echo Tag::select('estado_solicitud_id',$estado_solicitud->find('order: id'), 'using: id,estado_solicitud', 'useDummy: yes') ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">PORCENTAJE</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::NumericField("porcentaje", "size: 4","maxlength: 2","placeholder: INTERES") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">VALOR A PRESTAR</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::NumericField("capital", "size: 30","maxlength: 20","placeholder: VALOR A PRESTAR") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">N&Uacute;MERO CUOTAS</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::NumericField("numero_cuotas", "size: 30","maxlength: 20","placeholder: INGRESE N&Uacute;MERO CUOTAS","onBlur: valor_credito2()") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">VALOR CUOTA</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::NumericField("valor_cuota", "size: 30","maxlength: 20","placeholder: INGRESE VALOR CUOTA") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">TOTAL CR&Eacute;DITO</td>
+    <td  colspan="2" align="left" valign="middle"><?php echo Tag::NumericField("total_credito", "size: 30","maxlength: 20","placeholder: INGRESE TOTAL CR&Eacute;DITO") ?></td>
+  </tr>
+  <tr>
+    <td colspan="3"  align="right" valign="middle"><div id="loader" style="display:none" align="center"><?php Flash::success("Calculando valor total del crédito"); ?></div>
+    <div id="error" style="display:none" align="center"><?php Flash::error("Ingrese el número de cuotas y/o valor de la cuota"); ?></div></td>
+  </tr>
+ 	 <tr>
+         <td colspan="4" align="center" >
+                <button type="submit" id="guardar" name="guardar">Guardar</button>
+                <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+         </td>
+    </tr> 
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+<br />
+<script type="text/javascript">
+
+function valor_credito2(){
+
+var porcentaje=jQuery("#porcentaje").val();
+var capital=jQuery("#capital").val();
+var numero_cuotas=jQuery("#numero_cuotas").val();
+var valor_cuota=jQuery("#valor_cuota").val();
+
+var interes = 0;
+var interes2 = 0;
+	
+	interes = porcentaje/100;
+	interes2 = interes + 1;  
+	interes2 = Math.pow(interes2,-numero_cuotas); 
+	CuotaMensual = (interes * capital) / (1 - interes2);  
+	CuotaMensual = Math.round(CuotaMensual/1000);
+	CuotaMensual *=1000;
+	jQuery("#valor_cuota").val(CuotaMensual);
+}
+
+jQuery("#valor_cuota").blur(function() {
+    jQuery("#total_credito").val(jQuery("#valor_cuota").val()*jQuery("#numero_cuotas").val());
+});
+	
+	jQuery("#total_credito").attr("readOnly","ReadOnly");
+	jQuery("#estado_solicitud_id").val("-1");
+	jQuery("#estado_solicitud_id").attr("readOnly","readOnly");
+	
+	
+	/*jQuery(function() {
+	
+	jQuery( "#datepicker" ).datepicker();
+	
+	jQuery.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '&#x3c;Ant',
+                nextText: 'Sig&#x3e;',
+                currentText: 'Hoy',
+                monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+                monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+                'Jul','Ago','Sep','Oct','Nov','Dic'],
+				
+				dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
+                dayNamesShort: ['Dom','Lun','Mar','Mi&eacute;','Juv','Vie','S&aacute;b'],
+                dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+                weekHeader: 'Sm',
+                dateFormat: 'dd/mm/yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''};
+	
+	 jQuery.datepicker.setDefaults(jQuery.datepicker.regional['es']);
+	});
+	*/
+	
+	jQuery(document).ready(function(e) {
+			
+		<?php 
+			
+			$entidad = new Solicitud();
+			
+			foreach( $entidad->getPrimaryKeyAttributes() as $filas):
+				echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
+			endforeach;	
+			
+			//foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
+					foreach( $entidad->getNotNullAttributes() as $filas2):
+						//if($filas==$filas2){ 
+						echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n";
+						// break;} 
+					endforeach;	
+					
+			//endforeach;	
+			
+		?> 	
+	
+    });
+	
+	
+	
+</script>

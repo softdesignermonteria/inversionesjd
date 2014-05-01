@@ -1,0 +1,28 @@
+<?php echo view::getContent(); ?>
+
+<table>
+	<tr>
+    	<td>Saldo Credito</td>
+        <td><?php echo Tag::numericText("tmpint_saldo_credito","size: 50","readonly: readonly");?></td>
+    </tr>
+    
+    <tr>
+    	<td>Vencido Desde</td>
+        <td><?php echo Tag::numericText("tmpint_fecha","size: 20","readonly: readonly");?></td>
+    </tr>
+    
+    <tr>
+    	<td>Fecha</td>
+        <td><?php echo Tag::numericText("tmpint_vencimiento","size: 20","readonly: readonly");?></td>
+    </tr>
+    
+     <tr>
+    	<td>interes</td>
+        <td><?php echo Tag::numericText("tmpint_valor","size: 40");?></td>
+    </tr>
+    
+    <tr>
+    	<td colspan="2"><button type="button" id="calcular_int" name="calcula_int">Calcular</button></td>
+    </tr>
+
+</table>

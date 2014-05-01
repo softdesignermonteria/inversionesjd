@@ -1,0 +1,16 @@
+<h4>MEN&Uacute; OPCIONES</h4>
+<table width="407" border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="105">Agregar</td>
+    <td width="108">Listar Deudores</td>
+    <td width="89">Modificar</td>
+    <td width="87">Eliminar</td>
+  </tr>
+  <tr>
+    <td><?php echo Tag::linkTo(Router::getController()."/agregar",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td><?php echo Tag::linkTo(Router::getController()."/buscar",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td><?php echo Tag::linkTo(Router::getController()."/buscar/?opcion=modificar",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td><?php echo Tag::linkTo(Router::getController()."/buscar/?opcion=eliminar",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+  </tr>
+</table>
+
