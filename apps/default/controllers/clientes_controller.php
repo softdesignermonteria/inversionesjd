@@ -49,112 +49,82 @@
 			//primero instanciamos clase clientes
 			$this->setResponse('view');
 			$cli  = new Clientes();
-			$hue  = new Somhue();
 			$emp  = new Empresa();
 			//cargamos el objeto mediantes los metodos setters
 			
 			$emp=$this->Empresa->findFirst("id='".Session::get('id_empresa')."'");
 			
+			/*Almaceno en una variable el id del cliente, para luego compararlo con la referencia*/
+			$ref=$this->Clientes->findFirst("nit = '".$this->getPostParam("nit2")."'");
+						
 			$sw = 0;
-			if($this->Clientes->count("nit = '".$this->getPostParam("nit")."'")>0){
-				Flash::error("DOCUMENTO DE IDENTIFICACION (NIT/CEDULA) YA EXISTE EN NUESTRA BASE DE DATOS");
+			$sw1= 0;
+								
+			if($this->Clientes->count("nit = '".$this->getPostParam("nit2")."'")>0){
+				
 				$sw=1;
 			}
 			
-			if($emp->huella=='0'){
 			
-				if($this->Somhue->count("nit = '".$this->getPostParam("nit")."'")==0){
-					$sw=2;
-				 }
-				 
+			/*Valido que la referencia no sea el mismo cliente*/
+			if($ref->id!=$this->getPostParam("clientes_id")){
+				
+				$sw1=0;
+				
+				
+			}else{
+				
+				$sw1=1;
+				
 			}
 			
+			if($this->Clientes->count("id = '".$this->getPostParam("clientes_id")."'")>0){
+				
+				$sw2=0;
+				
+			}else{
+				
+				$sw2=1;
+			}
 			
 			if($sw==1){
 				
-				Flash::error("DOCUMENTO DE IDENTIFICACION (NIT/CEDULA) YA EXISTE EN NUESTRA BASE DE DATOS");
-			
-			//sw para restringuir al usuario crear un cliente hasta que no capture la huella	
-			}elseif($sw==2){
+				Flash::error("Cédula ya existe en nuestro sistema.");
 				
-				Flash::error("DEBE CAPTURAR LA HUELLA ANTES DE CREAR AL CLIENTE");
-				
-			}else{
-			
-			//$imagen=explode("upload/",$_REQUEST['imagen']);
+			}
 					
-			if($sw==0){
-				$sw=3;
+			if($sw1==1){
+				
+				Flash::error("Por favor cambie de referencia, está apuntando al mismo cliente.");
+				
+			}
+			
+			if($sw2==1){
+				
+				Flash::error("La referencia ingresada no existe en nuestro sistema.");
+				
+			}
+			
+			//Flash::error($sw1);
+								
+			if(($sw==0)&&($sw1==0)&&($sw2==0)){
+			
 				$cli->id = '0';
-				$cli->nit = $this->getPostParam("nit");
-				$cli->nombre1 = $this->getPostParam("nombre1");
-				$cli->nombre2 = $this->getPostParam("nombre2");
-				$cli->apellido1 = $this->getPostParam("apellido1");
-				$cli->apellido2 = $this->getPostParam("apellido2");
-				//$cli->foto = $imagen[1];
-				$cli->razon_social = $this->getPostParam("razon_social");
-				$cli->direccion_casa = $this->getPostParam("direccion_casa");
-				$cli->direccion_oficina = $this->getPostParam("direccion_oficina");
-				$cli->telefono1 = $this->getPostParam("telefono1");
-				$cli->telefono2 = $this->getPostParam("telefono2");
-				$cli->sueldo = $this->getPostParam("sueldo");
-				$cli->otros_ingresos = $this->getPostParam("otros_ingresos");
-				$cli->eps = $this->getPostParam("eps");
-				$cli->casa = $this->getPostParam("casa");
-				$cli->vehiculos = $this->getPostParam("vehiculos");
+				$cli->nit = $this->getPostParam("nit2");
+				$cli->nombre1 = $this->getPostParam("nombre12");
+				$cli->nombre2 = $this->getPostParam("nombre22");
+				$cli->apellido1 = $this->getPostParam("apellido12");
+				$cli->apellido2 = $this->getPostParam("apellido22");
+				$cli->razon_social = $this->getPostParam("razon_social2");
+				$cli->direccion = $this->getPostParam("direccion");
+				$cli->telefono = $this->getPostParam("telefono");
 				$cli->celular = $this->getPostParam("celular");
+				$cli->referencia_id = $this->getPostParam("clientes_id");
 				$cli->departamentos_id = $this->getPostParam("departamentos_id");
 				$cli->municipios_id = $this->getPostParam("municipios_id");				
-				//$cli->activo = $this->getPostParam("activo");
-				$cli->correo = $this->getPostParam("email");
-				$cli->web = $this->getPostParam("web");
-				$cli->activo = 0;
-				
-				if($emp->foto=='0'){
 					
-					$detalles_item = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_POST["foto"])));
-					Flash::notice($detalles_item);
-								
-					if(json_decode($detalles_item)){
-						
-						Flash::success("Json Correcto");
-						$fotos_url = json_decode($detalles_item);
-						$cli->url = $fotos_url->filename;
-						Flash::notice($fotos_url->filename);
-						$tipo = explode(".",$cli->url);
-						//este es el archivo temporal
-						$imagen_temporal  = $cli->url;
-						Flash::notice($imagen_temporal);
-						//este es el tipo de archivo
-						$tipo = $tipo[1];
-						Flash::notice($tipo);
-						//leer el archivo temporal en binario
-						$fp     = fopen($imagen_temporal, 'rb');
-						$data = fread($fp, filesize($imagen_temporal));
-						$data = base64_encode($data);
-						fclose($fp); 
-						
-						//print $data;
-						
-						//escapar los caracteres
-						//$data = mysql_real_escape_string($data);
-						//print("Bla".$data);
-						$cli->foto = $data;
-						
-					}else{
-						echo $deshabilitar;
-						Flash::error("Error json");
-						$sw=4;
-						//$msg_error.=Flash::error("Error json"); 
-						//$transaction->rollback();
-						
-					}
-					
-				}
-					
-				if($sw==3){
-					
-					if($cli->save()){
+	
+				if($cli->save()){
 						Flash::success("Se insertó correctamente el registro");
 						//unlink("public/img/upload/".$cli->foto);
 						echo "<script>quitar_mensajes();</script>";
@@ -164,17 +134,10 @@
 						
 						foreach($cli->getMessages() as $message){
 								  Flash::error($message->getMessage());
-							}
-					}
-				}else{
-					    
-						Flash::error("Error: Debe tomar la foto");	
-					
-				}
-			
-			  }//fin  si todo bien
-			}
-			
+						}
+					 }
+			     }
+			 		   
 	    }
 		
 		public function find_detalle_buscarAction(){
@@ -216,65 +179,26 @@
 				$cli = $this->Clientes->findFirst(" id = '$id_clientes' ");
 				$dpto= $this->Departamentos->findFirst("id = '$cli->departamentos_id'");
 				$mpio= $this->Municipios->findFirst("id = '$cli->municipios_id'");
-				$nit_huella= $this->Somhue->findFirst("nit = '$cli->nit'");
-				
-				if($nit_huella==""){
-				
+							
 				Tag::displayTo("id",$cli->id);
-				Tag::displayTo("nit",$cli->nit);
-				Tag::displayTo("nit_huella",$cli->nit);
-				Tag::displayTo("nombre1",$cli->nombre1);
-				Tag::displayTo("nombre2",$cli->nombre2);
-				Tag::displayTo("apellido1",$cli->apellido1);
-				Tag::displayTo("apellido2",$cli->apellido2);
-				Tag::displayTo("razon_social",$cli->razon_social);
-				Tag::displayTo("direccion_casa",$cli->direccion_casa);
-				Tag::displayTo("direccion_oficina",$cli->direccion_oficina);
-				Tag::displayTo("telefono1",$cli->telefono1);
-				Tag::displayTo("telefono2",$cli->telefono2);
-				Tag::displayTo("sueldo",$cli->sueldo);
-				Tag::displayTo("otros_ingresos",$cli->otros_ingresos);
-				Tag::displayTo("eps",$cli->eps);
-				Tag::displayTo("casa",$cli->casa);
-				Tag::displayTo("vehiculos",$cli->vehiculos);
+				Tag::displayTo("nit2",$cli->nit);
+				Tag::displayTo("nombre12",$cli->nombre1);
+				Tag::displayTo("nombre22",$cli->nombre2);
+				Tag::displayTo("apellido12",$cli->apellido1);
+				Tag::displayTo("apellido22",$cli->apellido2);
+				Tag::displayTo("razon_social2",$cli->razon_social);
+				Tag::displayTo("direccion",$cli->direccion);
+				Tag::displayTo("telefono",$cli->telefono);
 				Tag::displayTo("celular",$cli->celular);
+				Tag::displayTo("clientes",$cli->referencia_id);
 				Tag::displayTo("departamentos",$cli->departamentos_id);
 				Tag::displayTo("departamento",$dpto->departamento);
 				Tag::displayTo("municipios",$cli->municipios_id);
 				Tag::displayTo("municipio",$mpio->municipio);
-				Tag::displayTo("email",$cli->correo);
-				Tag::displayTo("web",$cli->web);
 				
-				}else{
-					
-				Tag::displayTo("id",$cli->id);
-				Tag::displayTo("nit",$cli->nit);
-				Tag::displayTo("nit_huella",$nit_huella->nit);
-				Tag::displayTo("nombre1",$cli->nombre1);
-				Tag::displayTo("nombre2",$cli->nombre2);
-				Tag::displayTo("apellido1",$cli->apellido1);
-				Tag::displayTo("apellido2",$cli->apellido2);
-				Tag::displayTo("razon_social",$cli->razon_social);
-				Tag::displayTo("direccion_casa",$cli->direccion_casa);
-				Tag::displayTo("direccion_oficina",$cli->direccion_oficina);
-				Tag::displayTo("telefono1",$cli->telefono1);
-				Tag::displayTo("telefono2",$cli->telefono2);
-				Tag::displayTo("sueldo",$cli->sueldo);
-				Tag::displayTo("otros_ingresos",$cli->otros_ingresos);
-				Tag::displayTo("eps",$cli->eps);
-				Tag::displayTo("casa",$cli->casa);
-				Tag::displayTo("vehiculos",$cli->vehiculos);
-				Tag::displayTo("celular",$cli->celular);
-				Tag::displayTo("departamentos",$cli->departamentos_id);
-				Tag::displayTo("departamento",$dpto->departamento);
-				Tag::displayTo("municipios",$cli->municipios_id);
-				Tag::displayTo("municipio",$mpio->municipio);
-				Tag::displayTo("email",$cli->correo);
-				Tag::displayTo("web",$cli->web);
 				
-				}
 			}else{
-					Flash::error("Parametro Incorrecto Volver a Buscar Ies para modificar.");
+					Flash::error("Parametro Incorrecto Volver a Buscar el cliente para modificar.");
 				}
 		}
 		
@@ -292,30 +216,23 @@
 				$mpio= $this->Municipios->findFirst("id = '$cli->municipios_id'");
 				
 				Tag::displayTo("id",$cli->id);
-				Tag::displayTo("nit",$cli->nit);
-				Tag::displayTo("nombre1",$cli->nombre1);
-				Tag::displayTo("nombre2",$cli->nombre2);
-				Tag::displayTo("apellido1",$cli->apellido1);
-				Tag::displayTo("apellido2",$cli->apellido2);
-				Tag::displayTo("razon_social",$cli->razon_social);
-				Tag::displayTo("direccion_casa",$cli->direccion_casa);
-				Tag::displayTo("direccion_oficina",$cli->direccion_oficina);
-				Tag::displayTo("telefono1",$cli->telefono1);
-				Tag::displayTo("telefono2",$cli->telefono2);
-				Tag::displayTo("sueldo",$cli->sueldo);
-				Tag::displayTo("otros_ingresos",$cli->otros_ingresos);
-				Tag::displayTo("eps",$cli->eps);
-				Tag::displayTo("casa",$cli->casa);
-				Tag::displayTo("vehiculos",$cli->vehiculos);
+				Tag::displayTo("nit2",$cli->nit);
+				Tag::displayTo("nombre12",$cli->nombre1);
+				Tag::displayTo("nombre22",$cli->nombre2);
+				Tag::displayTo("apellido12",$cli->apellido1);
+				Tag::displayTo("apellido22",$cli->apellido2);
+				Tag::displayTo("razon_social2",$cli->razon_social);
+				Tag::displayTo("direccion",$cli->direccion);
+				Tag::displayTo("telefono",$cli->telefono);
 				Tag::displayTo("celular",$cli->celular);
+				Tag::displayTo("clientes",$cli->referencia_id);
 				Tag::displayTo("departamentos",$cli->departamentos_id);
 				Tag::displayTo("departamento",$dpto->departamento);
 				Tag::displayTo("municipios",$cli->municipios_id);
 				Tag::displayTo("municipio",$mpio->municipio);
-				Tag::displayTo("email",$cli->correo);
 				
 			}else{
-					Flash::error("Parametro Incorrecto Volver a Buscar ".strtoupper(Router::getController())." para modificar.");
+					Flash::error("Parametro incorrecto, vuelva a buscar ".strtoupper(Router::getController())." para modificarlo.");
 				}
 		}
 		
@@ -329,14 +246,14 @@
 				if($cli->delete(" id = '".$_REQUEST["id"]."' ")){
 					
 					Flash::success(strtoupper(Router::getController())." Eliminada Satisfactoriamente");
-					echo "<script>quitar_mensajes();</script>";
+					echo "<script>redireccionar_action('clientes/buscar/?opcion=eliminar');";
 	
 				}else{
 				
 					Flash::error("Error: No se pudo Eliminar .");	
 					
 					foreach($cli->getMessages() as $message){
-							  Flash::error("Error Eliminando Ies ".$message->getMessage());
+							  Flash::error("Error Eliminando Clientes ".$message->getMessage());
 					}	  
 					
 				}
@@ -355,203 +272,98 @@
 			//cargamos el objeto mediantes los metodos setters
 			$emp=$this->Empresa->findFirst("id='".Session::get('id_empresa')."'");
 			$sw=0;
+			$sw1=0;
+			$sw2=0;
+		
+			//cargamos el objeto mediantes los metodos setters
 			
+			$emp=$this->Empresa->findFirst("id='".Session::get('id_empresa')."'");
 			
-			if($emp->huella=='0'){
+			/*Almaceno en una variable el id del cliente, para luego compararlo con la referencia*/
+			$ref=$this->Clientes->findFirst("nit = '".$this->getPostParam("nit2")."'");
+								
+			if(($sw==1)&&($sw1==1)&&($sw2==1)){
 				
-				if($this->Somhue->count(" nit = '".$_REQUEST["nit_huella"]."' ")==0){
-					
-				$sw=5;			
-														
-				}
+				Flash::error("Cédula ya existe en nuestro sistema.");
+				
+			}else{
+			
+			
+			/*Valido que la referencia no sea el mismo cliente*/
+			if($ref->id!=$this->getPostParam("clientes_id")){
+				
+				$sw1=0;
+				
+				
+			}else{
+				
+				$sw1=1;
 				
 			}
 			
-			if($sw==5){
+			if($this->Clientes->count("id = '".$this->getPostParam("clientes_id")."'")>0){
 				
-				Flash::error('Error: Debe crear la huella, es de caracter obligatorio');
+				$sw2=0;
 				
+			}else{
+				
+				$sw2=1;
 			}
 			
 			if($sw==1){
 				
-				Flash::error("Error: Clientes ya existe!!!");
-			
-			}else{
+				Flash::error("Cédula ya existe en nuestro sistema.");
 				
-				if($sw==0){
-						$sw=3;
-						//verificamos si el campo foto y huella no están vacios, esto con el objetivo de que
-						//el campo imagen no se sobrescriba con un dato vacio
-						if(($this->getPostParam("foto")!="")){
+			}
 					
-						$cli = $this->Clientes->findFirst(" id = '".$_REQUEST["id"]."' ");
-												
-						$cli->nit = $this->getPostParam("nit");
-						$cli->nombre1 = $this->getPostParam("nombre1");
-						$cli->nombre2 = $this->getPostParam("nombre2");
-						$cli->apellido1 = $this->getPostParam("apellido1");
-						$cli->apellido2 = $this->getPostParam("apellido2");
-						$cli->razon_social = $this->getPostParam("razon_social");
-						$cli->direccion_casa = $this->getPostParam("direccion_casa");
-						$cli->direccion_oficina = $this->getPostParam("direccion_oficina");
-						$cli->telefono1 = $this->getPostParam("telefono1");
-						$cli->telefono2 = $this->getPostParam("telefono2");
-						$cli->sueldo = $this->getPostParam("sueldo");
-						$cli->otros_ingresos = $this->getPostParam("otros_ingresos");
-						$cli->eps = $this->getPostParam("eps");
-						$cli->casa = $this->getPostParam("casa");
-						$cli->vehiculos = $this->getPostParam("vehiculos");
-						$cli->celular = $this->getPostParam("celular");
-						$cli->departamentos_id = $this->getPostParam("departamentos_id");
-						$cli->municipios_id = $this->getPostParam("municipios_id");
-						$cli->correo = $this->getPostParam("email");
-						$cli->web = $this->getPostParam("web");
-						$cli->activo = 0;
-																
-						$detalles_item = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_POST["foto"])));
-						Flash::notice($detalles_item);
-									
-						if(json_decode($detalles_item)){
-							
-							Flash::success("Json Correcto");
-							$fotos_url = json_decode($detalles_item);
-							$cli->url = $fotos_url->filename;
-							Flash::notice($fotos_url->filename);
-							$tipo = explode(".",$cli->url);
-							//este es el archivo temporal
-							$imagen_temporal  = $cli->url;
-							Flash::notice($imagen_temporal);
-							//este es el tipo de archivo
-							$tipo = $tipo[1];
-							Flash::notice($tipo);
-							//leer el archivo temporal en binario
-							$fp   = fopen($imagen_temporal, 'rb');
-							$data = fread($fp, filesize($imagen_temporal));
-							$data = base64_encode($data);
-							fclose($fp); 
-							//Se codifica la imagen en base64 antes del almacenarla en el campo imagen de tipo BLOB
-							$cli->foto = $data;
-							
-						}else{
-							
-							echo $deshabilitar;
-							Flash::error("Error json");
-							$sw=4;
-							//$msg_error.=Flash::error("Error json"); 
-							//$transaction->rollback();
-							
-						}
-												
-						
-						
-						//Se hace con el objetivo de actualizar el NIT/Cédula en la tabla somhue
-						//de manera simultanea
-/*						$hue->nit = $this->getPostParam("nit");
-						
-						
-						if($hue->update()){
-							 
-							  Flash::success("Se Actualizo correctamente el registro");
-							  
-							  echo "<script>quitar_mensajes();</script>";
-							  
-						}else{
-							 
-							  Flash::success("Error: No se pudo Actualizar el registro");	
-							
-									
-						}*/
-						
-						if($sw==3){
-							if($cli->save()){
-								  Flash::success("Se Actualizo correctamente el registro");
-															 
-								  echo "<script>quitar_mensajes();</script>";
-								  echo "<script>redireccionar_action('clientes/modificar/?id=$cli->id');</script>";
-								  
-							}else{
-								 Flash::success("Error: No se pudo Actualizar el registro");	
+			if($sw1==1){
+				
+				Flash::error("Por favor cambie de referencia, está apuntando al mismo cliente.");
+				
+			}
+			
+			if($sw2==1){
+				
+				Flash::error("La referencia ingresada no existe en nuestro sistema.");
+				
+			}
+			
+			//Flash::error($sw1);
 								
-										
-							}
-						}else{
-							
-							Flash::error("Error: Debe tomar la foto");
-						}
+			if(($sw==0)&&($sw1==0)&&($sw2==0)){
+				
+				$cli = $this->Clientes->findFirst(" id = '".$_REQUEST["id"]."' ");
 
+				$cli->nit = $this->getPostParam("nit2");
+				$cli->nombre1 = $this->getPostParam("nombre12");
+				$cli->nombre2 = $this->getPostParam("nombre22");
+				$cli->apellido1 = $this->getPostParam("apellido12");
+				$cli->apellido2 = $this->getPostParam("apellido22");
+				$cli->razon_social = $this->getPostParam("razon_social2");
+				$cli->direccion = $this->getPostParam("direccion");
+				$cli->telefono = $this->getPostParam("telefono");
+				$cli->celular = $this->getPostParam("celular");
+				$cli->referencia_id = $this->getPostParam("clientes_id");
+				$cli->departamentos_id = $this->getPostParam("departamentos_id");
+				$cli->municipios_id = $this->getPostParam("municipios_id");				
+					
+	
+				if($cli->save()){
+						Flash::success("Se insertó correctamente el registro");
+						//unlink("public/img/upload/".$cli->foto);
+						echo "<script>redireccionar_action('clientes/modificar/?id=$cli->id');</script>";
 						
-					 }else{
-						 
-								
-						$cli = $this->Clientes->findFirst(" id = '".$_REQUEST["id"]."' ");
+					}else{
+						Flash::error("Error: No se pudo insertar registro");	
 						
-						
-						$cli->nit = $this->getPostParam("nit");
-						$cli->nombre1 = $this->getPostParam("nombre1");
-						$cli->nombre2 = $this->getPostParam("nombre2");
-						$cli->apellido1 = $this->getPostParam("apellido1");
-						$cli->apellido2 = $this->getPostParam("apellido2");
-						$cli->razon_social = $this->getPostParam("razon_social");
-						$cli->direccion_casa = $this->getPostParam("direccion_casa");
-						$cli->direccion_oficina = $this->getPostParam("direccion_oficina");
-						$cli->telefono1 = $this->getPostParam("telefono1");
-						$cli->telefono2 = $this->getPostParam("telefono2");
-						$cli->sueldo = $this->getPostParam("sueldo");
-						$cli->otros_ingresos = $this->getPostParam("otros_ingresos");
-						$cli->eps = $this->getPostParam("eps");
-						$cli->casa = $this->getPostParam("casa");
-						$cli->vehiculos = $this->getPostParam("vehiculos");
-						$cli->celular = $this->getPostParam("celular");
-						$cli->departamentos_id = $this->getPostParam("departamentos_id");
-						$cli->municipios_id = $this->getPostParam("municipios_id");
-						$cli->correo = $this->getPostParam("email");
-						$cli->web = $this->getPostParam("web");
-						$cli->activo = 0;
-						
-						//Se hace con el objetivo de actualizar el NIT/Cédula en la tabla somhue
-						//de manera simultanea
-						if($emp->huella==0){
-							
-						$hue = $this->Somhue->findFirst(" nit = '".$_REQUEST["nit_huella"]."' ");
-						
-						$hue->nit = $cli->nit;
-						
-						
-						if($hue->update()){
-							 
-							  Flash::success("Se Actualizo correctamente el registro");
-							  
-							  echo "<script>quitar_mensajes();</script>";
-							  
-						}else{
-							 
-							  Flash::success("Error: No se pudo Actualizar el registro");	
-							
-									
+						foreach($cli->getMessages() as $message){
+								  Flash::error($message->getMessage());
 						}
 					 }
-					 if($sw==3){
-							if($cli->save()){
-								  Flash::success("Se Actualizo correctamente el registro");
-															 
-								  echo "<script>quitar_mensajes();</script>";
-								  echo "<script>redireccionar_action('clientes/modificar/?id=$cli->id');</script>";
-								  
-							}else{
-								 Flash::success("Error: No se pudo Actualizar el registro");	
-								
-										
-							}
-						}else{
-							
-							Flash::error("Error: Debe tomar la foto");
-						}
-						
-												 
-					 }
-				  }
-			  }
+			     }
+			
+			
+			}
 			
 		}
 		

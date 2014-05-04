@@ -1,4 +1,5 @@
-<h4>FORMULARIO MODIFICAR CLIENTES</h5>
+<h4>
+FORMULARIO MODIFICAR COBRADOR</h5>
 
 <?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
 
@@ -40,11 +41,6 @@
   <tr>
     <td height="0" align="right" valign="middle">CELULAR</td>
     <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::NumericField("celular", "size: 30","maxlength: 20") ?></td>
-  </tr>
-  <tr>
-    <td height="0" align="right" valign="middle">REFERENCIA</td>
-    <td height="0" colspan="3" align="left" valign="middle">
-	<?php echo Tag::textFieldExt("clientes", "size: 10","maxlength: 20","placeholder: INGRESE REFERENCIA") ?></td>
   </tr>
   <tr>
     <td height="0" align="right" valign="middle">DEPARTAMENTOS</td>

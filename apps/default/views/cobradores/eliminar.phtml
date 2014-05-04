@@ -1,6 +1,7 @@
-<h4>FORMULARIO MODIFICAR CLIENTES</h5>
+<h1>FORMULARIO PARA ELIMINAR DATOS DEL COBRADOR</h1>
 
-<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes", "id: fx","name: fx"); ?>
 
 <table border="0" align="center" cellpadding="1">
   <tr>
@@ -42,11 +43,6 @@
     <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::NumericField("celular", "size: 30","maxlength: 20") ?></td>
   </tr>
   <tr>
-    <td height="0" align="right" valign="middle">REFERENCIA</td>
-    <td height="0" colspan="3" align="left" valign="middle">
-	<?php echo Tag::textFieldExt("clientes", "size: 10","maxlength: 20","placeholder: INGRESE REFERENCIA") ?></td>
-  </tr>
-  <tr>
     <td height="0" align="right" valign="middle">DEPARTAMENTOS</td>
     <td height="0" colspan="3" align="left" valign="middle">
       <?php  echo Tag::textFieldExt("departamentos","campo: departamento","size: 10"); ?>
@@ -58,50 +54,42 @@
   </tr>
     <tr>
  	 <td colspan="4" align="center" >
-     		<button type="submit" id="guardar" name="guardar">Guardar</button>
+     		<button type="submit" id="guardar" name="guardar">Eliminar</button>
            
             <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
      </td>
     </tr> 
 </table>
 
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
 <?php echo Tag::endForm() ?>
 
 <div id="mensajes"></div>
-<br />
 
-<script language="JavaScript">
- jQuery(document).ready(function(e) {
-	 
-	 
- <?php 
-		$entidad = new Clientes();
-		
-		foreach( $entidad->getPrimaryKeyAttributes() as $filas):
-			echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
-		endforeach;	
-		
-		foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
-				foreach( $entidad->getNonPrimaryKeyAttributes() as $filas2):
-					if($filas==$filas2){ echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n"; break;} 
-				endforeach;	
-				
-		endforeach;	
-		
-	?> 	
+<script>
 	
-	 
-	 jQuery("#razon_social2").focus(function(){
-		 	nom="";
-			nom+=jQuery("#nombre12").val();nom+=" ";
-			nom+=jQuery("#nombre22").val();nom+=" ";
-			nom+=jQuery("#apellido12").val();nom+=" ";
-			nom+=jQuery("#apellido22").val();nom+=" ";
-			nom = nom.replace("  "," ");
-	 		jQuery("#razon_social2").val(nom);
-		 });
-	 
- 	 });
+	jQuery(document).ready(function(e) {
+		
+        jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#nit2").attr("readOnly","ReadOnly");
+		jQuery("#nombre12").attr("readOnly","ReadOnly");
+		jQuery("#nombre22").attr("readOnly","ReadOnly");
+		jQuery("#apellido12").attr("readOnly","ReadOnly");
+		jQuery("#apellido22").attr("readOnly","ReadOnly");
+		jQuery("#razon_social2").attr("readOnly","ReadOnly");
+		jQuery("#direccion").attr("readOnly","ReadOnly");
+		jQuery("#telefono").attr("readOnly","ReadOnly");
+		jQuery("#celular").attr("readOnly","ReadOnly");
+		jQuery("#departamentos_id").attr("readOnly","ReadOnly");
+		jQuery("#departamento").attr("readOnly","ReadOnly");
+		jQuery("#buscar_departamentos").prop('disabled', true);
+		jQuery("#buscar_clientes").prop('disabled', true);
+		jQuery("#municipios_id").attr("readOnly","ReadOnly");
+		jQuery("#municipio").attr("readOnly","ReadOnly");
+		jQuery("#buscar_municipios").prop('disabled', true);
+			
 
-
+    });
+	
 </script>

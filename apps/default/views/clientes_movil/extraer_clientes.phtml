@@ -8,8 +8,9 @@ foreach($clientes->find() as $clientes):
 	$responce[]=array(
 								"id"=>$clientes->id,
 								"nombres"=>utf8_encode($clientes->nombre1." ".$clientes->nombre2." ".$clientes->apellido1." ".$clientes->apellido2),
-								"direccion_oficina"=>$clientes->direccion_oficina,"direccion_casa"=>$clientes->direccion_casa,
-								"telefono1"=>$clientes->telefono1
+								"direccion"=>$clientes->direccion,
+								"telefono"=>$clientes->telefono,
+								"celular"=>$clientes->celular
 							); 						
 	$i++;
 endforeach;

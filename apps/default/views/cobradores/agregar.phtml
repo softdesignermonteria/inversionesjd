@@ -1,11 +1,11 @@
-<h4>FORMULARIO MODIFICAR CLIENTES</h5>
+<h4>FORMULARIO AGREGAR CLIENTES</h5>
 
-<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
 
 <table border="0" align="center" cellpadding="1">
   <tr>
     <td width="155" height="0" align="right" valign="middle" >IDENTIFICACION</td>
-    <td width="180" height="0" align="left" valign="middle" scope="col"><?php echo Tag::hiddenField("id", "size: 12","maxlength: 12") ?><?php echo Tag::textField("nit2", "size: 12","maxlength: 12") ?></td>
+    <td width="180" height="0" align="left" valign="middle" scope="col"><?php echo Tag::textField("nit2", "size: 12","maxlength: 12") ?></td>
     <td width="136" align="right" scope="col">&nbsp;</td>
     <td width="349" scope="col">&nbsp;</td>
     </tr>
@@ -42,11 +42,6 @@
     <td height="0" colspan="3" align="left" valign="middle"><?php echo Tag::NumericField("celular", "size: 30","maxlength: 20") ?></td>
   </tr>
   <tr>
-    <td height="0" align="right" valign="middle">REFERENCIA</td>
-    <td height="0" colspan="3" align="left" valign="middle">
-	<?php echo Tag::textFieldExt("clientes", "size: 10","maxlength: 20","placeholder: INGRESE REFERENCIA") ?></td>
-  </tr>
-  <tr>
     <td height="0" align="right" valign="middle">DEPARTAMENTOS</td>
     <td height="0" colspan="3" align="left" valign="middle">
       <?php  echo Tag::textFieldExt("departamentos","campo: departamento","size: 10"); ?>
@@ -65,17 +60,50 @@
     </tr> 
 </table>
 
+<div id="mensajes"></div>
 <?php echo Tag::endForm() ?>
 
-<div id="mensajes"></div>
-<br />
+<!--
 
+<div id="photos"></div>
+
+<div id="camera">
+	<span class="tooltip"></span>
+	<span class="camTop"></span>
+   
+	
+    <div id="screen"></div>
+    <div id="buttons">
+    	<div class="buttonPane">
+        	<a id="shootButton" href="" class="blueButton">Foto</a>
+        </div>
+        <div class="buttonPane hidden">
+        	<a id="cancelButton" href="" class="blueButton">Cancelar</a> <a id="uploadButton" href="" class="greenButton">Subir</a>
+        </div>
+    </div>
+    
+    <span class="settings"></span>
+</div>
+
+
+    -->
+    
+<?php // echo "<script>configcamara('".$_DOCUMENT["REQUEST"].core::getInstancePath()."public/javascript/fotos/assets/webcam/','".$_DOCUMENT["REQUEST"].core::getInstancePath()."clientes/')</script>"?>
+
+
+<br />
+<br />
+	
+
+	
+    
+    
 <script language="JavaScript">
  jQuery(document).ready(function(e) {
 	 
 	 
  <?php 
-		$entidad = new Clientes();
+		$entidad = new Cobradores();
 		
 		foreach( $entidad->getPrimaryKeyAttributes() as $filas):
 			echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
@@ -100,8 +128,9 @@
 			nom = nom.replace("  "," ");
 	 		jQuery("#razon_social2").val(nom);
 		 });
-	 
- 	 });
+	
+	
+});
 
-
+	
 </script>
