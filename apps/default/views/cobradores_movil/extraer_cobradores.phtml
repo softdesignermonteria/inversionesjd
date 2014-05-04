@@ -1,0 +1,19 @@
+<?php
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: 0');
+header('Content-Type: application/json');
+$cobradores = new Cobradores();
+$i=0;
+foreach($cobradores->find() as $cobradores):
+	$responce[]=array(
+								"id"=>$cobradores->id,
+								"nombres"=>utf8_encode($cobradores->nombre1." ".$cobradores->nombre2." ".$cobradores->apellido1." ".$cobradores->apellido2),
+								"direccion"=>$cobradores->direccion,
+								"telefono"=>$cobradores->telefono,
+								"celular"=>$cobradores->celular
+							); 						
+	$i++;
+endforeach;
+echo json_encode($responce);
+		
+?>			

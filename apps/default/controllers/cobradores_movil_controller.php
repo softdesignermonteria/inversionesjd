@@ -1,6 +1,6 @@
 <?php
 
-	class Clientes_movilController extends ApplicationController {
+	class Cobradores_movilController extends ApplicationController {
 	
 			
 		public function initialize() {
@@ -20,6 +20,13 @@
 			$this->setResponse("view");
 		
 		}
+		
+		public function extraer_cobradoresAction(){
+			
+			$this->setResponse("view");
+		
+		}
+		
 				
 		
 }
