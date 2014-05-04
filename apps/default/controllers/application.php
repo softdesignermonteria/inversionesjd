@@ -12,7 +12,7 @@ class ControllerBase {
 	
 	public function beforeFilter(){
 	 	
-		if(Router::getController()!='login' && Router::getController()!='clientes_movil'){
+		if(Router::getController()!='login' && strpos(Router::getController(),'_movil') ){
 							//Flash::error( " md5(username) = '".Session::get(md5("admin_username"))."' and md5(id) = '".Session::get(md5("usuarios_id"))."' " );
 							
 						 if( $this->Admin->count( " md5(username) = '".Session::get(md5("admin_username"))."' and md5(id) = '".Session::get(md5("usuarios_id"))."' "  ) == 0 ){
