@@ -22,13 +22,13 @@
 
   <tr>
 
-    <td align="right"><div align="right">SOLICITUD:</div></td>
+    <!--<td align="right"><div align="right">SOLICITUD:</div></td>-->
 
     <td align="left" valign="middle" id="aclientes">
     
        <?php echo Tag::hiddenField("id"); ?> 
 
-		<?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+		<?php echo Tag::textField("tipo_documento_id"); ?> 
 
         <?php echo Tag::hiddenField("empresa_id"); ?> 
 
@@ -36,7 +36,7 @@
 
         <?php echo Tag::hiddenField("consecutivo"); ?> 
 
-	<?php echo Tag::textFieldExt("solicitud","size: 30"); ?>
+	<?php //echo Tag::textFieldExt("solicitud","size: 30"); ?>
 
   </tr>
 
@@ -64,20 +64,21 @@
        <td align="right" valign="top">PORCENTAJE</td>
        <td>
 		   	<?php echo Tag::numericField("porcentaje","size: 4","maxlenth: 2"); ?>% 
-	        Capital Prestado<?php echo Tag::numericField("capital","size: 20","maxlenth: 100"); ?>
+	        <!--Capital Prestado--><?php //echo Tag::numericField("capital","size: 20","maxlenth: 100"); ?>
        </td>
      </tr>
      <tr>
 
-    <td align="right" valign="top">VALOR COTAS</td>
+    <td align="right" valign="top">TOTAL DE CREDITO</td>
 
     	<td>
-			<?php echo Tag::numericField("valor_cuotas","size: 20"); ?>
+         	
+            <?php echo Tag::numericField("total_credito","size: 20"); ?>
             NUMERO DE CUOTAS
             <?php echo Tag::numericField("numero_cuotas","size: 10"); ?>
-            TOTAL DE CREDITO
-            <?php echo Tag::numericField("total_credito","size: 20"); ?>
-       	 	<button id="generar" type="button" name="generar">Generar</button>
+            VALOR CUOTAS
+			<?php echo Tag::numericField("valor_cuotas","size: 20"); ?>
+           	<button id="generar" type="button" name="generar">Generar</button>
         </td>
 
     </tr>
@@ -386,8 +387,8 @@ if (!existe) {
 
  jQuery("#numero_cuotas").blur(function(e){
 	 e.preventDefault();
-		if(jQuery("#valor_cuotas").val()!=''){
-			jQuery("#total_credito").val(jQuery("#valor_cuotas").val()*jQuery("#numero_cuotas").val())
+		if(jQuery("#total_credito").val()!=''){
+			jQuery("#valor_cuotas").val(jQuery("#total_credito").val()/jQuery("#numero_cuotas").val())
 		}
 });	
 
@@ -395,14 +396,14 @@ if (!existe) {
  jQuery("#valor_cuotas").blur(function(e){
 	 e.preventDefault();
 		if(jQuery("#numero_cuotas").val()!=''){
-			jQuery("#total_credito").val(jQuery("#valor_cuotas").val()*jQuery("#numero_cuotas").val())
+			jQuery("#valor_cuotas").val(jQuery("#total_credito").val()/jQuery("#numero_cuotas").val())
 		}
 });	
 
 jQuery("#total_credito").focus(function(e){
 	 e.preventDefault();
-		if(jQuery("#numero_cuotas").val()!='' && jQuery("#valor_cuotas").val()!=''){
-			jQuery("#total_credito").val(jQuery("#valor_cuotas").val()*jQuery("#numero_cuotas").val())
+		if(jQuery("#total_credito").val()!='' && jQuery("#numero_cuotas").val()!=''){
+			jQuery("#valor_cuotas").val(jQuery("#total_credito").val()/jQuery("#numero_cuotas").val())
 		}
 });	
 

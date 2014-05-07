@@ -272,7 +272,7 @@
 				$multiplo = $_REQUEST["codigo"];
 				$fecha = new Date($_REQUEST["vencimiento"]);
 				$db = DbBase::rawConnect();
-				$result = $db->query("select DATE_ADD('$fecha',INTERVAL $multiplo MONTH) as name");
+				$result = $db->query("select DATE_ADD('$fecha',INTERVAL $multiplo DAY) as name");
 				while($row = $db->fetchArray($result)){
 					 $fecha =  $row['name'];
 				}
@@ -295,7 +295,7 @@
 					$multiplo = $i;
 					$fecha = new Date($_REQUEST["vencimiento"]);
 					$db = DbBase::rawConnect();
-					$result = $db->query("select DATE_ADD('$fecha',INTERVAL $multiplo MONTH) as name");
+					$result = $db->query("select DATE_ADD('$fecha',INTERVAL $multiplo DAY) as name");
 					
 					while($row = $db->fetchArray($result)){
 						 $fecha =  $row['name'];
@@ -347,19 +347,21 @@
 			$total_credito=0;
 			//si no hay error de valiaciones o cualquier otra novedad
 			$cr = new Creditos();
-			$sol = new Solicitud();
-			if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and clientes_id = '".$_REQUEST["clientes_id"]."' ") == 0 ){
+			//$sol = new Solicitud();
+			/*if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and clientes_id = '".$_REQUEST["clientes_id"]."' ") == 0 ){
 				$sw=1;Flash::error("Esta Solicitud No Corresponde a este Cliente");
-				}
-			if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and estado_solicitud_id = 1 ") == 0 ){
+				}*/
+			/*if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and estado_solicitud_id = 1 ") == 0 ){
 				$sw=1;Flash::error("Esta solicitud aun no ha sido aprobada o fue rechazada");
 				}
-			if( $cr->count("anulado = 0 and solicitud_id = '".$_REQUEST["solicitud_id"]."' ") > 0 ){
+				*/
+			if( $cr->count("anulado = 0 and clientes_id = '".$_REQUEST["clientes_id"]."' ") > 0 ){
 				$sw=1;Flash::error("Esta solicitud ya fue acreditada o guardada anteriormente ");
 				}
 			if($sw==0){
 					//abriando transacciones
 				Flash::success("EMPEZANDO A GUARDAR LOS REGISTOS...");	
+
 				$transaction = new ActiveRecordTransaction(true);   
 				try{
 					$transaction = TransactionManager::getUserTransaction(); 
@@ -403,17 +405,17 @@
 							 $creditos = new Creditos();
 							 $creditos->setTransaction($transaction);
 							//para traer el mismo modelo ya instanciado
-							 $creditos->id                  =  $_REQUEST["id"];
+							 $creditos->id                  = $_REQUEST["id"];
 							 $creditos->empresa_id          = $_REQUEST["empresa_id"];
 							 $creditos->clientes_id         = $_REQUEST["clientes_id"];
-							 $creditos->solicitud_id        = $_REQUEST["solicitud_id"]; 
+							 $creditos->solicitud_id        = '0'; 
 							 $creditos->tipo_documento_id   = $cons->tipo_documento_id;
 							 $creditos->prefijo             = $cons->prefijo;
 							 $creditos->consecutivo         = $cons->desde;   
 							 $creditos->fecha_act           = date("Y-m-d H:i:s");
 							 $creditos->fecha               = $_REQUEST["fecha"];
 							 $creditos->fecha_cuota         = $_REQUEST["fecha_cuota"];
-							 $creditos->capital             = $_REQUEST["capital"];
+							 $creditos->capital             = '0';//$_REQUEST["capital"];
 							 $creditos->anulado             = '0';
 							 $creditos->observaciones       = $_REQUEST["observaciones"];
 							 $creditos->cuotas              = $_REQUEST["numero_cuotas"];
@@ -464,7 +466,7 @@
 									$detalles->vencimiento            = $items->vencimiento;
 									$detalles->multiplicar            = 1;
 									$detalles->financiacion           = 0;
-									$detalles->capital                = ( $creditos->capital /  $creditos->cuotas );
+									$detalles->capital                = 0;//( $creditos->capital /  $creditos->cuotas );
 									$detalles->iva                    = 0;
 									//$detalles->anulado                = '0';
 									if($items->anulado == "SI") {  $detalles->anulado = '1';}
@@ -580,13 +582,13 @@
 			$total_credito=0;
 			//si no hay error de valiaciones o cualquier otra novedad
 			$cr = new Creditos();
-			$sol = new Solicitud();
+			/*$sol = new Solicitud();
 			if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and clientes_id = '".$_REQUEST["clientes_id"]."' ") == 0 ){
 				$sw=1;Flash::error("Esta Solicitud No Corresponde a este Cliente");
 				}
 			if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and estado_solicitud_id = 1 ") == 0 ){
 				$sw=1;Flash::error("Esta solicitud aun no ha sido aprobada o fue rechazada");
-				}
+				}*/
 			//if( $cr->count("anulado = 0 and solicitud_id = '".$_REQUEST["solicitud_id"]."' ") > 0 ){
 				//$sw=1;Flash::error("Esta solicitud ya fue acreditada ");
 			//	}
@@ -605,17 +607,17 @@
 							 $creditos->setTransaction($transaction);
 							 $creditos = $this->Creditos->FindFirst(" id = '".$_REQUEST["id"]."' ");
 							//para traer el mismo modelo ya instanciado
-							 $creditos->id                  =  $_REQUEST["id"];
+							 $creditos->id                  = $_REQUEST["id"];
 							 $creditos->empresa_id          = $_REQUEST["empresa_id"];
 							 $creditos->clientes_id         = $_REQUEST["clientes_id"];
-							 $creditos->solicitud_id        = $_REQUEST["solicitud_id"]; 
+							 $creditos->solicitud_id        = '0';//$_REQUEST["solicitud_id"]; 
 							 //$creditos->tipo_documento_id   = $tipo_documento_id;
 							 //$creditos->prefijo             = $prefijo;
 							 //$creditos->consecutivo         = $consecutivo;   
 							 $creditos->fecha_act           = date("Y-m-d H:i:s");
 							 $creditos->fecha               = $_REQUEST["fecha"];
 							 $creditos->fecha_cuota         = $_REQUEST["fecha_cuota"];
-							 $creditos->capital             = $_REQUEST["capital"];
+							 $creditos->capital             = '0';//$_REQUEST["capital"];
 							 $creditos->anulado             = '0';
 							 $creditos->observaciones       = $_REQUEST["observaciones"];
 							 $creditos->cuotas              = $_REQUEST["numero_cuotas"];
