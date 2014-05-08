@@ -218,12 +218,12 @@
 				$Creditos = new Creditos();
 				$Creditos = $this->Creditos->findFirst(" id = '".$id."' ");			
 				$this->clientes_id = $Creditos->clientes_id;
-				$this->solicitud_id = $Creditos->solicitud_id;
 				Tag::displayTo("id"                 ,$Creditos->id);
 				Tag::displayTo("tipo_documento_id"  ,$Creditos->tipo_documento_id);
 				Tag::displayTo("prefijo"            ,$Creditos->prefijo);
 				Tag::displayTo("consecutivo"        ,$Creditos->consecutivo);
 				Tag::displayTo("empresa_id"         ,$Creditos->empresa_id);
+				Tag::displayTo("cobradores"         ,$Creditos->cobradores_id);
 				$empresa = $this->Empresa->findFirst(" id = '".$Creditos->empresa_id."' ");
 				Tag::displayTo("fecha"              ,$Creditos->fecha);
 				Tag::displayTo("fecha_cuota"        ,$Creditos->fecha_cuota);
@@ -347,7 +347,7 @@
 			$total_credito=0;
 			//si no hay error de valiaciones o cualquier otra novedad
 			$cr = new Creditos();
-			//$sol = new Solicitud();
+			$cob = new Cobradores();
 			/*if( $sol->count("anulado = 0 and id = '".$_REQUEST["solicitud_id"]."' and clientes_id = '".$_REQUEST["clientes_id"]."' ") == 0 ){
 				$sw=1;Flash::error("Esta Solicitud No Corresponde a este Cliente");
 				}*/
@@ -408,7 +408,7 @@
 							 $creditos->id                  = $_REQUEST["id"];
 							 $creditos->empresa_id          = $_REQUEST["empresa_id"];
 							 $creditos->clientes_id         = $_REQUEST["clientes_id"];
-							 $creditos->solicitud_id        = '0'; 
+							 $creditos->cobradores_id       = $_REQUEST["cobradores_id"];
 							 $creditos->tipo_documento_id   = $cons->tipo_documento_id;
 							 $creditos->prefijo             = $cons->prefijo;
 							 $creditos->consecutivo         = $cons->desde;   
@@ -423,7 +423,7 @@
 							 $creditos->total_credito       = $_REQUEST["total_credito"];
 							 $creditos->porcentaje          = $_REQUEST["porcentaje"];
 							 //Flash::error($cons->desde);
-								if($creditos->save()==false){
+							 if($creditos->save()==false){
 									//abre for each
 									foreach($creditos->getMessages() as $message){ 
 										Flash::error("TABLA CREDITOS: ".$message); 
@@ -521,14 +521,15 @@
 		public function showAction($id){
 			
 			$Creditos = new Creditos();
-				$Creditos = $this->Creditos->findFirst(" id = '".$id."' ");			
+				$Creditos = $this->Creditos->findFirst(" id = '".$id."' ");
 				$this->clientes_id = $Creditos->clientes_id;
-				$this->solicitud_id = $Creditos->solicitud_id;
+				$cobrador_id= $this->Cobradores->findFirst("id = '$Creditos->cobradores_id'");
 				Tag::displayTo("id"                 ,$Creditos->id);
 				Tag::displayTo("tipo_documento_id"  ,$Creditos->tipo_documento_id);
 				Tag::displayTo("prefijo"            ,$Creditos->prefijo);
 				Tag::displayTo("consecutivo"        ,$Creditos->consecutivo);
 				Tag::displayTo("empresa_id"         ,$Creditos->empresa_id);
+				Tag::displayTo("cobradores"         ,$Creditos->cobradores_id);
 				$empresa = $this->Empresa->findFirst(" id = '".$Creditos->empresa_id."' ");
 				Tag::displayTo("fecha"              ,$Creditos->fecha);
 				Tag::displayTo("fecha_cuota"        ,$Creditos->fecha_cuota);
@@ -610,7 +611,8 @@
 							 $creditos->id                  = $_REQUEST["id"];
 							 $creditos->empresa_id          = $_REQUEST["empresa_id"];
 							 $creditos->clientes_id         = $_REQUEST["clientes_id"];
-							 $creditos->solicitud_id        = '0';//$_REQUEST["solicitud_id"]; 
+							 //$creditos->solicitud_id        = '0';//$_REQUEST["solicitud_id"]; 
+							 $creditos->cobradores_id       = $_REQUEST["cobradores_id"];
 							 //$creditos->tipo_documento_id   = $tipo_documento_id;
 							 //$creditos->prefijo             = $prefijo;
 							 //$creditos->consecutivo         = $consecutivo;   
@@ -745,7 +747,7 @@
                 echo "</script>";
 				
 			}else{
-				Flash::error("No se Encontro Solicitud");
+				Flash::error("No se encontró Cobrador");
 				echo "<script>jQuery(\"#".$opcion."_id\").val(\"\");jQuery(\"#$opcion\").val(\"\");</script>";
 			}
 			

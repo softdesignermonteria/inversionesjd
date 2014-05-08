@@ -22,7 +22,7 @@
 
   <tr>
 
-    <!--<td align="right"><div align="right">SOLICITUD:</div></td>-->
+    <td align="right"><div align="right">COBRADOR:</div></td>
 
     <td align="left" valign="middle" id="aclientes">
     
@@ -36,7 +36,7 @@
 
         <?php echo Tag::hiddenField("consecutivo"); ?> 
 
-	<?php //echo Tag::textFieldExt("solicitud","size: 30"); ?>
+	<?php echo Tag::textFieldExt("cobradores","size: 30"); ?>
 
   </tr>
 
@@ -231,7 +231,7 @@ jQuery(document).ready(function(){
 
 <?php 
 	echo "jQuery(\"#clientes_id\").val($clientes_id);\n";
-	echo "jQuery(\"#solicitud_id\").val($solicitud_id);\n";
+	echo "jQuery(\"#cobradores_id\").val($cobradores_id);\n";
 ?>	
 	
 	if( jQuery( "#fecha_cuota"          ) ){ jQuery( "#fecha_cuota"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
@@ -287,7 +287,7 @@ function guardar_compra(){
 					empresa_id:         jQuery("#empresa_id").val(),
 					prefijo:            jQuery("#prefijo2").val(),
 					consecutivo:        jQuery("#consecutivo").val(),
-					solicitud_id:       jQuery("#solicitud_id").val(),
+					cobradores_id:      jQuery("#cobradores_id").val(),
 					clientes_id:        jQuery("#clientes_id").val(),
 					fecha:              jQuery("#fecha").val(),
 					fecha_cuota:        jQuery("#fecha_cuota").val(),

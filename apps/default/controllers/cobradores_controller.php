@@ -473,8 +473,8 @@
 			$cob = new Cobradores();
 			$cob->findFirst("nit = '$id'");
 			echo "<script>";
-			echo "$('Cobradores_id').value='$cob->id';";
-			echo "$('nombre_cobente').value='$cob->razon_social';";
+			echo "$('cobradores_id').value='$cob->id';";
+			echo "$('cobradores').value='$cob->razon_social';";
 			if($cob->id==''){ echo "alert('cobente no encontrado o no existe');"; }
 			echo "</script>";
 			
@@ -529,7 +529,7 @@
 		/* FIN CONSULTA DE Cobradores CON FACTURAS AGREGADAS*/
 		
 		
-	  public function validarAction($id,$opcion){
+	   public function validarAction($id,$opcion){
 
 			$this->setResponse("view");
 			
@@ -537,9 +537,9 @@
 			$cob = new Cobradores();
 			if( $this->Cobradores->count(" 1=1 and (id = '$id' or nit ='$id') ") > 0 ){
 				$cob = $this->Cobradores->findFirst(" 1=1 and (id = '$id' or nit ='$id')  ");
-				echo "<script>jQuery(\"#$opcion\").val(\"\");jQuery(\"#".Router::getController()."_id\").val(\"$cob->id\");jQuery(\"#Cobradores\").val(\"$cob->razon_social\");</script>";
+				echo "<script>jQuery(\"#$opcion\").val(\"\");jQuery(\"#".Router::getController()."_id\").val(\"$cob->id\");jQuery(\"#cobradores\").val(\"$cob->razon_social\");</script>";
 			}else{
-				Flash::error("No se encontró cobente");
+				Flash::error("No se encontró cobrador");
 				echo "<script>jQuery(\"#$opcion\").val(\"\");</script>";
 				echo "<script>jQuery(\"#".Router::getController()."_id\").val(\"\");</script>";
 				}

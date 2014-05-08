@@ -68,7 +68,7 @@ jQuery(document).ready(function(){
 			/*shrinkToFit :false,*/
 			viewrecords: true, 
 			sortorder: "asc", 
-			caption:"LISTADO DE CLIENTES",
+			caption:"LISTADO DE COBRADORES",
 			ondblClickRow:function(rowid,iRow,iCol,e){
 				
 				var fila = jQuery(this).jqGrid('getRowData',rowid);
@@ -80,14 +80,14 @@ jQuery(document).ready(function(){
 					if( jQuery("#apellido2") ){ jQuery("#apellido2").val(fila['apellido2']); } 
 					
 					
-					jQuery("#clientes_id").val("");
+					jQuery("#cobradores_id").val("");
 					jQuery("#nombre1").val("");
 					jQuery("#nombre2").val("");
 					jQuery("#apellido1").val("");
 					jQuery("#apellido2").val("");
 								
-					jQuery("#clientes_id").val(fila['id']);
-					jQuery("#clientes").val(fila['nombre1']+' '+fila['nombre2']+' '+fila['apellido1']+' '+fila['apellido2']);
+					jQuery("#cobradores_id").val(fila['id']);
+					jQuery("#cobradores").val(fila['nombre1']+' '+fila['nombre2']+' '+fila['apellido1']+' '+fila['apellido2']);
 
 					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
 					
