@@ -5,7 +5,7 @@
   
 
   	public function initialize(){
-
+		$this->hasMany("cobradores");
 
 /*
 		$this->hasMany("saldo_remisiones");

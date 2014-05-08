@@ -1,0 +1,23 @@
+<?php
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: 0');
+header('Content-Type: application/json');
+$clientes = new Clientes();
+$i=0;
+echo View::getContent();
+foreach($detalles as $detalles):
+	$responce[]=array(
+						"detalle_cxc_id"=>$detalles->id,
+						"creditos_id"=>$detalles->creditos_id,
+						"clientes_id"=>$detalles->clientes_id,
+						"cedula"=>$detalles->nit,
+						"cobradores_id"=>$detalles->clientes_id,
+						"cedula_cobrador"=>$detalles->nit_cobrador,
+						"vencimiento"=>$detalles->vencimiento,
+						"valor"=>($detalles->valor_cuota-$detalles->valor_pagado-$detalles->valor_nota_credito)
+					); 						
+	$i++;
+endforeach;
+echo json_encode($responce);
+		
+?>			

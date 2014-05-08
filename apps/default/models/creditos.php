@@ -4,11 +4,9 @@ class Creditos extends ActiveRecord{
 
 
 	public function initialize(){
-		
-	   //$this->belongsTo("bodegas");
-       //$this->belongsTo("proveedores");
-	   
-	   
+	   $this->hasMany("detalle_cxc");
+       $this->belongsTo("clientes");
+	   $this->belongsTo("cobradores");
 	}
 	
 	

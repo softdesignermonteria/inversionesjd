@@ -62,7 +62,7 @@
     
      <tr>
        <td align="right" valign="top">PORCENTAJE</td>
-       <td><?php echo Tag::numericField("porcentaje","size: 4","maxlenth: 2"); ?>%</td>
+       <td><?php echo Tag::numericField("porcentaje","size: 4","maxlenth: 2"); ?>% Capital <?php echo Tag::numericField("capital","size: 20","maxlenth: 50"); ?></td>
      </tr>
      <tr>
 
@@ -292,6 +292,7 @@ function guardar_compra(){
 					fecha:              jQuery("#fecha").val(),
 					fecha_cuota:        jQuery("#fecha_cuota").val(),
 					porcentaje:         jQuery("#porcentaje").val(),
+					capital:            jQuery("#capital").val(),
 					observaciones:      jQuery("#observaciones").val(),
 					valor_cuotas:       jQuery("#valor_cuotas").val(),
 					numero_cuotas:      jQuery("#numero_cuotas").val(),

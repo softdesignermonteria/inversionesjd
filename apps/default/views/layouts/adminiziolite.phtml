@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 	<meta charset="utf-8"/>
-	<title>...:::Prestamos:::....</title>
+	<title>...:::InversionesJd:::....</title>
     <?php echo view::renderPartial('adminiziolite_encabezado'); ?>
 	<?php echo view::renderPartial('javascript'); ?>
 </head>
@@ -13,7 +13,7 @@
 	<!-- Tray -->
 	<div id="tray" class="box"> 
 		<div class="f-left box">
-			Project: <font size="+1" face="verdana"> Prestamos v1.0</font>
+			Project: <font size="+1" face="verdana"> InversionesJd v1.0</font>
 		</div>
 		<?php if(Session::get(md5("usuario_autenticado"))==md5(true)){ ?>
         	<div class="f-right">
@@ -52,7 +52,7 @@
 	<div id="cols" class="box" >
     
 		<?php if(Session::get(md5("usuario_autenticado"))==md5(true)){ ?>
-		<aside>
+		<aside id="menu_left">
               <!-- Aside (Left Column) -->
                	<div id="aside" class="box ocultar-en-movil" >
                    <div class="padding box">
@@ -60,7 +60,7 @@
                             <p id="logo">
                                <!-- <a href="#"> -->
                                     <?php //echo Tag::image("logo.gif","border: 0","height: 80px"); ?>
-                                    <?php echo Tag::image("logo_softdes.png","border: 0","width: 150px"); ?>
+                                    <?php echo Tag::image("logo_dydsoluciones_350_105.png","border: 0","width: 150px"); ?>
                                     
                                <!--  </a> -->
                             </p>

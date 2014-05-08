@@ -1,9 +1,86 @@
 <?php echo View::getContent(); ?>
-<br />
-<br />
-<?php echo Tag::formRemote(Router::getController()."/valida", "update: mensajes", "id: fx","name: fx"); ?>
+<style>
 
-<table width="50%" align="center" title="Inicio de Sesion" class="login"> 
+#contenido #loginprincipal {
+  float: left;
+  width: 60%;
+}
+#contenido #mostrarsecundario {
+  float: left;
+  width: 40%;
+}
+#contenido #formfx {
+  padding-left:5px;
+  padding-right:5px;
+  padding-bottom:5px;
+  min-width: 300px;
+  width:400px;
+  margin:auto;
+  font:Verdana, Geneva, sans-serif;
+  font-style:normal;
+  font-weight:bold;
+  font-size:1.2 em;
+  border-radius: 10px;
+  border: 1px solid #869d31;
+  min-height:80%;
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+   box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+#lower {
+  clear:both;
+  background-color:#5c9ccc;
+   border-radius: 5px;
+  border: 1px solid #5c9ccc;
+  min-height:75px;
+  height:75px;
+  margin-top:20px;
+}
+#titulo {
+  display:block;
+  background-color:#5c9ccc;
+  border-radius: 5px;
+  border: 1px solid #5c9ccc;
+  min-height:25px;
+  height:25px;
+  vertical-align:middle;
+  font-size: 15px;
+  color:#FFF;
+  font-weight:bold;
+
+}
+#contenido label {
+  display:block;
+   width:100%;
+ margin-top:10px;
+
+}
+#contenido input {
+ width:95%;
+ margin-top:10px;
+  height:35px;
+}
+#contenido h4 {
+ width:100%;
+ height:35px;
+ vertical-align:middle;
+}
+#contenido button {
+ width:100%;
+ margin-top:10px;
+ height:35px;
+}
+#contenido #empresa_chosen {
+ width:100%;
+ margin-top:10px;
+}
+
+#contenido pie {
+  clear: both;
+}
+</style>
+<!--
+<table width="50%" align="center" class="ui-widget ui-widget-content ui-corner-all ui-widget-header ui-icon-circle-arrow-e" title="Inicio de Sesion" class="login"> 
  <thead >
    <tr>
       <th colspan="5" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left"><?php echo Tag::image("iconos/clientes.png", "width: 32", "height: 32", "border: 0", "alt: Imagen"); ?> INICIO DE SESSION            </th>
@@ -12,49 +89,90 @@
 <tbody>
     <tr>
       <td width="32%" align="right"><div align="right">Nombre de Usuario:</div></td>
-      <td width="43%" align="left" colspan="3"><?php echo Tag::textField('login','size: 40') ?></td>		
+      <td width="43%" align="left" colspan="3"><?php //echo Tag::textField('login','size: 40') ?></td>		
 </tr>
 <tr>
   <td align="right"><div align="right">Password:</div></td>
-      <td align="left" colspan="3"><?php echo Tag::passwordField('password','size: 40') ?></td>
+      <td align="left" colspan="3"><?php //echo Tag::passwordField('password','size: 40') ?></td>
 </tr>
     <tr>
       <td><div align="right">Empresa</div></td>
-      <td colspan="3" style="padding-left:10px"><?php $empresa = new Empresa(); echo Tag::select("empresa",$empresa->find(),'using: id,nombre_corto',"size: 40","style: width:200px"); ?></td>
+      <td colspan="3" style="padding-left:10px"><?php //$empresa = new Empresa(); echo Tag::select("empresa",$empresa->find(),'using: id,nombre_corto',"size: 40","style: width:200px"); ?></td>
     </tr>
     <tr>
       <th colspan="4"><button type="submit" id="inicio" name="inicio">Iniciar Sesion</button></th>
     </tr>
      <tr>
     <th colspan="3" class="lower" >
-                <?php echo View::getContent(); ?>
-                <?php foreach(View::getValidationMessages() as $message){
-                        Flash::error($message->getMessage());
-                     } ?>            
+                           
                 <div id="mensajes"></div>
        </th>
    </tr>
 
 </tbody>
 </table>
+
 </div>
-  
+  -->
+<?php //echo Tag::endForm(); ?>
 
 <!-- Begin Page Content -->
-<!--<div id="container">
-    <form>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-        <div id="lower">
-            <input type="submit" value="Login">
+<div id="contenido">
+  
+   <div id="loginprincipal">
+      <div id="formfx">
+      <?php echo Tag::image("logo_modificado_2.png","border: 0","width: 100px"); ?>
+       <?php echo Tag::formRemote(Router::getController()."/valida", "update: mensajes", "id: fx","name: fx"); ?>
+        <label for="username">Usuario:</label>
+        <?php echo Tag::textField('login','size: 40') ?>
+        <label for="password">Contraseña:</label>
+        <?php echo Tag::passwordField('password','size: 40') ?>
+         <label for="username">Empresa</label>
+        <?php $empresa = new Empresa(); echo Tag::select("empresa",$empresa->find(),'using: id,nombre_corto',"size: 40","style: width:300px"); ?>
+        <button type="submit" id="inicio" name="inicio">Iniciar Sesion</button>
+        
+      <?php echo Tag::endForm(); ?>
+    
+      <div id="lower">
+      <div id="mensajes">
+
+          <?php echo View::getContent(); ?>
+                <?php foreach(View::getValidationMessages() as $message){
+                        Flash::error($message->getMessage());
+                     } ?> 
+         </div>            
         </div><!--/ lower-->
-<!--    </form>
+      </div>
+      
+	</div>
+    
+    
+     <div id="mostrarsecundario" align="left">
+                <?php echo Tag::image("logo_dydsoluciones_350_105.png","border: 0"); ?>
+       <ul>
+                    <li><?php echo Tag::image("llamadas.png","border: 0","width: 50px"); ?>Troncal sip para llamadas a bajos costo</li>
+                    <li><?php echo Tag::image("mobile.png","border: 0","width: 50px"); ?>Desarrollo Applicaciones Android</li>
+                    <li><?php echo Tag::image("software.png","border: 0","width: 50px"); ?>Desarrollo de Software</li>
+                </ul>
+                
+                
+                <p>Tecnologias</p>
+                <p>
+					
+					<?php echo Tag::image("HTML5yCSS3.png","border: 0","width: 150px"); ?>
+                
+     				<?php echo Tag::image("joomla-logo.png","border: 0","width: 150px"); ?>
+					
+					<?php echo Tag::image("AsteriskPBX.png","border: 0","width: 150px"); ?>
+			     </p>
+                 <p>Visita Nuestra Pagina: <a href="http://www.dydsoluciones.net">Dydsoluciones.net</a> </p>
+     </div>
+     
+     
+     
 </div><!--/ container-->
 <!-- End Page Content -->
 
-<?php echo Tag::endForm(); ?>
 
 
 

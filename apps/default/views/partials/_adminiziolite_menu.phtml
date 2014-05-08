@@ -1,22 +1,28 @@
 <?php if(Session::get(md5("usuario_autenticado"))==md5(true)){ ?>
-<div id='cssmenu' class="t-rigth" align="right" style="padding-left:200px;">
+
+<div id='cssmenu' class="t-rigth .ocultar-en-movil" align="left" style="padding-left:200px;" >
     <ul>
-    <li class='has-sub '><?php echo Tag::linkTo("home/aplicaciones","Inicio"); ?></li>
+    <li class='has-sub '>
+    	<span id="ocultar_left">
+        	<span id="a_toogle"><a title='Ocultar Barra Lateral'><?php echo Tag::image("iconos/plus.png","border: 0","width: 25px"); ?>Ocultar Barra Lateral</a></span>
+        </span>    
+    </li>
+    <li class='has-sub '><?php echo Tag::image("iconos/inicio.png","border: 0","width: 25px"); ?><?php echo Tag::linkTo("home/aplicaciones","Inicio"); ?></li>
          <?php 
         $menu = new Menu();
         $s_menu = new Menu();
         foreach($menu->find("aplicacion = '".Router::getApplication()."' and posicion='navegacion' and posicion_x<>0 and aplicacion = '".Router::getApplication()."' ","order: orden") as $menu):
-        echo "<li class='has-sub '> ";
+        echo "<li class='has-sub'> ";
                   if($menu->url!='#'){ 
-							echo "<a href='".core::getInstancePath().Router::getApplication()."/$menu->url' title='$menu->tittle'><span>$menu->descripcion</span></a> ";
+							echo "<a href='".core::getInstancePath().Router::getApplication()."/$menu->url' ><span>".Tag::image("$s_menu->urlimage","border: 0","width: 25px")." $menu->descripcion</span></a> ";
 					}else{ 
-							echo "<a title='$menu->tittle'><span>$menu->descripcion</span></a> ";
+							echo "<a ><span>".Tag::image("$menu->urlimage","border: 0","width: 25px")." $menu->descripcion</span></a> ";
 					};
                   echo  " <ul>"; 
                     if($s_menu->count("posicion_y='$menu->posicion_x' and aplicacion = '".Router::getApplication()."' and posicion='navegacion' ")){			
                             foreach($s_menu->find("posicion_y='$menu->posicion_x' and posicion='navegacion' ","order: orden") as $s_menu):
                             echo "<li>";
-                                echo "<span><a href='".core::getInstancePath().Router::getApplication()."/$s_menu->url' title='$s_menu->tittle'>$s_menu->descripcion</a></span>";
+                                echo "<span><a href='".core::getInstancePath().Router::getApplication()."/$s_menu->url' > ".Tag::image("$s_menu->urlimage","border: 0","width: 25px")."  $s_menu->descripcion</a></span>";
                             echo "</li>";
                             endforeach;
                     }
@@ -28,3 +34,4 @@
     </ul>
 </div>
 <?php } ?>
+

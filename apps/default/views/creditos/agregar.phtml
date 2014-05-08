@@ -64,7 +64,7 @@
        <td align="right" valign="top">PORCENTAJE</td>
        <td>
 		   	<?php echo Tag::numericField("porcentaje","size: 4","maxlenth: 2"); ?>% 
-	        <!--Capital Prestado--><?php //echo Tag::numericField("capital","size: 20","maxlenth: 100"); ?>
+	        Capital Prestado <?php echo Tag::numericField("capital","size: 20","maxlenth: 100"); ?>
        </td>
      </tr>
      <tr>
@@ -102,23 +102,22 @@
 
  <br />
 
- <br /> <br /> <br /> <br />
-<!--
+ <br /> <br /><br />
+ <!--
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
 
   <tr>
 
     <td width="50%">&nbsp;</td>
 
-    <th align="right">CANTIDAD TOTAL </th>
+    <th align="right">VALOR TOTAL </th>
 
-    <td><?php //echo Tag::textField("total","size: 12"); ?></td>
+    <td><?php echo Tag::textField("total","size: 40"); ?></td>
 
   </tr>
 
 </table>
 
--->
 
 	<div align="center">
 
@@ -128,7 +127,7 @@
 
     </div>
 
-
+-->
 
 <p>&nbsp;</p>
 
@@ -232,23 +231,35 @@
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	
+jQuery("#capital").blur(function(e) {
+    var totaltmp = 0;
+	totaltmp = (parseFloat(jQuery("#porcentaje").val())/100) + 1;
+	totaltmp = totaltmp * parseFloat( this.value );
+	//alert (totaltmp);
+	jQuery("#total_credito").val(totaltmp);
+	if(parseFloat(jQuery("#total_credito").val())>1000000){
+			jQuery("#numero_cuotas").val(40)
+		}else{
+			jQuery("#numero_cuotas").val(30)
+			}
+});
 
-<?php 
-echo "jQuery(\"#clientes_id\").val($clientes_id);\n";
-echo "jQuery(\"#cobradores_id\").val($cobradores_id);\n";
+jQuery("#numero_cuotas").blur(function(e) {
+	jQuery("#valor_cuotas").val( jQuery("#total_credito").val()/jQuery("#numero_cuotas").val() );
+});
 
-//echo "jQuery(\"#observaciones\").val('paso por aqui');\n";
-?>	
 
-	
-	if( jQuery( "#fecha_cuota"          ) ){ jQuery( "#fecha_cuota"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
-	if( jQuery( "#tmp_vencimiento"      ) ){ jQuery( "#tmp_vencimiento"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
-	if( jQuery( "#tmp_vencimiento_mod"  ) ){ jQuery( "#tmp_vencimiento_mod"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
-	
-	if( jQuery( "#buscar_item"     ) ){ jQuery( "#buscar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
-	if( jQuery( "#agregar_item"     ) ){ jQuery( "#agregar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
-	if( jQuery( "#modificar_item"    ) ){ jQuery( "#modificar_item"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
-	if( jQuery( "#borrar_item"   ) ){ jQuery( "#borrar_item"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+
+
+if( jQuery( "#fecha_cuota"          ) ){ jQuery( "#fecha_cuota"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+if( jQuery( "#tmp_vencimiento"      ) ){ jQuery( "#tmp_vencimiento"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+if( jQuery( "#tmp_vencimiento_mod"  ) ){ jQuery( "#tmp_vencimiento_mod"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+
+if( jQuery( "#buscar_item"     ) ){ jQuery( "#buscar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#agregar_item"     ) ){ jQuery( "#agregar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#modificar_item"    ) ){ jQuery( "#modificar_item"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+if( jQuery( "#borrar_item"   ) ){ jQuery( "#borrar_item"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
 
 	
  <?php 
@@ -385,27 +396,27 @@ if (!existe) {
 });
 
 
- jQuery("#numero_cuotas").blur(function(e){
+ /*jQuery("#numero_cuotas").blur(function(e){
 	 e.preventDefault();
 		if(jQuery("#total_credito").val()!=''){
 			jQuery("#valor_cuotas").val(jQuery("#total_credito").val()/jQuery("#numero_cuotas").val())
 		}
-});	
+});	*/
 
 
- jQuery("#valor_cuotas").blur(function(e){
+ /*jQuery("#valor_cuotas").blur(function(e){
 	 e.preventDefault();
 		if(jQuery("#numero_cuotas").val()!=''){
 			jQuery("#valor_cuotas").val(jQuery("#total_credito").val()/jQuery("#numero_cuotas").val())
 		}
-});	
+});	*/
 
-jQuery("#total_credito").focus(function(e){
+/*jQuery("#total_credito").focus(function(e){
 	 e.preventDefault();
 		if(jQuery("#total_credito").val()!='' && jQuery("#numero_cuotas").val()!=''){
 			jQuery("#valor_cuotas").val(jQuery("#total_credito").val()/jQuery("#numero_cuotas").val())
 		}
-});	
+});	*/
 
  jQuery("#generar").click(function(){
 	if( jQuery("#valor_cuotas").val() != '' && jQuery("#numero_cuotas").val() != '' && jQuery("#fecha_cuota").val() != '') {
@@ -953,9 +964,6 @@ function config_gridCompras(){
 
 config_gridCompras();
 
-
-
-jQuery("#generar").click();
 
 });
 

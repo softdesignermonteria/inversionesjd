@@ -415,7 +415,7 @@
 							 $creditos->fecha_act           = date("Y-m-d H:i:s");
 							 $creditos->fecha               = $_REQUEST["fecha"];
 							 $creditos->fecha_cuota         = $_REQUEST["fecha_cuota"];
-							 $creditos->capital             = '0';//$_REQUEST["capital"];
+							 $creditos->capital             = $_REQUEST["capital"];
 							 $creditos->anulado             = '0';
 							 $creditos->observaciones       = $_REQUEST["observaciones"];
 							 $creditos->cuotas              = $_REQUEST["numero_cuotas"];
@@ -619,7 +619,7 @@
 							 $creditos->fecha_act           = date("Y-m-d H:i:s");
 							 $creditos->fecha               = $_REQUEST["fecha"];
 							 $creditos->fecha_cuota         = $_REQUEST["fecha_cuota"];
-							 $creditos->capital             = '0';//$_REQUEST["capital"];
+							 $creditos->capital             = $_REQUEST["capital"];
 							 $creditos->anulado             = '0';
 							 $creditos->observaciones       = $_REQUEST["observaciones"];
 							 $creditos->cuotas              = $_REQUEST["numero_cuotas"];

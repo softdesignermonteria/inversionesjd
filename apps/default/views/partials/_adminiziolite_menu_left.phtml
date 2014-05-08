@@ -1,52 +1,5 @@
 <?php if(Session::get(md5("usuario_autenticado"))==md5(true)){ ?>
-
-<!-- Beginning of compulsory code below -->
-<!--<ul class="box">
-
-	 <?php 
-
-       /* $menu = new Menu();
-
-        $s_menu = new Menu();
-
-        $i=0;
-
-        foreach($menu->find("posicion_x<>0","order: orden") as $menu):
-
-        
-
-        echo "<li id='submenu-active' onClick='ocultar($i);' ><a>$menu->descripcion</a>
-
-                    <ul class='toggler menu_left_admiziolite' id='ul_$i'>";
-
-                    if($s_menu->count("posicion_y='$menu->posicion_x'")){			
-
-                            foreach($s_menu->find("posicion_y='$menu->posicion_x'","order: orden") as $s_menu):
-
-                            echo "<li>";
-
-                                echo "<a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>$s_menu->descripcion</a>";
-
-                            echo "</li>";
-
-                            endforeach;
-
-                    }
-
-                echo "</ul>";
-
-        echo "</li>";
-
-		
-
-      	$i++;
-
-        endforeach;*/
-
-        ?>			
-
-</ul>-->
-<!-- Beginning of compulsory code below -->
+<!--
 <div id="jt1">
 
 </div>
@@ -54,7 +7,7 @@
 <div id="menu_left_jt1" style="display:none">
 <div id="menu_left_jt1_datos" >
 <?php 
-$menu = new Menu();
+/*$menu = new Menu();
 $s_menu = new Menu();
 foreach($menu->find("posicion_x<>0 and posicion='navegacion' and aplicacion = '".Router::getApplication()."'" ,"order: orden") as $menu):
 echo "<li >
@@ -70,10 +23,37 @@ echo "<li >
 			}
 		echo "</ul>";
 echo "</li>";
-endforeach;
+endforeach;*/
 ?>	
 </div>
 </div>
+-->
+
+<style>.ui-menu { width: 100%; }</style>
+<div id="accordion" >
+<?php 
+$menu = new Menu();
+$s_menu = new Menu();
+foreach($menu->find("posicion_x<>0 and posicion='navegacion' and aplicacion = '".Router::getApplication()."'" ,"order: orden") as $menu):
+echo "<h3>$menu->descripcion</h3>
+	    <div>
+		  
+			<ul id='menu_$menu->descripcion'>";
+			if($s_menu->count(" posicion_y='$menu->posicion_x' and posicion='navegacion' and aplicacion = '".Router::getApplication()."' ")){			
+					foreach($s_menu->find("posicion_y='$menu->posicion_x' and posicion='navegacion' and aplicacion = '".Router::getApplication()."' ","order: orden") as $s_menu):
+					echo "<li>";
+						echo "<a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'><span>".Tag::image("$s_menu->urlimage","border: 0","width: 25px")."</span>$s_menu->descripcion</a>";
+					echo "</li>";
+					endforeach;
+			}
+	  echo "</ul>
+	       
+		</div>";
+endforeach;
+?>	
+</div>
+
+
 <script>
 
 //var i = <?php //echo $i; ?>;
@@ -81,10 +61,23 @@ endforeach;
 
 
 jQuery(document).ready(function(){
-
+	
+		 var icons = {
+			header: "ui-icon-circle-arrow-e",
+			activeHeader: "ui-icon-circle-arrow-s"
+		};
+	
+		jQuery( "#accordion" ).accordion({
+			icons: icons,  heightStyle: "content"
+		});
+		
+<?php foreach($menu->find("posicion_x<>0 and posicion='navegacion' and aplicacion = '".Router::getApplication()."'" ,"order: orden") as $menu): ?>
+		jQuery( "#menu_<?php echo $menu->descripcion; ?>" ).menu();
+<?php endforeach; ?>		
+		
 		//jQuery(".menu_left_admiziolite").toggle("slow");
 		
-		jQuery("#jt1").jstree({
+		/*jQuery("#jt1").jstree({
 			"html_data": {
 						"data": jQuery("#menu_left_jt1_datos").clone(),
 				},
@@ -95,7 +88,7 @@ jQuery(document).ready(function(){
 				},
     	    "plugins" : [ "themes", "html_data" ]
 	    });
-
+		*/
 
 });
 /*

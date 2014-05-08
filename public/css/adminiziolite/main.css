@@ -10,7 +10,7 @@
 HTML - styles
 ============================================================================= */
 
-body {font:0.1em/1.5 "arial", sans-serif;}
+body {font:0.1em/1  "arial", sans-serif;}
 h1, h2, h3, h4, h5, h6, address, blockquote, dl, fieldset, ol, p, table {margin:15px 0;}
 #content h1 {font-size:180%;}
 #content h2 {font-size:160%;}
@@ -19,12 +19,7 @@ h1, h2, h3, h4, h5, h6, address, blockquote, dl, fieldset, ol, p, table {margin:
 #content h5, h6 {font-size:100%;}
 #content table {margin:0; border-collapse:collapse;}
 
-/*#content ul {margin:15px 0; list-style:none;}*/
-/*background:url("@img_path/adminiziolite/design/ul.gif") 0 4px no-repeat;*/
-/*#content ul li {padding-left:15px; }
-#content ul ul {margin:0 0 0 10px;}*/
-/*background:url("@img_path/adminiziolite/design/ul-ul.gif") 0 4px no-repeat;*/
-/*#content ul ul li {padding-left:15px; }*/
+
 #content ol {margin:15px 0 15px 30px; }
 #content ol ol {margin:0 0 0 20px;}
 #content ol ol li {list-style-type:lower-alpha;}

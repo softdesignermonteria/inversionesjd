@@ -640,22 +640,6 @@
 							$total_credito = 0;
 							$detalles_item = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_POST["detalles"])));
 							
-							/* cunsultando intereses para el credito */
-								$cxc = new Cxc();
-								$cxc->setTransaction($transaction);
-								$cxc = $this->Cxc->findFirst("creditos_id = '$encabezado->creditos_id' and anulado = '0'");
-								$saldo = $cxc->capital + $cxc->capital_pagado;
-								Flash::notice("Capital Adeudado antes de este recibo de caja:  ".number_format($saldo));
-								
-								$emp = new Empresa();
-								$emp->setTransaction($transaction);
-								$emp = $this->Empresa->findFirst("id = '$encabezado->empresa_id' ");
-								$notastipo = $emp->tipo_documento_id_notas_debito;
-								$creditostipo = $emp->tipo_documento_id_creditos;
-								Flash::notice("notas tipo ".$notastipo);
-								Flash::notice("creditos tipo ".$creditostipo);
-							/**/
-							
 							//Flash::notice($detalles_item);
 							if($detalles_item!='[]'){	
 								
@@ -671,7 +655,7 @@
 								}
 								
 								
-								$saldotmp = $saldo;
+								//$saldotmp = $saldo;
 								foreach( $detalles_item as $items):
 									$capitaltmp = 0;
 									$interestmp = 0;
@@ -693,49 +677,14 @@
 									if($dcxc->tipo_documento_id == $creditostipo){
 										$creditos_tmp = $this->Creditos->findFirst("id = '$encabezado->creditos_id' and anulado = 0 ");
 										$porcentaje    = $creditos_tmp->porcentaje/100;
-									
-										Flash::notice("Porcenate de interese creditos = ".$porcentaje);
-										if($this->DetalleCxc->count("tipo_documento_id = '$creditostipo' and vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ")==0){
-											$fecha = $creditos_tmp->fecha_cuota;
-										}else{
-											$fecha = $this->DetalleCxc->findFirst("tipo_documento_id = '$creditostipo' and vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ","order: vencimiento desc")->vencimiento;
-											}
 									}
-									
 									/*si es notas debito*/
-									
 									if($dcxc->tipo_documento_id == $notastipo){
-										
 										$notasd_tmp = $this->NotasDebito->findFirst("id = '$encabezado->creditos_id' and anulado = 0 ");
 										$porcentaje = $notasd_tmp->porcentaje/100;
-										Flash::notice("Porcenate notas creditos de interese = ".$porcentaje);
-										if($this->DetalleCxc->count("tipo_documento_id = '$notastipo' and  vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ")==0){
-												$fecha = $notasd_tmp->fecha_cuota;
-										}else{
-												$fecha = $this->DetalleCxc->findFirst("tipo_documento_id = '$notastipo' and vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ","order: vecimiento desc")->vencimiento;
-											}
 									}
-									
-									Flash::notice("fecha inicial para el calculo de los intereses ".$fecha);
-									$fecha2 = new Date("$encabezado->fecha");
-									$dias = $fecha2->diffDate("$fecha");  
-									$dias = $dias+1;
-									Flash::notice(" $encabezado->fecha  $fecha Dias para el calculo de los intereses ".$dias);
-									if($dias<0){$dias=0;}
-									if($dias>30){$dias=30;}
-									
-									$dias_anteriores = $this->DetalleRecibosCaja->sum("dias_intereses","conditions: detalle_cxc_id = '$items->detalle_cxc_id' and anulado = '0' "); 
-									if($dias_anteriores>30){$dias_anteriores=30;}
-									$dias = $dias - $dias_anteriores;
-									
-									$interes_diario = (($saldotmp*$porcentaje)/30);
-									Flash::notice("Valor Intereses diario ".$interes_diario);
-									$interestmp = $interes_diario*$dias;
-									$interestmp = round($interestmp,-3);
-									Flash::notice("Interes Calculado para esta cuota ".$interestmp);
-									
-									$capitaltmp = $items->valor - $interestmp ;
-									Flash::notice("Capital Calculado para esta cuota ".$capitaltmp);
+								    
+									$capitaltmp = $items->valor / (1 + $porcentaje );
 									
 									$detalles->detalle_cxc_id         = $items->detalle_cxc_id;
 									$detalles->recibos_caja_id        = $encabezado->id;
@@ -744,9 +693,9 @@
 									$detalles->codigo                 = $items->codigo;
 									$detalles->vencimiento            = $items->vencimiento;
 									$detalles->descuento              = 0;
-									$detalles->dias_intereses         = $dias;
+									$detalles->dias_intereses         = 0;
 									$detalles->capital                = $capitaltmp;
-									$detalles->intereses              = $interestmp;
+									$detalles->intereses              = $items->valor - $capitaltmp;
 									//$detalles->anulado                = '0';
 									if($items->anulado == "SI") {  $detalles->anulado = '1';}
 									if($items->anulado == "NO") {  $detalles->anulado = '0';  $total_credito += $detalles->valor; }
@@ -788,8 +737,6 @@
 											 
 											}	
 										
-								$saldotmp = $saldotmp - $capitaltmp;
-								Flash::notice("Nuevo Saldo");					  
 								endforeach; //cierra los detalles		
 							
 						} //cierra detalles json	
@@ -935,21 +882,7 @@
 							$total_credito = 0;
 							$detalles_item = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_POST["detalles"])));
 							
-							/* cunsultando intereses para el credito */
-								$cxc = new Cxc();
-								$cxc->setTransaction($transaction);
-								$cxc = $this->Cxc->findFirst("creditos_id = '$encabezado->creditos_id' and anulado = '0'");
-								$saldo = $cxc->capital + $cxc->capital_pagado;
-								Flash::notice("Capital Adeudado antes de este recibo de caja:  ".number_format($saldo));
-								
-								$emp = new Empresa();
-								$emp->setTransaction($transaction);
-								$emp = $this->Empresa->findFirst("id = '$encabezado->empresa_id' ");
-								$notastipo = $emp->tipo_documento_id_notas_debito;
-								$creditostipo = $emp->tipo_documento_id_creditos;
-								Flash::notice("notas tipo ".$notastipo);
-								Flash::notice("creditos tipo ".$creditostipo);
-							/**/
+							
 							
 							//Flash::notice($detalles_item);
 							if($detalles_item!='[]'){	
@@ -994,48 +927,17 @@
 											if($dcxc->tipo_documento_id == $creditostipo){
 												$creditos_tmp = $this->Creditos->findFirst("id = '$encabezado->creditos_id' and anulado = 0 ");
 												$porcentaje    = $creditos_tmp->porcentaje/100;
-											
-												Flash::notice("Porcenate de interese creditos = ".$porcentaje);
-													if($this->DetalleCxc->count("tipo_documento_id = '$creditostipo' and vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ")==0){
-														$fecha = $creditos_tmp->fecha_cuota;
-													}else{
-													$fecha = $this->DetalleCxc->findFirst("tipo_documento_id = '$creditostipo' and vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ","order: vencimiento desc")->vencimiento;
-													}
 											}
 									
 											/*si es notas debito*/
 											
 											if($dcxc->tipo_documento_id == $notastipo){
-												
 												$notasd_tmp = $this->NotasDebito->findFirst("id = '$encabezado->creditos_id' and anulado = 0 ");
 												$porcentaje = $notasd_tmp->porcentaje/100;
-												Flash::notice("Porcenate notas creditos de interese = ".$porcentaje);
-													if($this->DetalleCxc->count("tipo_documento_id = '$notastipo' and  vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ")==0){
-														$fecha = $notasd_tmp->fecha_cuota;
-													}else{
-														$fecha = $this->DetalleCxc->findFirst("tipo_documento_id = '$notastipo' and vencimiento < '$items->vencimiento' and creditos_id = '$encabezado->creditos_id' and anulado = 0 ","order: vecimiento desc")->vencimiento;
-													}
 											}
 									
-											Flash::notice("fecha inicial para el calculo de los intereses ".$fecha);
-											$fecha2 = new Date("$encabezado->fecha");
-											$dias = $fecha2->diffDate("$fecha");  
-											$dias = $dias+1;
-											Flash::notice(" $encabezado->fecha  $fecha Dias para el calculo de los intereses ".$dias);
-											if($dias<0){$dias=0;}
-											if($dias>30){$dias=30;}
-											
-											$dias_anteriores = $this->DetalleRecibosCaja->sum("dias_intereses","conditions: detalle_cxc_id = '$items->detalle_cxc_id' and anulado = '0' "); 
-											if($dias_anteriores>30){$dias_anteriores=30;}
-											$dias = $dias - $dias_anteriores;
-											
-											$interes_diario = round((($saldotmp*$porcentaje)/30),-3) + 1000;
-											Flash::notice("Valor Intereses diario ".$interes_diario);
-											$interestmp = $interes_diario*$dias;
-											Flash::notice("Interes Calculado para esta cuota ".$interestmp);
-											$interestmp = round($interestmp,-3);
-											$capitaltmp = $items->valor - $interestmp;
-											Flash::notice("Capital Calculado para esta cuota ".$capitaltmp);
+										
+											$capitaltmp = $items->valor / (1 + $porcentaje );
 											
 									}
 									
@@ -1047,9 +949,9 @@
 									$detalles->codigo                 = $items->codigo;
 									$detalles->vencimiento            = $items->vencimiento;
 									$detalles->descuento              = 0;
-									$detalles->dias_intereses         = $dias;
+									$detalles->dias_intereses         = 0;
 									$detalles->capital                = $capitaltmp;
-									$detalles->intereses              = $interestmp;
+									$detalles->intereses              = $items->valor - $capitaltmp;
 									//$detalles->anulado                = '0';
 									if($items->anulado == "SI") {  $detalles->anulado = '1';}
 									if($items->anulado == "NO") {  $detalles->anulado = '0';  $total_credito += $detalles->valor; }
