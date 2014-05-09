@@ -6,11 +6,22 @@ jQuery(document).ready(function(){
 		
 		jQuery("#tabladetalles_cxc").jqGrid(
 		{ 
-			ajaxGridOptions : {type:"POST"},
-			url:'<?php echo core::getInstancePath(); ?>detalle_cxc/find_detalle_buscar/?clientes_id=<?php echo $_REQUEST["clientes_id"]; ?>', 
+			ajaxGridOptions : {
+								type:"POST",
+								data:{
+										clientes_id: <?php echo $_REQUEST["clientes_id"]; ?>,	
+										creditos_id: <?php echo $_REQUEST["creditos_id"]; ?>,
+										_search:	"false",
+										page:	1,
+										rows:	20,
+										sidx:	"vencimiento",
+										sord:	"asc"
+									 }
+							},
+			url:'<?php echo core::getInstancePath(); ?>detalle_cxc/find_detalle_buscar/', 
 			datatype: "json", 
 
-			colNames:['Id','Cod. Creditos','Prefijo','Consecutivos','Numero Credito','Fecha','Vencimiento','Codigo Cuota','Saldo'], 
+			colNames:['Id','Cod. Creditos','Prefijo','Consecutivos','Numero Credito','Fecha','Vencimiento','Dia','Codigo Cuota','Saldo'], 
 			colModel:[ 
 				{ name:'id'                 ,index:'id'             }, 
 				{ name:'creditos_id'        ,index:'creditos_id'    },
@@ -19,6 +30,7 @@ jQuery(document).ready(function(){
 				{ name:'numero_credito'     ,index:'numero_credito' },
 				{ name:'fecha'              ,index:'fecha'          },
 				{ name:'vencimiento'        ,index:'vencimiento'    },
+				{ name:'dia_semana'         ,index:'dia_semana'    },
 				{ name:'codigo'             ,index:'codigo'         },
 				{ name:'valor'              ,index:'valor'          }
 			], 

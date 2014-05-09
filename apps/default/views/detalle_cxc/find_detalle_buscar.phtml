@@ -29,7 +29,8 @@ if($searchOn=='true') {
 
 $condicion = "";
 
-if($_REQUEST["clientes_id"]!=''){ $condicion .= "  and creditos.clientes_id = '".$_REQUEST["clientes_id"]."'"; }
+if(isset($_REQUEST["clientes_id"])){ if($_REQUEST["clientes_id"]!=''){ $condicion .= "  and creditos.clientes_id = '".$_REQUEST["clientes_id"]."'"; } }
+if(isset($_REQUEST["creditos_id"])){ if($_REQUEST["creditos_id"]!=''){ $condicion .= "  and creditos.id = '".$_REQUEST["creditos_id"]."'"; } }
 
 $db = DbBase::rawConnect();
 
@@ -100,10 +101,14 @@ if ($page > $total_pages) $page=$total_pages;
 	$i=0; 
 	//colNames:['Id','Cod. Creditos','Prefijo','Consecutivos','Numero Credito','Fecha','Vencimiento','Codigo Cuota','Valor'], 
 	while( $row = $db->fetchArray($result) ) { 
+		
+		$fecha = new Date($row[vencimiento]);
+		$dia_semana = $fecha->getDayOfWeek();
+		
 		$responce->rows[$i]['id']=$row[id]; 
 		$numero = $row[id]."-".$row[prefijo].$row[consecutivo]."-".$row[codigo];
 		$saldo = $row[valor_cuota]-$row[valor_pagado]-$row[valor_nota_credito];
-		$responce->rows[$i]['cell']=array($row[id],$row[idt],$row[prefijo],$row[consecutivo],$numero,$row[fecha],$row[vencimiento],$row[codigo],$saldo); 
+		$responce->rows[$i]['cell']=array($row[id],$row[idt],$row[prefijo],$row[consecutivo],$numero,$row[fecha],$row[vencimiento],$dia_semana,$row[codigo],$saldo); 
 		$i++; 
 	} 
 	

@@ -15,12 +15,28 @@
     </tr>
      <tr>
         <td>DESCRIPCION</td>
-        <td colspan="2"><input type="text"  id="tmpint_descripcion"  name="tmpint_descripcion"  readonly="readonly" value="INTERESES" /></td>
+        <td colspan="2">
+        <!--<input type="text"  id="tmpint_descripcion"  name="tmpint_descripcion"  readonly="readonly" value="INTERESES" /></td>-->
+        <select id="tmpint_descripcion"  name="tmpint_descripcion">
+            	<option value="INTERESES">INTERESES</option>
+                <option value="DESCUENTOS">DESCUENTOS</option>
+                <option value="OTROS">OTROS</option>
+            </select>
+        
     </tr>
     <tr>
-        <td>VALOR INTERESES</td>
+        <td>VALOR</td>
         <td colspan="2"><input type="text"  id="tmpint_valor"  name="tmpint_valor" value="<?php echo $valor_int; ?>"/></td>
     </tr>
 </table>
 </div>
-<script>aplicar_css('ventana_unica1');</script>
+<script>
+aplicar_css('ventana_unica1');
+jQuery(document).ready(function(e) {
+jQuery("#tmpint_descripcion").change(function(){
+		if( jQuery("#tmpint_descripcion").val() == "INTERESES"  ){ jQuery("#tmpint_codigo").val("int"); }
+		if( jQuery("#tmpint_descripcion").val() == "DESCUENTOS" ){ jQuery("#tmpint_codigo").val("desc"); }
+		if( jQuery("#tmpint_descripcion").val() == "OTROS"      ){ jQuery("#tmpint_codigo").val("otros"); }
+	});
+});
+</script>

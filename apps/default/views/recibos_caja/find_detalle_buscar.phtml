@@ -52,12 +52,13 @@ if( isset($_REQUEST["hasta"]) ){  if( $_REQUEST["hasta"]!= '' ){  $condicion6 .=
 
 $db = DbBase::rawConnect();
 
-$sql = "select nd.*,(sum(dnd.valor)) as tnd,c.nit,c.nombre1,c.nombre2,c.apellido1,c.apellido2
+$sql = "select nd.*,(sum(IF(dnd.anulado=0,valor,0))) as tnd,c.nit,c.nombre1,c.nombre2,c.apellido1,c.apellido2
 			from recibos_caja nd,detalle_recibos_caja dnd, clientes c
 			where 1 = 1 
 			and nd.id = dnd.recibos_caja_id
 			and nd.clientes_id = c.id
 			and nd.anulado = 0
+		
 			$condicion1
 			$condicion2
 			$condicion3
@@ -92,7 +93,7 @@ if ($page > $total_pages) $page=$total_pages;
 			LIMIT $start , $limit"; 
 	$result = $db->query( $SQL ); 
 	$responce->page = $page ;
-	//$responce->sql = $SQL; 
+	$responce->sql = $SQL; 
 	$responce->total = $total_pages; 
 	$responce->records = $count; 
 	$i=0; 

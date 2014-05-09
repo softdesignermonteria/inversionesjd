@@ -75,7 +75,11 @@
 
 <button id="agregar_item" type="button">Agregar</button>
 
-<button id="intereses_item" type="button">Agregar Intereses</button>
+<button id="intereses_item" type="button">Otros Cobros</button>
+
+<button id="descontar_martes" type="button">Descontar Martes</button>
+
+<button id="pagado" type="button">Pagado</button>
 
 <button id="modificar_item" type="button">Modificar</button>
 
@@ -130,6 +134,14 @@
 	
 </div>
 
+
+<div title="Descontar Martes" id="dialogo_descontar_martes">
+	Digite el valor Cancelado <input type="number"  id="tmp_descontar_martes" name="tmp_descontar_martes" size="40"/>
+</div>
+
+<div title="Pagado o Abonado" id="dialogo_pagado">
+	Digite el valor Cancelado o Abonado <input type="number"  id="tmp_pagado" name="tmp_pagado" size="40"/>
+</div>
 
 <div title="Modificar Cuota" id="dialogo_modificar_item">
     <table width="70%" cellpadding="2" cellspacing="2" align="center">
@@ -312,6 +324,9 @@ jQuery(document).ready(function(){
 	if( jQuery( "#agregar_item"     ) ){ jQuery( "#agregar_item"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
 	if( jQuery( "#modificar_item"    ) ){ jQuery( "#modificar_item"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
 	if( jQuery( "#borrar_item"   ) ){ jQuery( "#borrar_item"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+	
+	if( jQuery( "#descontar_martes"        ) ){ jQuery( "#descontar_martes"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#pagado"        ) ){ jQuery( "#pagado"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
 
 	
  <?php 
@@ -513,6 +528,34 @@ jQuery("#intereses_item").click(function(e){
 
 
 
+jQuery("#descontar_martes").click(function(e){
+	 e.preventDefault();
+	 
+	if( jQuery("#clientes_id").val() != '' && jQuery("#creditos_id").val() != '' ){
+			jQuery("#dialogo_descontar_martes").dialog("open");
+		//reload_grid();
+	}else{
+		jQuery("#dialogo_mensajes").html("");
+		jQuery("#dialogo_mensajes").html("Por Favor escoja un Cliente y un credito Valido");
+		jQuery("#dialogo_mensajes").dialog("open");
+	}
+});
+
+
+jQuery("#pagado").click(function(e){
+	 e.preventDefault();
+	 
+	if( jQuery("#clientes_id").val() != '' && jQuery("#creditos_id").val() != '' ){
+			jQuery("#dialogo_pagado").dialog("open");
+		//reload_grid();
+	}else{
+		jQuery("#dialogo_mensajes").html("");
+		jQuery("#dialogo_mensajes").html("Por Favor escoja un Cliente y un credito Valido");
+		jQuery("#dialogo_mensajes").dialog("open");
+	}
+});
+
+
 /*	 
 
 //autocomplete con json	
@@ -636,6 +679,128 @@ jQuery("#dialogo_agregar_intereses").dialog(
 	]
 
 });
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+
+jQuery("#dialogo_descontar_martes").dialog(
+
+{ 
+
+	autoOpen:false
+	, width:400 
+	, heigth:300 
+	,modal: true
+	,buttons:[
+		{
+			text:  "Abonar"
+			,click: function(){
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/agregar_item_martes/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									valor:   jQuery("#tmp_descontar_martes").val(),
+									clientes_id:  jQuery("#clientes_id").val(),
+									creditos_id:  jQuery("#creditos_id").val()
+								},
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+
+					 jqXHR.done(function(data){
+						jQuery.each(data, function(i, item) {
+									detalles.push(
+											{
+												 id              :data[i].id
+												,detalle_cxc_id  :data[i].detalle_cxc_id
+												,codigo          :data[i].codigo
+												,numero_credito  :data[i].numero_credito
+												,descripcion     :data[i].descripcion
+												,valor           :data[i].valor
+												,vencimiento     :data[i].vencimiento
+												,anulado         : data[i].anulado
+									
+											}
+									);
+							});
+							reload_grid();
+					});
+
+					jQuery(this).dialog("close"); 
+
+				}	
+
+		}
+
+	]
+
+});
+
+
+
+jQuery("#dialogo_pagado").dialog(
+
+{ 
+
+	autoOpen:false
+	, width:400 
+	, heigth:300 
+	,modal: true
+	,buttons:[
+		{
+			text:  "Abonar"
+			,click: function(){
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/agregar_item_pagado/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									valor:   jQuery("#tmp_pagado").val(),
+									clientes_id:  jQuery("#clientes_id").val(),
+									creditos_id:  jQuery("#creditos_id").val()
+								},
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+
+					 jqXHR.done(function(data){
+						jQuery.each(data, function(i, item) {
+									detalles.push(
+											{
+												 id              :data[i].id
+												,detalle_cxc_id  :data[i].detalle_cxc_id
+												,codigo          :data[i].codigo
+												,numero_credito  :data[i].numero_credito
+												,descripcion     :data[i].descripcion
+												,valor           :data[i].valor
+												,vencimiento     :data[i].vencimiento
+												,anulado         : data[i].anulado
+									
+											}
+									);
+							});
+							reload_grid();
+					});
+
+					jQuery(this).dialog("close"); 
+
+				}	
+
+		}
+
+	]
+
+});
+
 
 /*-----------------------------------------------------modificar item----------------------------------------------------------------------------*/
 
