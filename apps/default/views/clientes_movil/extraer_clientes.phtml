@@ -7,6 +7,7 @@ $i=0;
 foreach($clientes->find() as $clientes):
 	$responce[]=array(
 								"id"=>$clientes->id,
+								"nit"=>$clientes->nit,
 								"nombres"=>utf8_encode($clientes->nombre1." ".$clientes->nombre2." ".$clientes->apellido1." ".$clientes->apellido2),
 								"direccion"=>$clientes->direccion,
 								"telefono"=>$clientes->telefono,

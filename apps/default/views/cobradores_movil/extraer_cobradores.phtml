@@ -7,6 +7,7 @@ $i=0;
 foreach($cobradores->find() as $cobradores):
 	$responce[]=array(
 								"id"=>$cobradores->id,
+								"nit"=>$cobradores->nit,
 								"nombres"=>utf8_encode($cobradores->nombre1." ".$cobradores->nombre2." ".$cobradores->apellido1." ".$cobradores->apellido2),
 								"direccion"=>$cobradores->direccion,
 								"telefono"=>$cobradores->telefono,
