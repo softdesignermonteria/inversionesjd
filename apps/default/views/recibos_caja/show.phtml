@@ -36,6 +36,13 @@
 
   </tr>
 
+ <tr>
+
+    <td align="right" valign="top">COBRADOR</td>
+
+    <td><?php echo Tag::textFieldExt("cobradores","size: 30"); ?></td>
+
+  </tr>
 
   <tr>
 
@@ -49,21 +56,12 @@
  
     
      <tr>
-       <td align="right" valign="top">BANCO</td>
+       <td align="right" valign="top">PROVISIONAL</td>
        <td>
-	   		<?php echo Tag::textUpperField("banco","size: 30","maxlenth: 100"); ?>
-			 CHEQUE: 
-			<?php echo Tag::textUpperField("cheque","size: 30","maxlenth: 100"); ?>
+	   		<?php echo Tag::textUpperField("provisional","size: 30","maxlenth: 100"); ?>
        </td>
      </tr>
     
- <tr>
-
-    <td align="right" valign="top">OBSERVACIONES</td>
-
-    <td><?php echo Tag::textArea("observaciones","size: 20"); ?></td>
-
-    </tr>
 
 </table>
 
@@ -262,6 +260,7 @@ config_gridCompras();
 
 jQuery("#clientes_id").val("<?php echo $clientes_id; ?>");
 jQuery("#creditos_id").val("<?php echo $creditos_id; ?>");
+jQuery("#cobradores_id").val("<?php echo $cobradores_id; ?>");
 	
 </script>
 

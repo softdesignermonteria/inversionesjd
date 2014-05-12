@@ -85,6 +85,7 @@
 				Tag::displayTo("foto",$emp->foto);
 				Tag::displayTo("tipo_documento_id_creditos",$emp->tipo_documento_id_creditos);
 				Tag::displayTo("tipo_documento_id_notas_debito",$emp->tipo_documento_id_notas_debito);
+				Tag::displayTo("tipo_documento_id_recibos_caja",$emp->tipo_documento_id_recibos_caja);
 				/*Tag::displayTo("telefono2",$cli->telefono2);
 				Tag::displayTo("sueldo",$cli->sueldo);
 				Tag::displayTo("otros_ingresos",$cli->otros_ingresos);
@@ -171,6 +172,7 @@
 						$emp->foto = $this->getPostParam("foto");
 						$emp->tipo_documento_id_creditos = $this->getPostParam("tipo_documento_id_creditos");
 						$emp->tipo_documento_id_notas_debito = $this->getPostParam("tipo_documento_id_notas_debito");
+						$emp->tipo_documento_id_recibos_caja = $this->getPostParam("tipo_documento_id_recibos_caja");
 															
 						if($emp->save()){
 							  Flash::success("Se Actualizo correctamente el registro");

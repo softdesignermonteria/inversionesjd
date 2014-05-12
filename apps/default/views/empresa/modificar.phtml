@@ -55,6 +55,14 @@
       echo Tag::select("tipo_documento_id_notas_debito",$tp->find("empresa_id = '".Session::get("id_empresa")."'"),'using: id,nombre','useDummy=yes' ) ?></td>
       <td height="0">&nbsp;</td>
     </tr>
+     <tr>
+      <td height="0">&nbsp;</td>
+      <td height="0" align="right">TIPO DOCUMENTO RECIBOS CAJA</td>
+      <td height="0"><?php 
+            $tp = new TipoDocumento();
+      echo Tag::select("tipo_documento_id_recibos_caja",$tp->find("empresa_id = '".Session::get("id_empresa")."'"),'using: id,nombre','useDummy=yes' ) ?></td>
+      <td height="0">&nbsp;</td>
+    </tr>
    <tr>
    <td align="right">CAPTURAR HUELLA</td>
     <td height="0" align="left" valign="middle"><?php echo Tag::selectStatic('huellas', 
