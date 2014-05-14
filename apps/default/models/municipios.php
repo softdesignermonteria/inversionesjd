@@ -4,7 +4,7 @@
   		
 		public function initialize(){
 			
-			$this->belongsTo("municipios");
+			$this->hasMany("clientes");
 		   
 		}
   }

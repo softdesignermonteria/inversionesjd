@@ -1,0 +1,29 @@
+<?php echo view::getContent(); ?>
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th>Codigo</th>
+        <th>Nombres</th>
+        <th>Direccion Casa</th>
+        <th>Telefono</th>
+        <th>celular</th>
+        <th>Departamento</th>
+        <th>Municipio</th>
+    </tr>
+</thead>
+<tbody>
+<?php foreach($detalles as $detalles): ?>
+    <tr>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->direccion; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->telefono; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->celular; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->departamento; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->municipio; ?></td>
+    </tr>
+<?php endforeach; ?>    
+</tbody>
+</table>
+
+

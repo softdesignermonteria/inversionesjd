@@ -1,128 +1,72 @@
+<?php echo view::getContent(); ?>
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th>Codigo</th>
+        <th>Nombres</th>
+        <th>Direccion Casa</th>
+        <th>Total Credito</th>
+        <th>Pagado</th>
+        <th>Saldo</th>
+        <th>Saldo Capital</th>
+        <th class="oculto">Ver Credito</th>
+        <th class="oculto">Ver Cuotas</th>
+        <th class="oculto">Ver Pagos</th>
+    </tr>
+</thead>
+<tbody>
 <?php 
-$page = $_REQUEST['page']; 
-// get the requested page 
-$limit = $_REQUEST['rows']; 
-// get how many rows we want to have into the grid 
-$sidx = $_REQUEST['sidx']; 
-// get index row - i.e. user click to sort 
-$sord = $_REQUEST['sord']; 
-// get the direction if(!$sidx) 
-//$sidx =1; 
-if(!$sidx) $sidx =1;
-
-$wh = "";
-$searchOn = Strip($_REQUEST['_search']);
-if($searchOn=='true') {
-	$searchOper = $_REQUEST["searchOper"];
-	$searchField = $_REQUEST["searchField"];
-	$searchString = $_REQUEST["searchString"];
-	
-		switch ($searchOper) {
-			case 'eq': $wh = " and $searchField = '$searchString' "; break;
-		}
-	
-}
-$condicion1 = '';
-$condicion2 = '';
-if(isset($_REQUEST["identificacion"])){ $condicion1 .=  " and c.nit like '%".$_REQUEST["identificacion"]."%' "; }
-if(isset($_REQUEST["nombre"])){ $condicion2 .=  " and c.razon_social like '%".str_replace(' ','%',$_REQUEST["nombre"])."%' "; }
-
-// connect to the database 
-//$db = mysql_connect($dbhost, $dbuser, $dbpassword) or die("Connection Error: " . mysql_error()); 
-//mysql_select_db($database) or die("Error conecting to db."); 
-
-$db = DbBase::rawConnect();
-
-$sql = "select cxc.*, c.razon_social,c.nit
-			from cxc cxc, clientes c, creditos cr
-			where
-			 cr.anulado = 0
-			and cxc.anulado = 0
-			and cxc.creditos_id = cr.id
-			and cr.clientes_id = c.id
-			and (cxc.valor_total +  cxc.pagado) <> 0
-			and ( 
-				1 = 1 
-				$condicion1 
-				$condicion2
-				) 
-			";
-
-$result = $db->query("SELECT COUNT(*) AS count FROM ($sql) h where 1 = 1 ".$wr); 
-
-$row = $db->fetchArray($result); 
-
-$count = $row['count']; 
-
-if( $count >0 ) { 
-		$total_pages = ceil($count/$limit); 
-	} else { 
-		$total_pages = 0; 
-} 
-
-if ($page > $total_pages) $page=$total_pages; 
-	$start = $limit*$page - $limit;  // do not put 	$limit*($page - 1) 
-	$responce = new stdClass();
-	$SQL = "SELECT * 
-					FROM ($sql) h 
-			where 1 = 1 ".$wh."
-			ORDER BY $sidx $sord 
-			LIMIT $start , $limit"; 
-	$result = $db->query( $SQL ); 
-	$responce->page = $page ;
-	$responce->sql = $SQL; 
-	$responce->total = $total_pages; 
-	$responce->records = $count; 
-	$i=0; 
-	while( $row = $db->fetchArray($result) ) { 
-	 $responce->rows[$i]['id']=$row[id]; 
-	 $responce->rows[$i]['cell']=array(
-										$row[id],
-										$row[prefijo],
-										$row[consecutivo],
-										$row[fecha],
-										$row[nit],
-										utf8_encode($row[razon_social]),
-										$row[valor_total],
-										$row[pagado]
-									); 	
-	 					$i++; 
-	} 
-	
-	echo json_encode($responce);
-		
-		
-function Strip($value)
-{
-	if(get_magic_quotes_gpc() != 0)
-  	{
-    	if(is_array($value))  
-			if ( array_is_associative($value) )
-			{
-				foreach( $value as $k=>$v)
-					$tmp_val[$k] = stripslashes($v);
-				$value = $tmp_val; 
-			}				
-			else  
-				for($j = 0; $j < sizeof($value); $j++)
-        			$value[$j] = stripslashes($value[$j]);
-		else
-			$value = stripslashes($value);
-	}
-	return $value;
-}
-
-function array_is_associative ($array)
-{
-    if ( is_array($array) && ! empty($array) )
-    {
-        for ( $iterator = count($array) - 1; $iterator; $iterator-- )
-        {
-            if ( ! array_key_exists($iterator, $array) ) { return true; }
-        }
-        return ! array_key_exists(0, $array);
-    }
-    return false;
-}
-
+$a=0;$a1=0;$a2=0;$a3=0;
 ?>
+<?php foreach($detalles as $detalles): ?>
+    <tr>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->direccion; ?></td>
+        <td align="left" nowrap="nowrap">$ <?php echo number_format($detalles->valor_total);                       $a+=$detalles->valor_total; ?></td>
+        <td align="left" nowrap="nowrap">$ <?php echo number_format($detalles->pagado);                            $a1+=$detalles->pagado;?></td>
+        <td align="left" nowrap="nowrap">$ <?php echo number_format($detalles->valor_total+$detalles->pagado);     $a2+=$detalles->valor_total+$detalles->pagado;?></td>
+        <td align="left" nowrap="nowrap">$ <?php echo number_format($detalles->capital+$detalles->capital_pagado); $a3+=$detalles->capital+$detalles->capital_pagado;?></td>
+        <td align="left" nowrap="nowrap" class="oculto"><?php echo Tag::linkTo("creditos/show/$detalles->creditos_id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
+        <td align="left" nowrap="nowrap" class="oculto"><?php echo Tag::image("iconos/Visa.png","border: 0","width: 32px","id: a$detalles->creditos_id","onclick: ver_cuotas($detalles->clientes_id,$detalles->creditos_id)"); ?></td>
+        <td align="left" nowrap="nowrap" class="oculto"><?php echo Tag::image("iconos/Folder.png","border: 0","width: 32px","id: b$detalles->creditos_id","onclick: ver_pagos($detalles->creditos_id)"); ?></td>
+    </tr>
+   
+<?php endforeach; ?>    
+
+  <tr>
+      <th align="left" nowrap="nowrap">&nbsp;</th>
+      <th align="left" nowrap="nowrap">&nbsp;</th>
+      <th align="left" nowrap="nowrap">&nbsp;</th>
+      <th align="left" nowrap="nowrap">$ <?php echo number_format($a);  ?></th>
+      <th align="left" nowrap="nowrap">$ <?php echo number_format($a1);  ?></th>
+      <th align="left" nowrap="nowrap">$ <?php echo number_format($a2);  ?></th>
+      <th align="left" nowrap="nowrap">$ <?php echo number_format($a3);  ?></th>
+      <th align="left" nowrap="nowrap" class="oculto">&nbsp;</th>
+      <th align="left" nowrap="nowrap" class="oculto">&nbsp;</th>
+      <th align="left" nowrap="nowrap" class="oculto">&nbsp;</th>
+   </tr>
+    
+    
+</tbody>
+</table>
+<div id="div_ver_pagos"></div>
+<script>
+
+jQuery(document).ready(function(e) {
+	jQuery("#div_ver_pagos").dialog(
+			{ autoOpen: false 
+				,width: 800
+ 			    ,height: 500
+				,title: " Pagos Realizados " 
+				,modal: true
+				,buttons: {
+					"Cerrar": function() {
+							jQuery( this ).dialog( "close" );
+						}
+				}
+	 });
+  
+});
+
+</script>

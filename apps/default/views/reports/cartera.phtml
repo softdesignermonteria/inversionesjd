@@ -1,89 +1,100 @@
-<table width="80%">
-	<tr>
-    	<th colspan="2" align="center" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">Filtros</th>
+<h4>REPORTE LISTADO DE CARTERA</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/detalle_cartera", "update: resultado", "id: fx","name: fx","before: mostrar();","success: esconder(); ","complete: esconder(); " ); ?>
+
+<table id="filtros" width="100%" class="ui-corner-all ui-content">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th colspan="4">Filtros</th>
     </tr>
-	<tr>
-    	<td>Identificacion</td>
-    	<td><?php echo Tag::numericField("nit","size: 30"); ?></td>
+</thead>
+<tbody>
+    <tr>
+        <th>Cliente</th>
+        <td colspan="3"><input type="number" id="nit" name="nit" size="30"  /></td>
     </tr>
     <tr>
-    	<td>Nombre</td>
-    	<td><?php echo Tag::textUpperField("nombre","size: 100"); ?></td>
+        <th>Busqueda por Nombre</th>
+        <td><input type="text" id="nombre" name="nombre" size="50" /></td>
+        <th>Busqueda por Direccion</th>
+        <td><input type="text" id="direccion" name="direccion" size="50" /></td>
     </tr>
-    
     <tr>
-    	<td colspan="2" align="center"><button type="button" id="enviar" name="enviar">Filtrar</button></td>
-   	</tr>
+        <th>Departamento</th>
+        <td><?php  echo Tag::textFieldExt("departamentos","campo: departamento","size: 10"); ?></td>
+        <th>Municipio</th>
+        <td><?php  echo Tag::textFieldExt("municipios","campo: municipio","size: 10"); ?></td>
+    </tr>
+    <tr>
+      <th colspan="4"><button type="submit" id="guardar" name="guardar">Enviar</button></th>
+    </tr>
+</tbody>
 </table>
 
-<table id="tabla<?php echo Router::getController(); ?>"></table>
-<div id="pager<?php echo Router::getController(); ?>"></div>
+<?php echo Tag::endForm() ?>
+<div id="loader">
+<?php echo Tag::image("ajax-loader.gif"); ?>
+</div>
+<div id="resultado" style="min-height:600px; max-height:800px; overflow:auto;" ></div>
+
+
+<div id="mensajes"></div>
+
 
 <script>
+function mostrar(){
+		jQuery("#loader").show();
+ 
+	}
+function esconder(){
+		jQuery("#loader").hide();
+	}	
 	
-
-jQuery(document).ready(function(){
+esconder();
 	
-						
-		function reload_grid(){
-			var urls  = '<?php echo core::getInstancePath().Router::getController(); ?>/detalle_cartera/'	
-			urls += '?identificacion=' + jQuery("#nit").val();
-			urls += '&nombre=' + jQuery("#nombre").val();
-			jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',
-				{ 	
-					url: urls, 
+function ver_pagos(id){
+	jQuery.ajax({
+			type:"POST"
+			,url:"<?php echo core::getInstancePath(); ?>recibos_caja/ver_pagos/"
+			,async:true
+			,data:{
+					creditos_id: id
 				}
-			).trigger("reloadGrid");
-		}
-	
-		jQuery("#enviar").click(function() {
-            reload_grid();
-        });
+			,success: function(data){
+					jQuery("#div_ver_pagos").html("");
+					jQuery("#div_ver_pagos").html(data);
+					jQuery("#div_ver_pagos").dialog("open");
+				}
+			,error: function(data){
+					jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);
+					jQuery("#dialogo_mensajes").dialog("open");
+				}	
+		});			
 
+}
+
+
+function ver_cuotas(id,id2){
 		
-		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
-		{ 
-			ajaxGridOptions : {type:"POST"},
-			url:'<?php echo core::getInstancePath().Router::getController(); ?>/detalle_cartera', 
-			datatype: "json", 
-			colNames:['Id','Prefijo','Consecutivo','Fecha','Identificacion','Nombre','Total Credito','Total Pagado'], 
-			colModel:[ 
-				{ name:'id',index:'id', width:50},
-				{ name:'prefijo',index:'prefijo', width:50}, 
-				{ name:'consecutivo',index:'consecutivo', width:100},
-				{ name:'fecha',index:'fecha', width:100}, 
-				{ name:'nit',index:'nit', width:200 }, 
-				{ name:'razon_social',index:'razon_social', width:300},
-				{ name:'total_credito',index:'total_credito', width:100},
-				{ name:'total_pagado',index:'total_pagado', width:100}
-			], 
-			autoWidth:true,
-			width: 900,
-			height: 300,
-			rowNum:25, 
-			/*rowList:[10,20,30,40,50], */
-			pager: '#pager<?php echo Router::getController(); ?>', 
-			sortname: 'id', 
-			/*shrinkToFit :false,*/
-			viewrecords: true, 
-			sortorder: "asc", 
-			caption:"LISTADO DE SALDOS DE CARTERA",
-			ondblClickRow:function(rowid,iRow,iCol,e){
-				
-				var fila = jQuery(this).jqGrid('getRowData',rowid);
-					
-					//if( jQuery("#nit")    ){ jQuery("#nit").val(fila['nit']); }
-					
-					
-       		 }
-		}); 
-		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
-		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
-		caption: "Columnas",
-		title: "Reordena Columnas",
-		onClickButton : function (){
-			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
-		
-	});}*/
-});
+			 jQuery.ajax({
+					url:"<?php echo core::getInstancePath(); ?>detalle_cxc/find_buscar/",
+					type:"POST",
+					async:true,
+					data:{
+							clientes_id:  id,
+							creditos_id:  id2
+						}
+					,success: function(data){
+							jQuery("#div_ver_pagos").html("");
+							jQuery("#div_ver_pagos").html(data);
+							jQuery("#div_ver_pagos").dialog("open");
+						}
+					,error: function(data){
+							jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);
+							jQuery("#dialogo_mensajes").dialog("open");
+						}	
+				});
+
+	}
+
 </script>

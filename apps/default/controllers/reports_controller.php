@@ -40,92 +40,88 @@
 
 		
 
-		/**
-
-		 * Aqui sale el formulario de Iniciar Sesión
-
-		 *
-
-		 */
-
-		 
-
-		 public function not_found($controller, $action){
-
-				 $this->set_response('view');
-
-				 Flash::error("No esta definida la accion $action, redireccionando");
-
-				 return $this->redirect('administrador');
-
-				 
-
-		 }
-
-
-
-		/**
-
-		 * Esta accion es ejecutada por application/before_filter en caso
-
-		 * de que el usuario trate de entrar a una accion a la cual
-
-		 * no tiene permiso
-
-		 *
-
-		 */
-
-		public function no_accesoAction(){
-
-				$this->setResponse('view');
-
-				 Flash::error("No esta definida la accion $action, redireccionando");
-
-				 return $this->redirect('administrador');
-
-		}
-
 
 		public function carteraAction(){
-			}
+		
+		}
 			
 		public function detalle_carteraAction(){
-				$this->setResponse('view');
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			$condicion3 ="";
+			
+			$condicion4 ="";
+			$condicion5 ="";
+			
+			if($_REQUEST["nit"]!=''       ){ $condicion1 = " and {#Clientes}.nit like '%".$_REQUEST["nit"]."%' "; }
+			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and {#Clientes}.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%' "; }
+			if($_REQUEST["direccion"]!='' ){ $condicion3 = " and ( {#Clientes}.direccion like '%".str_replace(" ","%",$_REQUEST["direccion"])."%' )"; }
+			
+			if($_REQUEST["departamentos_id"]!='' ){ $condicion1 = " and {#Clientes}.departamentos_id = '".$_REQUEST["departamentos_id"]."' "; }
+			if($_REQUEST["municipios_id"]!=''    ){ $condicion1 = " and {#Clientes}.municipios_id = '".$_REQUEST["municipios_id"]."' "; }
+			
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("Creditos", "Cxc","Clientes","Departamentos","Municipios"),
+				"fields" => array(
+							"{#Cxc}.*", 
+							"{#Creditos}.clientes_id", 
+							"{#Clientes}.nit", 
+							"{#Clientes}.razon_social", 
+							"{#Clientes}.direccion", 
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+				"conditions" => " 1=1 $condicion1 $condicion2 $condicion3 $condicion4 $condicion5"
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles",$query->getResultSet());
+				
 		}	
 	
 		public function clientesAction(){
 				
 		}
 		
+		public function detalle_clientesAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			$condicion3 ="";
+			
+			$condicion4 ="";
+			$condicion5 ="";
+			
+			if($_REQUEST["nit"]!=''       ){ $condicion1 = " and {#Clientes}.nit like '%".$_REQUEST["nit"]."%' "; }
+			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and {#Clientes}.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%' "; }
+			if($_REQUEST["direccion"]!='' ){ $condicion3 = " and ( {#Clientes}.direccion like '%".str_replace(" ","%",$_REQUEST["direccion"])."%' )"; }
+			
+			if($_REQUEST["departamentos_id"]!='' ){ $condicion1 = " and {#Clientes}.departamentos_id = '".$_REQUEST["departamentos_id"]."' "; }
+			if($_REQUEST["municipios_id"]!=''    ){ $condicion1 = " and {#Clientes}.municipios_id = '".$_REQUEST["municipios_id"]."' "; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("Clientes", "Departamentos", "Municipios"),
+				"fields" => array(
+							"{#Clientes}.*", 
+							
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+				"conditions" => " 1=1 $condicion1 $condicion2 $condicion3 $condicion4 $condicion5"
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles",$query->getResultSet());
+		}
+		
 		public function deudoresAction(){
 		
 		}
 		
-		public function solicitudAction(){
-				//$this->setResponse("view");
-	
-		}
-		
-		public function cxcAction(){
-				//$this->setResponse("view");
-	
-		}
-		
-		public function cxc_generalAction(){
-				//$this->setResponse("view");
-	
-		}
-		
-		public function cxc_resumenAction(){
-				//$this->setResponse("view");
-	
-		}
-		
-		public function extracto_resumenAction(){
-				//$this->setResponse("view");
-	
-		}
 		
 		public function creditosAction(){
 				//$this->setResponse("view");
@@ -233,32 +229,8 @@
 			
 		}
 		
-		public function detalle_extracto_resumenAction(){
-				$this->setResponse("view");
-				$fecha=$_REQUEST["fecha"];
-				//Flash::notice($fecha);
-				$this->setParamToView("fecha",$fecha);
-				//Flash::notice($fecha);
-	
-		}
 		
-		public function detalle_extracto_resumen2Action(){
-				$this->setResponse("view");
-				$fecha=$_REQUEST["fecha"];
-				//Flash::notice($fecha);
-				$this->setParamToView("fecha",$fecha);
-				//Flash::notice($fecha);
-	
-		}
-
 		
-		public function detalle_extracto_resumen_csvAction(){
-			
-				$this->setResponse("view");
-		
-		}
-		
-	
 	
 	}
 

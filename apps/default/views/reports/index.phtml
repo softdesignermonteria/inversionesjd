@@ -1,20 +1,19 @@
-
- <h1>Modulo de Reportes</h1>   	
-
+  	
+<!--
+ <h1>Modulo de Reportes</h1> 
 <table align="center" width="100%" border="1" cellspacing="2" cellpadding="2">
 
  
 
   <tr>
 
-    <td width="20%" align="center" valign="middle"><?php echo Tag::linkTo("reports/clientes",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td width="20%" align="center" valign="middle"><?php //echo Tag::linkTo("reports/clientes",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
 
-    <td width="20%" align="center" valign="middle"><?php echo Tag::linkTo("reports/deudores",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td width="20%" align="center" valign="middle"><?php //echo Tag::linkTo("reports/deudores",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
 
-    <td width="20%" align="center" valign="middle"><?php echo Tag::linkTo("reports/solicitud",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
-    <td width="20%" align="center" valign="middle"><?php echo Tag::linkTo("reports/cxc",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td width="20%" align="center" valign="middle"><?php //echo Tag::linkTo("reports/cartera",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
 
-    <td width="20%" align="center" valign="middle"><?php echo Tag::linkTo("reports/creditos",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
+    <td width="20%" align="center" valign="middle"><?php //echo Tag::linkTo("reports/creditos",Tag::image("aplicaciones/agenda.jpg","width: 50px")); ?></td>
 
   </tr>
 
@@ -22,12 +21,81 @@
 
     <td height="30" align="center" valign="middle">Clientes</td>
 
-    <td height="30" align="center" valign="middle">Deudores</td>
+    <td height="30" align="center" valign="middle">Referencias</td>
 
-    <td height="30" align="center" valign="middle">Solicitud</td>
+    
+    
     <td align="center" valign="middle">Cartera</td>
 
     <td height="30" align="center" valign="middle">Cr&eacute;ditos</td>
 
   </tr>
 </table>
+-->
+<!--<?php 
+/*echo View::getContent(); 
+$menu = new Menu();
+$s_menu = new Menu();
+foreach($menu->find("aplicacion = '".Router::getApplication()."' and posicion='reportes' and posicion_x<>0 ","order: orden") as $menu):
+	echo "<h1>$menu->descripcion</h1>";	
+		echo "<table align=\"center\" width=\"100%\" border=\"1\" cellspacing=\"2\" cellpadding=\"2\">";
+		  echo "<tr>";
+			echo "<td>"; 
+			   echo "<ul style=\"width:100%;display:inline;\">";
+				if($s_menu->count("posicion_y='$menu->posicion_x' and aplicacion = '".Router::getApplication()."' and posicion='reportes' ")){			
+						foreach($s_menu->find("posicion_y='$menu->posicion_x' and posicion='reportes' ","order: orden") as $s_menu):
+						echo "<li style=\"width:150px;height:100px;vertical-align:central;display:inline-block;padding:5px;\"  >";
+							echo "<span><a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>".Tag::image("$s_menu->urlimage","width: 50px")."</a></span>";
+							echo "<span style=\"padding:5px;\" >$s_menu->descripcion</span>";
+						echo "</li>";
+						endforeach;
+				}
+			 echo "</ul>";
+			echo "</td>";
+		echo "</tr>";
+	  echo "</table>";
+endforeach;*/
+?>-->
+<div id="horizontalTab">
+<?php 
+
+echo View::getContent(); 
+$menu = new Menu();
+$s_menu = new Menu();
+
+$i=0;
+
+echo "<ul>";
+	foreach($menu->find("aplicacion = '".Router::getApplication()."' and posicion='reportes' and posicion_x<>0 ","order: orden") as $menu):
+		echo "<li><a href=\"#tab-$i\">$menu->descripcion</li>";	$i++; 
+	endforeach;
+echo "</ul>";
+
+$i=0;
+foreach($menu->find("aplicacion = '".Router::getApplication()."' and posicion='reportes' and posicion_x<>0 ","order: orden") as $menu):
+		echo "<div id=\"tab-$i\">"; $i++; 
+			echo "<ul style=\"width:100%;display:inline;\">";
+				if($s_menu->count("posicion_y='$menu->posicion_x' and aplicacion = '".Router::getApplication()."' and posicion='reportes' ")){			
+						foreach($s_menu->find("posicion_y='$menu->posicion_x' and posicion='reportes' ","order: orden") as $s_menu):
+						echo "<li style=\"width:150px;height:100px;vertical-align:central;display:inline-block;padding:5px;\"  >";
+							echo "<span><a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>".Tag::image("$s_menu->urlimage","width: 50px")."</a></span>";
+							echo "<span style=\"padding:5px;\" >$s_menu->descripcion</span>";
+						echo "</li>";
+						endforeach;
+				}
+			 echo "</ul>";
+		echo "</div>";
+endforeach;
+?>
+</div>
+
+<script>
+jQuery(document).ready(function () {
+	jQuery('#horizontalTab').responsiveTabs({
+		rotate: false,
+		startCollapsed: 'accordion',
+		collapsible: 'accordion',
+		setHash: true
+	});
+});	
+</script>

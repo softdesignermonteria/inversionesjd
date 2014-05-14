@@ -1162,6 +1162,35 @@
 				$this->setParamToView("id",$id);
 				$this->setParamToView("empresa_id",$rc->empresa_id);
 		}	
+		
+		
+		
+		public function ver_pagosAction($id=''){
+			$this->setResponse("view");
+			if($id==''){$id=$_REQUEST["creditos_id"];}	
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("RecibosCaja", "DetalleRecibosCaja","Cobradores"),
+				"groupFields" => array(
+									"{#RecibosCaja}.id",
+									"{#RecibosCaja}.prefijo",
+									"{#RecibosCaja}.consecutivo",
+									"{#RecibosCaja}.fecha",
+									"{#Cobradores}.razon_social"
+								   ),
+				"sumatory" => array(
+									"{#DetalleRecibosCaja}.valor",
+									"{#DetalleRecibosCaja}.capital",
+									"{#DetalleRecibosCaja}.intereses"
+									),				
+				"conditions" => " 1=1 and {#RecibosCaja}.creditos_id = '$id' and {#DetalleRecibosCaja}.anulado = 0 "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles",$query->getResultSet());
+				
+				
+		}	
+
 
 
 

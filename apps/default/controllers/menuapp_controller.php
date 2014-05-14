@@ -38,11 +38,13 @@ class MenuappController extends ApplicationController {
 	
 	public function detalle_buscarAction(){
 		$this->setResponse("view");
-		$app = $_REQUEST["aplicaciones"];
-		$pos = $_REQUEST["posiciones"];
+		$app = $_REQUEST["aplicaciones_mod"];
+		$pos = $_REQUEST["posiciones_mod"];
+		$px = $_REQUEST["posicion_x_mod"];
 		$condicion1 = '';
 		$condicion2 = '';
 		$condicion3 = '';
+		
 		if($app!=''){$condicion1 = " and aplicacion = '$app' "; }
 		if($pos!=''){$condicion1 = " and posicion = '$pos' "; }
 		if($px!=''){$condicion1 = " and posicion_x = '$px' "; }

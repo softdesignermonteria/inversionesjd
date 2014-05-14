@@ -5,7 +5,7 @@
   
 		public function initialize(){
 			
-			$this->hasMany("departamentos");
+			$this->hasMany("clientes");
 		   
 		}
   

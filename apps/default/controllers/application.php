@@ -5,6 +5,10 @@ class ControllerBase {
 		
 	}
   
+	public function notFoundAction(){
+	  Router::routeTo("controller: login","action: login");
+	}
+  
 	public function init(){
 		Router::routeTo("controller: login","action: login");
 		
