@@ -52,13 +52,13 @@ jQuery(document).ready(function(){
 			ajaxGridOptions : {type:"POST"},
 			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
 			datatype: "json", 
-			colNames:['Id','Username','Nombre Completo','Tipo de usuario','Id Empleado'], 
+			colNames:['Id','Username','Nombre Completo','Tipo de usuario','Id Cobrador'], 
 			colModel:[ 
 				{ name:'id',index:'id', width:200},
 				{ name:'username',index:'username', width:200}, 
 				{ name:'nombre_completo',index:'nombre_completo', width:500},
 				{ name:'tipo_usuario',index:'tipo_usuario', width:200}, 
-				{ name:'empleado_id',index:'empleado_id', width:200}
+				{ name:'cobradores_id',index:'cobradores_id', width:200}
 			], 
 			autoWidth:true,
 			width: jQuery('#content').width()-25,
@@ -79,7 +79,7 @@ jQuery(document).ready(function(){
 					if( jQuery("#username") ){ jQuery("#username").val(fila['username']); } 
 					if( jQuery("#nombre_completo") ){ jQuery("#nombre_completo").val(fila['nombre_completo']); } 
 					if( jQuery("#tipo_usuario") ){ jQuery("#tipo_usuario").val(fila['tipo_usuario']); } 
-					if( jQuery("#empleado_id") ){ jQuery("#empleado_id").val(fila['empleado_id']); } 
+					if( jQuery("#cobradores_id") ){ jQuery("#cobradores_id").val(fila['cobradores_id']); } 
 					
 					<?php if(isset($_REQUEST["opcion"]) ){ ?>
 					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/?id="+fila['id'] );

@@ -215,7 +215,7 @@
 			Tag::displayTo("username",$user->username);
 			Tag::displayTo("password",$user->password);
 			Tag::displayTo("confirmar",$user->password);
-			Tag::displayTo("empleado",$user->empleado_id);
+			Tag::displayTo("cobradores",$user->cobradores_id);
 			Tag::displayTo("role",$roles->role);
 								
 			}
@@ -282,9 +282,9 @@
 						//$Usuario->id$this->getPostParam("id");
 						$usuario->username  		= $this->getPostParam("username");
 						$usuario->password        = $this->getPostParam("password");
-						$usuario->nombre_completo = $this->getPostParam("empleado");
+						$usuario->nombre_completo = $this->getPostParam("cobradores");
 						$usuario->tipo_usuario    = '1';
-						$usuario->empleado_id     = $this->getPostParam("empleado_id");
+						$usuario->cobradores_id     = $this->getPostParam("cobradores_id");
 						$usuario->role            = $this->getPostParam("role");
 												
 						//$Usuario->cedula    = $this->getPostParam("cedula");
@@ -338,7 +338,7 @@
 				Tag::displayTo("username",$user->username);
 				Tag::displayTo("password",$user->password);
 				Tag::displayTo("confirmar",$user->password);
-				Tag::displayTo("empleado",$user->empleado_id);
+				Tag::displayTo("cobradores",$user->cobradores_id);
 				Tag::displayTo("role",$roles->role);
 				
 			}else{
@@ -399,7 +399,7 @@
 					$sw2=0;
 					$sw3=0;
 				
-					$sql="select count(*) from admin where empleado_id='".$this->getPostParam("empleado_id")."'";
+					$sql="select count(*) from admin where cobradores_id='".$this->getPostParam("cobradores_id")."'";
 				   
 				   	if($usuario->countBySql($sql)>=1){
 					
@@ -445,8 +445,8 @@
 						$usuario->id             = '0';
 						$usuario->username       = $this->getPostParam("username");
 						$usuario->password       = md5($this->getPostParam("password"));
-						$usuario->nombre_completo= $this->getPostParam("empleado");
-						$usuario->empleado_id    = $this->getPostParam("empleado_id");
+						$usuario->nombre_completo= $this->getPostParam("cobradores");
+						$usuario->cobradores_id    = $this->getPostParam("cobradores_id");
 						$usuario->tipo_usuario   = '1';
 						$usuario->plantilla      = 'adminiziolite';
 						$usuario->role           = $this->getPostParam("role");

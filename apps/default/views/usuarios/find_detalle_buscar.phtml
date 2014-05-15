@@ -73,7 +73,7 @@ if ($page > $total_pages) $page=$total_pages;
 	$i=0; 
 	while( $row = $db->fetchArray($result) ) { 
 	 $responce->rows[$i]['id']=$row[id]; 
-	 $responce->rows[$i]['cell']=array($row[id],utf8_encode($row[username]),$row[nombre_completo],$row[tipo_usuario],$row[empleado_id]); 						$i++;
+	 $responce->rows[$i]['cell']=array($row[id],utf8_encode($row[username]),$row[nombre_completo],$row[tipo_usuario],$row[cobradores_id]); 						$i++;
 	} 
 	
 	echo json_encode($responce);
