@@ -1127,7 +1127,14 @@
 		}	
 		
 
-		public function showAction($id){
+		public function showAction($id=''){
+
+			$request = $this->getRequestInstance();
+			if($request->isAjax()==true){
+				$this->setResponse('ajax');
+				$id=$_REQUEST["id"];
+			}
+	
 			$rc = new RecibosCaja();
 			$rcd = new DetalleRecibosCaja();
 			$rc  = $this->RecibosCaja->findFirst(" id = '$id'");

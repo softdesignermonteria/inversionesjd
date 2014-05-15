@@ -1,0 +1,41 @@
+<h4>REPORTE LISTADO RECIBOS DE CAJA</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/detalle_recibos_caja", "update: resultado", "id: fx","name: fx"); ?>
+
+<table id="filtros" width="100%" class="ui-corner-all ui-content">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th colspan="4">Filtros</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <th>Identificacion Cliente</th>
+        <td ><input type="number" id="nit" name="nit" size="30"  /></td>
+        <th>Busqueda por Nombre</th>
+        <td ><input type="text" id="nombre" name="nombre" size="50" /></td>
+    </tr>
+    <tr>
+        <th>Cobrador</th>
+        <td><?php  echo Tag::textFieldExt("cobradores","campo: cobrador","size: 10"); ?></td>
+    </tr>
+    <tr>
+        <th>Desde</th>
+        <td><?php  echo Tag::textField("desde","size: 20","value: ".date("Y-m-d")); ?></td>
+        <th>Hasta</th>
+        <td><?php  echo Tag::textField("hasta","size: 20","value: ".date("Y-m-d")); ?></td>
+    </tr>
+    <tr>
+      <th colspan="4"><button type="submit" id="guardar" name="guardar">Enviar</button></th>
+    </tr>
+</tbody>
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="resultado" style="min-height:400px; max-height:500px; overflow:auto;" ></div>
+
+<br />
+
+
+<div id="mensajes"></div>

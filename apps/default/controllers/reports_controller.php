@@ -118,6 +118,64 @@
 			$this->setParamToView("detalles",$query->getResultSet());
 		}
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		public function recibos_cajaAction(){
+				
+		}
+		
+		public function detalle_recibos_cajaAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			$condicion3 ="";
+			
+			$condicion4 ="";
+			$condicion5 ="";
+			
+			if($_REQUEST["nit"]!=''       ){ $condicion1 = " and {#Clientes}.nit like '%".$_REQUEST["nit"]."%' "; }
+			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and {#Clientes}.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%' "; }
+			if($_REQUEST["cobradores_id"]!='' ){ $condicion3 = " and ( {#RecibosCaja}.cobradores_id = '".$_REQUEST["cobradores_id"]."' )"; }
+			
+			if($_REQUEST["desde"]!='' ){ $condicion1 = " and {#RecibosCaja}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["hasta"]!=''    ){ $condicion1 = " and {#RecibosCaja}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("RecibosCaja","Clientes" ,"DetalleRecibosCaja","Cobradores"),
+				"groupFields" => array(
+									"{#RecibosCaja}.id",
+									"{#RecibosCaja}.prefijo",
+									"{#RecibosCaja}.consecutivo",
+									"{#RecibosCaja}.fecha",
+									"{#Cobradores}.razon_social",
+									"{#Clientes}.razon_social as nombre"
+								   ),
+				"sumatory" => array(
+									"{#DetalleRecibosCaja}.valor",
+									"{#DetalleRecibosCaja}.capital",
+									"{#DetalleRecibosCaja}.intereses"
+									),				
+				"conditions" => " 1=1 $condicion1 $condicion2 $condicion3 $condicion4 $condicion5 "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles",$query->getResultSet());
+		}
+		
+		
+		
+		
+		
+		
+		
 		public function deudoresAction(){
 		
 		}

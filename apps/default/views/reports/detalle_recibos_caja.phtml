@@ -1,0 +1,43 @@
+<?php echo view::getContent(); ?>
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th>Codigo</th>
+        <th>Numero Recibo</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Cobrador</th>
+        <th>Capital</th>
+        <th>Intereses</th>
+        <th>Total Pagado</th>
+        <th class="oculto">Ver</th>
+    </tr>
+</thead>
+<tbody>
+<?php 
+$a=0;$a1=0;$a2=0;$a3=0;
+?>
+<?php foreach($detalles as $detalles): ?>
+    <tr>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->nombre; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);     $a+=$detalles->capital; ?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->intereses);   $a1+=$detalles->intereses;?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->valor);      $a2+=$detalles->valor;?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->valor);      $a2+=$detalles->valor;?></td>
+        <td align="right" nowrap="nowrap" class="oculto"><?php echo Tag::image("iconos/Visa.png","border: 0","width: 32px","id: a$detalles->creditos_id","onclick: ver($detalles->id)"); ?></td>
+    </tr>
+   
+<?php endforeach; ?>    
+  <tr>
+      <th colspan="5" align="right" nowrap="nowrap">Totales</th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a);  ?></th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a1);  ?></th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a2);  ?></th>
+      <th align="right" nowrap="nowrap" class="oculto">&nbsp;</th>
+   </tr>
+</tbody>
+</table>
