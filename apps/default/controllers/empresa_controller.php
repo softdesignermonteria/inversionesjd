@@ -59,6 +59,11 @@
 	
 		}
 		
+		
+		public function actualizar_softwareAction(){
+			
+		}
+		
 		public function modificarAction(){
 			//$this->setResponse("ajax");
 			$id_empresa= $_REQUEST['id'];
