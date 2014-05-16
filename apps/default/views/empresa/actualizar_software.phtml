@@ -42,24 +42,17 @@ if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 	Flash::notice($path_system);
 	Flash::notice("Hey entro por linux modificado hoy");
 	
-	/*$command = " cd ".$path_system_linux;
+
 	$command3 = " git pull origin master ";
 	//system($command);
 	//system($command2);
 
-	$salida = shell_exec($command);
+	$salida = shell_exec("cd '$path_system_linux' && /usr/bin/git pull origin master");
 	echo "<pre>$salida</pre>";
-	$salida = shell_exec($command3);
-	echo "<pre>$salida</pre>";
-	echo print_r($salida);*/
-	$pathRepo = $path_system;
-	chdir($pathRepo);  
-	exec("git pull origin master ");
-	echo 'OK';
+	echo print_r($salida);
 	
-	$repo = new PHPGit_Repository($path_system,true, array('git_executable' => '/usr/bin/git'));
-	$repo->git('pull origin master');
-	echo 'OK2';
+	
+	
 	
 }
 
