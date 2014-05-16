@@ -6,10 +6,15 @@ $proyecto = "inversionesjd/";
 
 $path_system_linux = $_SERVER['DOCUMENT_ROOT']."/";
 
-Flash::notice($path_system.$proyecto);
+
 
 if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){ 
+
+
 	Flash::notice("Hey entro por windows");
+	
+	Flash::notice($path_system.$proyecto);
+	
 	$command = " cd ".$path_system.$proyecto;
 	
 	$command3 = " git pull origin master ";
@@ -26,7 +31,8 @@ if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 
 }else{
 	//si es window
-	Flash::notice("Hey entro por linux");
+	Flash::notice($path_system);
+	Flash::notice("Hey entro por linux modificado hoy");
 	$command = " cd ".$path_system_linux;
 	$command3 = " git pull origin master ";
 	//system($command);
