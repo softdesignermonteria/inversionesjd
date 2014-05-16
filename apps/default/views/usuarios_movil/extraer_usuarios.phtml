@@ -1,0 +1,24 @@
+<?php
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: 0');
+header('Content-Type: application/json');
+
+$db = DbBase::rawConnect();
+$db->setTracing(true);
+
+$result = $db->query("SELECT a.id,a.username,a.password,a.cobradores_id,c.nit FROM admin a,cobradores c where a.cobradores_id=c.id");
+
+while($row = $db->fetchArray($result)){
+	
+	$responce[]=array(
+								"id"=>$row[id],
+								"nombre"=>$row[username],
+								"clave"=>$row[password],
+								"cobradores_id"=>$row[cobradores_id],
+								"cedula_cobrador"=>$row[nit]
+					 ); 						
+
+}
+echo json_encode($responce);
+		
+?>			

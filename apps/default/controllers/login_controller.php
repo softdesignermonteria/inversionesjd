@@ -126,7 +126,7 @@
 					$Empresa = new Empresa();
 					$emp = $Empresa->findFirst("id = '".$_REQUEST['empresa']."'");
 					
-					$empleado = $this->Empleado->findFirst(" id = '$usuario->empleado_id' ");
+					$empleado = $this->Cobradores->findFirst(" id = '$usuario->cobradores_id' ");
 					
 					if(!$emp){
 						Flash::error('Usuario/Clave incorrectos');
@@ -175,7 +175,7 @@
 					Session::set('nombre_empresa'           , $emp->nombre_empresa);
 					Session::set('kardex_id_default'        , $emp->kardex_id_default);
 					Session::set('id_empleado'              , $empleado->id);
-					Session::set('nombre_empleado'          , $empleado->nombre_completo);
+					Session::set('nombre_empleado'          , $empleado->razon_social);
 					Session::set('regimen'                  , $emp->regimen_id);
 					Session::set(md5('role')                , $usuario->role);
 					Session::set('cobro_tarifa'             , $emp->cobro_tarifa);
@@ -305,7 +305,7 @@
 
 					if($Usuario->save()){
 
-						    Flash::addMessage("Se CREO correctamente el registro",FLASH::SUCCESS);
+						    Flash::addMessage("Se creo correctamente el registro",FLASH::SUCCESS);
 							
 
 						  /*echo "<script>redireccionar_action('menu');</script>";	*/
