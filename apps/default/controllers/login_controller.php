@@ -169,7 +169,7 @@
 					Session::set(md5('admin_username')      , md5($usuario->username));
 					Session::set(md5('tipo_usuario')        , $usuario->tipo_usuario);
 					Session::set(md5('usuarios_id')         , md5($usuario->id));
-					Session::set('nombre_completo'          , $empleado->nombre_completo);
+					Session::set('nombre_completo'          , $empleado->razon_social);
 					Session::set(md5('usuario_autenticado') , md5(true));
 					Session::set('id_empresa'               , $emp->id);
 					Session::set('nombre_empresa'           , $emp->nombre_empresa);
