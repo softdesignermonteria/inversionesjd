@@ -56,9 +56,10 @@ if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 	chdir($pathRepo);  
 	exec("git pull origin master ");
 	echo 'OK';
-	/*$repo = new PHPGit_Repository($path_system,true, array('git_executable' => '/usr/bin/git'));
+	
+	$repo = new PHPGit_Repository($path_system,true, array('git_executable' => '/usr/bin/git'));
 	$repo->git('pull origin master');
-	echo 'OK';*/
+	echo 'OK2';
 	
 }
 
