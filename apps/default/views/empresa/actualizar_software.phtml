@@ -28,13 +28,12 @@ if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 	echo print_r($salida);*/
 	$pathRepo = $path_system.$proyecto;
 	chdir($pathRepo);  
-	exec("git pull origin master ");
-	echo 'OK';
-	
+	$out = shell_exec('git pull origin master');
+	var_dump($out);
 	/* $repo = new PHPGit_Repository($path_system.$proyecto,true, array('git_executable' => 'C:\Program Files\Git\bin'));
 	 $repo->git('pull origin master');
 	 echo 'OK';*/
-		
+	echo 'OK';	
 
 
 }else{
@@ -48,6 +47,7 @@ if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 	//system($command2);
 
 	$salida = shell_exec("cd '$path_system_linux' && /usr/bin/git pull origin master");
+	var_dump($salida);
 	echo "<pre>$salida</pre>";
 	echo print_r($salida);
 	
