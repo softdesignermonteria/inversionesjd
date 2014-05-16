@@ -10,8 +10,7 @@ class ControllerBase {
 	}
   
 	public function init(){
-		Router::routeTo("controller: login","action: login");
-		
+		//Extensions::loadExtension("Git");
 	}
 	
 	public function beforeFilter(){
