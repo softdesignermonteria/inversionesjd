@@ -518,7 +518,13 @@
 }
 
 
-		public function showAction($id){
+		public function showAction($id=''){
+			
+			$request = $this->getRequestInstance();
+			if($request->isAjax()==true){
+				$this->setResponse('ajax');
+				$id=$_REQUEST["id"];
+			}
 			
 			$Creditos = new Creditos();
 				$Creditos = $this->Creditos->findFirst(" id = '".$id."' ");

@@ -5,7 +5,7 @@ class RecibosCaja extends ActiveRecord{
 		
 		$this->belongsTo("cobradores");
 		$this->belongsTo("creditos");
-		
+		$this->belongsTo("clientes");
 		$this->hasMany("detalle_recibos_caja");
        
 	}
