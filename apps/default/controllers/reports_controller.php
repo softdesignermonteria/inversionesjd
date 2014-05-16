@@ -172,7 +172,71 @@
 		
 		
 		
+		public function historicosAction(){
+				
+		}
 		
+		public function detalle_historicosAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			$condicion3 ="";
+			
+			$condicion4 ="";
+			$condicion5 ="";
+			
+			if($_REQUEST["nit"]!=''       ){ $condicion1 = " and {#Clientes}.nit like '%".$_REQUEST["nit"]."%' "; }
+			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and {#Clientes}.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%' "; }
+			if($_REQUEST["direccion"]!='' ){ $condicion3 = " and ( {#Clientes}.direccion like '%".str_replace(" ","%",$_REQUEST["direccion"])."%' )"; }
+			
+			if($_REQUEST["departamentos_id"]!='' ){ $condicion1 = " and {#Clientes}.departamentos_id = '".$_REQUEST["departamentos_id"]."' "; }
+			if($_REQUEST["municipios_id"]!=''    ){ $condicion1 = " and {#Clientes}.municipios_id = '".$_REQUEST["municipios_id"]."' "; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("Clientes", "Departamentos", "Municipios"),
+				"fields" => array(
+							"{#Clientes}.*", 
+							
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+				"conditions" => " 1=1 $condicion1 $condicion2 $condicion3 $condicion4 $condicion5"
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles",$query->getResultSet());
+		}
+		
+		
+		public function historico_clienteAction($id){
+			
+			//$this->setResponse('view');
+			/*Query Recibos de caja*/			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("RecibosCaja","Clientes" ,"DetalleRecibosCaja","Cobradores"),
+				"groupFields" => array(
+									"{#RecibosCaja}.id",
+									"{#RecibosCaja}.prefijo",
+									"{#RecibosCaja}.consecutivo",
+									"{#RecibosCaja}.fecha",
+									"{#Cobradores}.razon_social",
+									"{#Clientes}.razon_social as nombre"
+								   ),
+				"sumatory" => array(
+									"{#DetalleRecibosCaja}.valor",
+									"{#DetalleRecibosCaja}.capital",
+									"{#DetalleRecibosCaja}.intereses"
+									),				
+				"conditions" => " 1=1 and {#Clientes}.nit = '$id' "
+			));
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_recibos_caja",$query->getResultSet());
+			
+			/*Fin Query Recibos de caja*/		
+			
+			
+		}
 		
 		
 		
@@ -185,6 +249,52 @@
 				//$this->setResponse("view");
 	
 		}
+		
+		
+		public function detalle_creditosAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			$condicion3 ="";
+			
+			$condicion4 ="";
+			$condicion5 ="";
+			
+			if($_REQUEST["nit"]!=''       ){ $condicion1 = " and {#Clientes}.nit like '%".$_REQUEST["nit"]."%' "; }
+			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and {#Clientes}.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%' "; }
+			if($_REQUEST["direccion"]!='' ){ $condicion3 = " and ( {#Clientes}.direccion like '%".str_replace(" ","%",$_REQUEST["direccion"])."%' )"; }
+			
+			if($_REQUEST["departamentos_id"]!='' ){ $condicion1 = " and {#Clientes}.departamentos_id = '".$_REQUEST["departamentos_id"]."' "; }
+			if($_REQUEST["municipios_id"]!=''    ){ $condicion1 = " and {#Clientes}.municipios_id = '".$_REQUEST["municipios_id"]."' "; }
+			
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("Creditos","Clientes","Cobradores","Departamentos","Municipios"),
+				"fields" => array(
+							"{#Creditos}.id", 
+							"{#Creditos}.clientes_id", 
+							"{#Clientes}.nit", 
+							"{#Clientes}.razon_social", 
+							"{#Cobradores}.razon_social as nombre", 
+							"{#Clientes}.direccion", 
+							"{#Creditos}.prefijo", 
+							"{#Creditos}.fecha", 
+							"{#Creditos}.capital", 
+							"{#Creditos}.cuotas", 
+							"{#Creditos}.valor_cuotas", 
+							"{#Creditos}.total_credito", 
+							"{#Creditos}.consecutivo", 
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+				"conditions" => " 1=1 $condicion1 $condicion2 $condicion3 $condicion4 $condicion5"
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles",$query->getResultSet());
+				
+		}	
 		
 		
 		public function cred_clientesAction(){

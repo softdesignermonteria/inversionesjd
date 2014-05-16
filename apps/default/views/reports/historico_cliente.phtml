@@ -1,4 +1,7 @@
 <?php echo view::getContent(); ?>
+<br />
+<h4>Recibos de Caja</h4>
+<br />
 <table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
@@ -17,7 +20,7 @@
 <?php 
 $a=0;$a1=0;$a2=0;$a3=0;
 ?>
-<?php foreach($detalles as $detalles): ?>
+<?php foreach($detalles_recibos_caja as $detalles): ?>
     <tr>
         <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
         <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>

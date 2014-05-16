@@ -1,5 +1,7 @@
 <script type="text/javascript">
 
+
+
 jQuery(document).ready(function(){
 
 	/*cuadros*/
@@ -100,6 +102,8 @@ endforeach;
 		
 	/*Botones Utilizados en el sistema*/
 	if( jQuery( ".boton"  ) ){ jQuery( ".boton"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+	
+	if( jQuery( "#imprimir"  ) ){ jQuery( "#imprimir"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
 	/*Proyecto investigacion dialogo objetivo_socioeconomico*/
 	
 	if( jQuery( "#buscar"     ) ){ jQuery( "#buscar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
@@ -133,7 +137,9 @@ jQuery( document ).tooltip();
 jQuery("#ocultar_left").click(function(e) {
     jQuery("#menu_left").toggle();
 });
-		
+
+
+	
 	
 
 });

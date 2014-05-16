@@ -1131,8 +1131,9 @@
 
 			$request = $this->getRequestInstance();
 			if($request->isAjax()==true){
-				$this->setResponse('ajax');
+				//$this->setResponse('ajax');
 				$id=$_REQUEST["id"];
+				$this->setTemplateAfter("blanco");
 			}
 	
 			$rc = new RecibosCaja();
@@ -1161,6 +1162,8 @@
 	
 			
 		}	
+		
+		
 
 		public function print_jaspertAction($id){
 				$this->setResponse("view");

@@ -1,0 +1,48 @@
+<h4>REPORTE HISTORICO DE CLIENTES</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/detalle_historicos", "update: resultado", "id: fx","name: fx"); ?>
+
+<table id="filtros" width="100%" class="ui-corner-all ui-content">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th colspan="4">Filtros</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <th>Identificacion</th>
+        <td colspan="3"><input type="number" id="nit" name="nit" size="30"  /></td>
+    </tr>
+    <tr>
+        <th>Busqueda por Nombre</th>
+        <td><input type="text" id="nombre" name="nombre" size="50" /></td>
+        <th>Busqueda por Direccion</th>
+        <td><input type="text" id="direccion" name="direccion" size="50" /></td>
+    </tr>
+    <tr>
+        <th>Departamento</th>
+        <td><?php  echo Tag::textFieldExt("departamentos","campo: departamento","size: 10"); ?></td>
+        <th>Municipio</th>
+        <td><?php  echo Tag::textFieldExt("municipios","campo: municipio","size: 10"); ?></td>
+    </tr>
+    <tr>
+      <th colspan="4"><button type="submit" id="guardar" name="guardar">Enviar</button></th>
+    </tr>
+</tbody>
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="resultado" style="min-height:400px; max-height:500px; overflow:auto;" ></div>
+
+<br />
+<table width="400px" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front">
+      <tr>
+        <td align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspertClientes",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
+      </tr>
+      <tr>
+        <td align="center">Listado General de Clientes</td>
+      </tr>
+</table>
+
+<div id="mensajes"></div>

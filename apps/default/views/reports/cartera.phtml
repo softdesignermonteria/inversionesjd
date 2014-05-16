@@ -51,6 +51,7 @@ function esconder(){
 	}	
 	
 esconder();
+
 	
 function ver_pagos(id){
 	jQuery.ajax({
@@ -61,9 +62,9 @@ function ver_pagos(id){
 					creditos_id: id
 				}
 			,success: function(data){
-					jQuery("#div_ver_pagos").html("");
-					jQuery("#div_ver_pagos").html(data);
-					jQuery("#div_ver_pagos").dialog("open");
+					jQuery("#dialogo_mensajes").html("");
+					jQuery("#dialogo_mensajes").html(data);
+					jQuery("#dialogo_mensajes").dialog("open");
 				}
 			,error: function(data){
 					jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);
@@ -82,9 +83,9 @@ function ver(id){
 					id: id
 				}
 			,success: function(data){
-					jQuery("#div_ver_pagos").html("");
-					jQuery("#div_ver_pagos").html(data);
-					jQuery("#div_ver_pagos").dialog("open");
+					jQuery("#dialogo_mensajes").html("");
+					jQuery("#dialogo_mensajes").html(data);
+					jQuery("#dialogo_mensajes").dialog("open");
 				}
 			,error: function(data){
 					jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);
@@ -106,9 +107,9 @@ function ver_cuotas(id,id2){
 							creditos_id:  id2
 						}
 					,success: function(data){
-							jQuery("#div_ver_pagos").html("");
-							jQuery("#div_ver_pagos").html(data);
-							jQuery("#div_ver_pagos").dialog("open");
+							jQuery("#dialogo_mensajes").html("");
+							jQuery("#dialogo_mensajes").html(data);
+							jQuery("#dialogo_mensajes").dialog("open");
 						}
 					,error: function(data){
 							jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);

@@ -6,11 +6,12 @@ class ControllerBase {
 	}
   
 	public function notFoundAction(){
-	  Router::routeTo("controller: login","action: login");
+	
 	}
   
 	public function init(){
-		//Extensions::loadExtension("Git");
+		//Extensions::loadExtension("Git");  
+		Router::routeTo("controller: login","action: login");
 	}
 	
 	public function beforeFilter(){
