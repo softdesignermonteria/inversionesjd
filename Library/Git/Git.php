@@ -19,6 +19,6 @@
  * @license http://www.kumbia.org/license.txt New BSD License
  */
 
-include_once "Library/Git/Lib/PHPGit/Repository.php";
+include_once "Library/Git/lib/PHPGit/Repository.php";
 
 ?>
