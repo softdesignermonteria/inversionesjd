@@ -36,13 +36,31 @@
 <div id="resultado" style="min-height:400px; max-height:500px; overflow:auto;" ></div>
 
 <br />
+<!--
 <table width="400px" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front">
       <tr>
-        <td align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspertClientes",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
+        <td align="center"><?php //echo Tag::linkTo(Router::getController()."/print_jaspertClientes",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
       </tr>
       <tr>
         <td align="center">Listado General de Clientes</td>
       </tr>
 </table>
+-->
+<button type="button" id="imprimir" name="imprimir">Imprimir</button>
 
 <div id="mensajes"></div>
+
+
+<script>
+	
+jQuery(document).ready(function(e) {
+    jQuery("#imprimir").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_clientes/?"+data+"&print=true";
+	    window.open(url, '_blank');
+    });
+});
+  
+
+</script>

@@ -21,9 +21,9 @@
     </tr>
     <tr>
         <th>Desde</th>
-        <td><?php  echo Tag::textField("desde","size: 20","value: ".date("Y-m-d")); ?></td>
+        <td><?php  echo Tag::textField("desde","size: 20"); ?></td>
         <th>Hasta</th>
-        <td><?php  echo Tag::textField("hasta","size: 20","value: ".date("Y-m-d")); ?></td>
+        <td><?php  echo Tag::textField("hasta","size: 20"); ?></td>
     </tr>
     <tr>
       <th colspan="4"><button type="submit" id="guardar" name="guardar">Enviar</button></th>
@@ -37,6 +37,7 @@
 
 <br />
 
+<button type="button" id="imprimir" name="imprimir">Imprimir</button>
 
 <div id="mensajes"></div>
 
@@ -44,27 +45,21 @@
 <script>
 
 
+jQuery(document).ready(function(e) {
+    jQuery("#imprimir").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_recibos_caja/?"+data+"&print=true";
+	    window.open(url, '_blank');
+    });
+});
+  
+  
 function ver(id){
 	
 	  url = "<?php echo core::getInstancePath(); ?>recibos_caja/show/"+id;
 	  window.open(url, '_blank');
-	/*jQuery.ajax({
-			type:"POST"
-			,url:"<?php //echo core::getInstancePath(); ?>recibos_caja/show/"
-			,async:true
-			,data:{
-					id: id
-				}
-			,success: function(data){
-					jQuery("#dialogo_mensajes").html("");
-					jQuery("#dialogo_mensajes").html(data);
-					jQuery("#dialogo_mensajes").dialog("open");
-				}
-			,error: function(data){
-					jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);
-					jQuery("#dialogo_mensajes").dialog("open");
-				}	
-		});		*/
+	
 }
 
 </script>

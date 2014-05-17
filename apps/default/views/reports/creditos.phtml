@@ -48,7 +48,7 @@ jQuery(document).ready(function(e) {
     jQuery("#imprimir").click(function(e) {
         e.preventDefault();
 		var data = jQuery("#fx").serialize();
-		url = "<?php echo core::getInstancePath(); ?>reports/detalle_creditos/?"+data;
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_creditos/?"+data+"&print=true";
 	    window.open(url, '_blank');
     });
 });

@@ -1,4 +1,39 @@
 <?php echo view::getContent(); ?>
+<?php if(isset($_REQUEST["print"])){ ?>
+<style>
+	.oculto{ display:none;}
+</style>
+<table width="100%" border="1" cellpadding="1" cellspacing="1" class="ui-corner-all ui-content" >
+    <tr >
+      <th colspan="7">Informe Listado Recibos de caja</th>
+    </tr>
+    <tr >
+      <th colspan="7"><?php echo Session::get("nombre_empresa"); ?></th>
+    </tr>
+    <tr >
+      <th colspan="7">Reporte Impreso el dia <?php echo date("Y-m-d"); ?> </th>
+    </tr>
+    <tr >
+      <th colspan="7">Filtrado por:</th>
+    </tr>
+    <tr >
+      <th width="25%" align="left">Identificacion:</th>
+      <th width="75%" colspan="6" align="left"><?php echo $_REQUEST["nit"] ?></th>
+    </tr>
+    <tr >
+      <th align="left">Nombre</th>
+      <th colspan="6" align="left"><?php echo $_REQUEST["nombre"] ?></th>
+  </tr>
+    <tr >
+      <th align="left">Fecha Desde:</th>
+      <th colspan="6" align="left"><?php echo $_REQUEST["desde"] ?> Fecha Hasta: <?php echo $_REQUEST["hasta"] ?></th>
+    </tr>
+    <tr >
+      <th align="left">Cobrador: </th>
+      <th colspan="6" align="left"><?php echo $_REQUEST["cobradores"] ?></th>
+    </tr>
+</table>	 
+<?php } ?>
 <table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
