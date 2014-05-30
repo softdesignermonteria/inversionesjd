@@ -78,7 +78,7 @@ foreach($menu->find("aplicacion = '".Router::getApplication()."' and posicion='r
 				if($s_menu->count("posicion_y='$menu->posicion_x' and aplicacion = '".Router::getApplication()."' and posicion='reportes' ")){			
 						foreach($s_menu->find("posicion_y='$menu->posicion_x' and posicion='reportes' ","order: orden") as $s_menu):
 						echo "<li style=\"width:150px;height:100px;vertical-align:central;display:inline-block;padding:5px;\"  >";
-							echo "<span><a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>".Tag::image("$s_menu->urlimage","width: 50px")."</a></span>";
+							echo "<span><a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle' target='_blank'>".Tag::image("$s_menu->urlimage","width: 50px")."</a></span>";
 							echo "<span style=\"padding:5px;\" >$s_menu->descripcion</span>";
 						echo "</li>";
 						endforeach;
