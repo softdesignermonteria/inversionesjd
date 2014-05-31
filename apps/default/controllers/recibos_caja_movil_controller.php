@@ -21,8 +21,10 @@ class Recibos_caja_movilController extends ApplicationController {
 	
 	public function addAction(){
 
-			$this->setResponse('view');
+			 $this->setResponse('view');
+			 
 			 $encabezado=$_POST["encabezado"];
+			 
 			 $syslogger = new Syslogger();
 			 //$syslogger->setTransaction($transaction);
 			 $syslogger->username          = Session::get(md5("admin_username"));
@@ -30,18 +32,21 @@ class Recibos_caja_movilController extends ApplicationController {
 			 $syslogger->application       = Router::getApplication();
 			 $syslogger->controller        = $this->getControllerName();
 			 $syslogger->action            = $this->getActionName();
-			 $syslogger->error_sistema     = "Insertado Detalle Recibo Caja ".$detalles->id;
-			 $syslogger->descripcion       = "Registro Insertado";
+			 $syslogger->error_sistema     = "Recibo de caja Subido de Movil";
+			 $syslogger->descripcion       = "Recibo de caja Subido de Movil";
 			 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 			 $syslogger->fecha             = date("Y-m-d H:i:s");
-			 $syslogger->tipo_documento_id = $encabezado->tipo_documento_id;
-			 $syslogger->prefijo           = $encabezado->prefijo;
-			 $syslogger->consecutivo       = $encabezado->consecutivo;
+			 $syslogger->tipo_documento_id = "";
+			 $syslogger->prefijo           = "";
+			 $syslogger->consecutivo       = "";
 			 $syslogger->objeto            = json_decode($encabezado);
+			 
 			 if(!$syslogger->save()){
-				$this->setParamToView("responce",0);
+				$responce[]=array("mensaje"=>"true");
+				$this->setParamToView("responce",$responce);
 			 }else{
-				$this->setParamToView("responce",0);
+				$responce[]=array("mensaje"=>"false");
+				$this->setParamToView("responce",$responce);
 			 }
 			 
 			
