@@ -256,7 +256,8 @@ class Recibos_caja_movilController extends ApplicationController {
 													 $syslogger->save();
 												}
 										//fin guardar encabezado recibos de caja
-										foreach( $encabezado->detalles as $items):
+										$detalles = json_decode($encabezado->detalles); 
+										foreach($detalles  as $items):
 											
 											$creditos_tmp  = $this->Creditos->findFirst("id   = '$rec->creditos_id' and anulado = 0 ");
 											$detalles_tmp  = $this->DetalleCxc->findFirst("id = '$items->detalle_cxc_id' and anulado = 0 ");
