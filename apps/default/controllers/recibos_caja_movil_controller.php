@@ -60,7 +60,7 @@ class Recibos_caja_movilController extends ApplicationController {
 				
 					//cargando las variables globales para este controlador
 					$this->tipo_documento = $tipo_document->id;
-					$this->tipo_documento_nombre = $tipo_document->nombre;
+					//$this->tipo_documento_nombre = $tipo_document->nombre;
 					
 				}//fin si o no existe docuemnto
 				
