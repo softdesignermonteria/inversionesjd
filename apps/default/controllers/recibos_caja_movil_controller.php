@@ -128,7 +128,7 @@ class Recibos_caja_movilController extends ApplicationController {
 			$msg_error="";
 			 $encabezado=$jsonenc;
 			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
-			if($encabezado!='[]'){	
+			//if($encabezado!='[]'){	
 				
 				if(json_decode($encabezado)){
 					$encabezado = json_decode($encabezado);	
@@ -371,7 +371,7 @@ class Recibos_caja_movilController extends ApplicationController {
 						 $syslogger->objeto            = $encabezado;
 						 $syslogger->save();	
 				}//fin validacion json encabezado
-			 }else{
+			 /*}else{
 				 	$sw=1;
 						 $syslogger = new Syslogger();
 						 ////$syslogger->setTransaction($transaction);
@@ -389,7 +389,7 @@ class Recibos_caja_movilController extends ApplicationController {
 						 $syslogger->consecutivo       = "";
 						 $syslogger->objeto            = $encabezado;
 						 $syslogger->save();
-				 }//finn validar json vacio
+				 }//finn validar json vacio*/
 				 /*Respuesta*/
 				 if($sw==0){
 						 $this->setParamToView("responce",$verdadero);
