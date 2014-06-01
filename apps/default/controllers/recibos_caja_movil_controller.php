@@ -5,12 +5,7 @@ class Recibos_caja_movilController extends ApplicationController {
 
 
 	public function initialize() {
-			//$this->setTemplateAfter("a_bit_boxy");
-			 //$this->setTemplateAfter("menu_azul");
-
-			 $temp=$this->Admin->findFirst(" md5(id) = '".Session::get(md5("usuarios_id"))."' ")->plantilla;
-
-			$this->setTemplateAfter("$temp");
+		$this->setTemplateAfter("adminiziolite");
 	}
 	
 			
@@ -148,6 +143,7 @@ class Recibos_caja_movilController extends ApplicationController {
 								$dtc->desde = $dtc->desde+1;
 								if($dtc->save()==false){
 									$sw=1;
+									 $syslogger = new Syslogger();
 									 $syslogger->username          = '';
 									 $syslogger->module            = Router::getModule();
 									 $syslogger->application       = Router::getApplication();
@@ -329,7 +325,8 @@ class Recibos_caja_movilController extends ApplicationController {
 								 $syslogger->save();	
 							}	
 						 }else{
-							 		 $syslogger->username          = '';
+									 $syslogger = new Syslogger();
+									 $syslogger->username          = '';
 									 $syslogger->module            = Router::getModule();
 									 $syslogger->application       = Router::getApplication();
 									 $syslogger->controller        = 'recibos_caja_movil';
@@ -342,10 +339,10 @@ class Recibos_caja_movilController extends ApplicationController {
 									 $syslogger->prefijo           = $prefijo;
 									 $syslogger->consecutivo       = $consecutivo;
 									 $syslogger->objeto            = json_decode($encabezado);
-									 $syslogger->save();	
-								
-							 } //fin si no esta provisional registrado
-						endforeach;	//fin encabezado
+									 $syslogger->save();
+				
+						 } //fin si no esta provisional registrado
+					endforeach;	//fin encabezado
 					
 				}else{
 						 $sw=1;
