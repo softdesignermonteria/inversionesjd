@@ -147,8 +147,9 @@ class Recibos_caja_movilController extends ApplicationController {
 			//if($encabezado!='[]'){	
 				
 				if(json_decode($encabezado)){
-					$encabezado = json_decode($encabezado);	
-					foreach( $encabezado as $enc):
+					$encabezado = json_decode($_REQUEST["encabezado"]);	
+					$enc        = json_decode($_REQUEST["encabezado"]);	
+					//foreach( $encabezado as $enc):
 						 if($this->RecibosCaja->count(" provisional = '$enc->provisional' and anulado = 0 ")==0){
 							$transaction = new ActiveRecordTransaction(true);   
 							try{
@@ -180,7 +181,7 @@ class Recibos_caja_movilController extends ApplicationController {
 									 $syslogger->tipo_documento_id = $tipo_documento_id;
 									 $syslogger->prefijo           = $prefijo;
 									 $syslogger->consecutivo       = $consecutivo;
-									 $syslogger->objeto            = json_decode($dtc);
+									 $syslogger->objeto            = json_encode($dtc);
 									 $syslogger->save();	
 									$transaction->rollback();
 								}
@@ -345,7 +346,7 @@ class Recibos_caja_movilController extends ApplicationController {
 								 $syslogger->tipo_documento_id = $tipo_documento_id;
 								 $syslogger->prefijo           = $prefijo;
 								 $syslogger->consecutivo       = $consecutivo;
-								 $syslogger->objeto            = $jsonenc;
+								 $syslogger->objeto            = $enc;
 								 $syslogger->save();	
 							}	
 						 }else{
@@ -362,11 +363,11 @@ class Recibos_caja_movilController extends ApplicationController {
 									 $syslogger->tipo_documento_id = $tipo_documento_id;
 									 $syslogger->prefijo           = $prefijo;
 									 $syslogger->consecutivo       = $consecutivo;
-									 $syslogger->objeto            = $jsonenc;
+									 $syslogger->objeto            = $enc;
 									 $syslogger->save();
 				
 						 } //fin si no esta provisional registrado
-					endforeach;	//fin encabezado
+					//endforeach;	//fin encabezado
 					
 				}else{
 						 $sw=1;
@@ -384,7 +385,7 @@ class Recibos_caja_movilController extends ApplicationController {
 						 $syslogger->tipo_documento_id = "";
 						 $syslogger->prefijo           = "";
 						 $syslogger->consecutivo       = "";
-						 $syslogger->objeto            = $jsonenc;
+						 $syslogger->objeto            = $enc;
 						 $syslogger->save();	
 				}//fin validacion json encabezado
 			 /*}else{
