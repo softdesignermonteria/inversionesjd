@@ -119,28 +119,29 @@ class Recibos_caja_movilController extends ApplicationController {
 	}
 	
 	
-	public function addAction($jsonenc){
+	public function addAction(){
 			
 			$verdadero[]=array("mensaje"=>"true");	
 			$falso[]=array("mensaje"=>"false");
 			$sw=0; //true 
 			$this->setResponse('view');
+			$encabezado = $_REQUEST["encabezado"];
 			$msg_error="";
-			 $encabezado=$jsonenc;
+
 			 $syslogger = new Syslogger();
 			 $syslogger->username          = '';
 			 $syslogger->module            = Router::getModule();
 			 $syslogger->application       = Router::getApplication();
 			 $syslogger->controller        = 'recibos_caja_movil';
 			 $syslogger->action            = 'add';
-			 $syslogger->error_sistema     = "Error Actualzando consecutivo";
-			 $syslogger->descripcion       = "Error Actualzando consecutivo";
+			 $syslogger->error_sistema     = "Parametros";
+			 $syslogger->descripcion       = "Parametros";
 			 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 			 $syslogger->fecha             = date("Y-m-d H:i:s");
 			 $syslogger->tipo_documento_id = $tipo_documento_id;
 			 $syslogger->prefijo           = $prefijo;
 			 $syslogger->consecutivo       = $consecutivo;
-			 $syslogger->objeto            = "jsonenc=".$jsonenc."encabezado=".$_REQUEST["encabezado"];
+			 $syslogger->objeto            = "encabezado=".$_REQUEST["encabezado"];
 			 $syslogger->save();	
 			 //$encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
 			//if($encabezado!='[]'){	
