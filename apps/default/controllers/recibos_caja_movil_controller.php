@@ -2,7 +2,15 @@
 
 class Recibos_caja_movilController extends ApplicationController {
 
-
+		public $prefijo;
+		public $tipo_documento;
+		public $tipo_documento_nombre;
+		public $id_consecutivo;
+		
+		public $clientes_id;
+		public $creditos_id;
+		public $cobradores_id;
+		public $solicitud_id;
 
 	public function initialize() {
 		$this->setTemplateAfter("adminiziolite");
