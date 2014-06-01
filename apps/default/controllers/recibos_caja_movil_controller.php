@@ -119,13 +119,13 @@ class Recibos_caja_movilController extends ApplicationController {
 	}
 	
 	
-	public function addAction($json){
+	public function addAction(){
 			
 			$verdadero[]=array("mensaje"=>"true");	
 			$falso[]=array("mensaje"=>"false");
 			$sw=0; //true 
 			$this->setResponse('view');
-			$encabezado = $json;
+			$encabezado = $_REQUEST["encabezado"];
 			$msg_error="";
 
 			 $syslogger = new Syslogger();
@@ -141,7 +141,7 @@ class Recibos_caja_movilController extends ApplicationController {
 			 $syslogger->tipo_documento_id = $tipo_documento_id;
 			 $syslogger->prefijo           = $prefijo;
 			 $syslogger->consecutivo       = $consecutivo;
-			 $syslogger->objeto            = "encabezado=".$json;
+			 $syslogger->objeto            = "encabezado=".$encabezado;
 			 $syslogger->save();	
 			 //$encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
 			//if($encabezado!='[]'){	
