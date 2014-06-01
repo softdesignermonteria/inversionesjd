@@ -119,7 +119,7 @@ class Recibos_caja_movilController extends ApplicationController {
 	}
 	
 	
-	public function addAction($jsonenc='[]'){
+	public function addAction($jsonenc){
 			
 			$verdadero[]=array("mensaje"=>"true");	
 			$falso[]=array("mensaje"=>"false");
@@ -127,7 +127,7 @@ class Recibos_caja_movilController extends ApplicationController {
 			$this->setResponse('view');
 			$msg_error="";
 			 $encabezado=$jsonenc;
-			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
+			 //$encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
 			//if($encabezado!='[]'){	
 				
 				if(json_decode($encabezado)){
