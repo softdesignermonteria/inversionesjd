@@ -260,6 +260,10 @@ class Recibos_caja_movilController extends ApplicationController {
 											$detalles->anulado                = '0';
 									
 												if($detalles->save()==false){
+													$msg_error="";
+													foreach($syslogger->getMessages() as $message){ 
+														$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
+													}
 													 $sw=1;
 													 $syslogger = new Syslogger();
 													 $syslogger->setTransaction($transaction);
@@ -268,8 +272,8 @@ class Recibos_caja_movilController extends ApplicationController {
 													 $syslogger->application       = Router::getApplication();
 													 $syslogger->controller        = $this->getControllerName();
 													 $syslogger->action            = $this->getActionName();
-													 $syslogger->error_sistema     = "Insertado Detalle Recibo Caja Movil ".$detalles->id;
-													 $syslogger->descripcion       = "Registro Insertado Movil";
+													 $syslogger->error_sistema     = "No Insertado Detalle Recibo Caja Movil ".$msg_error;
+													 $syslogger->descripcion       = "Registro No Insertado Movil";
 													 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 													 $syslogger->fecha             = date("Y-m-d H:i:s");
 													 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
@@ -289,8 +293,8 @@ class Recibos_caja_movilController extends ApplicationController {
 													 $syslogger->application       = Router::getApplication();
 													 $syslogger->controller        = $this->getControllerName();
 													 $syslogger->action            = $this->getActionName();
-													 $syslogger->error_sistema     = "No Insertado Detalle Recibo Caja ".$detalles->id;
-													 $syslogger->descripcion       = "Registro No Insertado";
+													 $syslogger->error_sistema     = "Insertado Detalle Recibo Caja ".$detalles->id;
+													 $syslogger->descripcion       = "Registro Insertado";
 													 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 													 $syslogger->fecha             = date("Y-m-d H:i:s");
 													 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
@@ -315,7 +319,7 @@ class Recibos_caja_movilController extends ApplicationController {
 								 $syslogger->controller        = 'recibos_caja_movil';
 								 $syslogger->action            = 'add';
 								 $syslogger->error_sistema     = "Error en la transaccion";
-								 $syslogger->descripcion       = "Error en la transaccion";
+								 $syslogger->descripcion       = "Error en la transaccion".$e->getMessage();
 								 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 								 $syslogger->fecha             = date("Y-m-d H:i:s");
 								 $syslogger->tipo_documento_id = $tipo_documento_id;
