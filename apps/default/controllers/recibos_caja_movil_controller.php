@@ -122,7 +122,7 @@ class Recibos_caja_movilController extends ApplicationController {
 			$falso[]=array("mensaje"=>"false");
 			$sw=0; //true 
 			$this->setResponse('view');
-			 
+			$msg_error="";
 			 $encabezado=$_POST["encabezado"];
 			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_POST["encabezado"])));
 			if($encabezado!='[]'){	
@@ -188,6 +188,10 @@ class Recibos_caja_movilController extends ApplicationController {
 									 $rec->cheque              = "";
 									 $rec->banco               = "";
 										if($rec->save()==false){
+													$msg_error="";
+													foreach($syslogger->getMessages() as $message){ 
+														$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
+													}
 													$sw=1;
 													/*Registro Para Audirotia*/
 									 
@@ -198,8 +202,8 @@ class Recibos_caja_movilController extends ApplicationController {
 													 $syslogger->application       = Router::getApplication();
 													 $syslogger->controller        = $this->getControllerName();
 													 $syslogger->action            = $this->getActionName();
-													 $syslogger->error_sistema     = "Insertado Satisfactoriamente Movil";
-													 $syslogger->descripcion       = "Registro Insertado Movil";
+													 $syslogger->error_sistema     = "No Insertado Satisfactoriamente Movil ".$msg_error;
+													 $syslogger->descripcion       = "Registro No Insertado Movil";
 													 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 													 $syslogger->fecha             = date("Y-m-d H:i:s");
 													 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
@@ -285,8 +289,8 @@ class Recibos_caja_movilController extends ApplicationController {
 													 $syslogger->application       = Router::getApplication();
 													 $syslogger->controller        = $this->getControllerName();
 													 $syslogger->action            = $this->getActionName();
-													 $syslogger->error_sistema     = "Insertado Detalle Recibo Caja ".$detalles->id;
-													 $syslogger->descripcion       = "Registro Insertado";
+													 $syslogger->error_sistema     = "No Insertado Detalle Recibo Caja ".$detalles->id;
+													 $syslogger->descripcion       = "Registro No Insertado";
 													 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 													 $syslogger->fecha             = date("Y-m-d H:i:s");
 													 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
