@@ -189,14 +189,14 @@ class Recibos_caja_movilController extends ApplicationController {
 									 $rec->banco               = "";
 										if($rec->save()==false){
 													$msg_error="";
-													foreach($syslogger->getMessages() as $message){ 
+													foreach($rec->getMessages() as $message){ 
 														$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
 													}
 													$sw=1;
 													/*Registro Para Audirotia*/
 									 
 													 $syslogger = new Syslogger();
-													 $syslogger->setTransaction($transaction);
+													 //$syslogger->setTransaction($transaction);
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -218,7 +218,7 @@ class Recibos_caja_movilController extends ApplicationController {
 													/*Registro Para Audirotia*/
 									 
 													 $syslogger = new Syslogger();
-													 $syslogger->setTransaction($transaction);
+													 //$syslogger->setTransaction($transaction);
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -261,12 +261,12 @@ class Recibos_caja_movilController extends ApplicationController {
 									
 												if($detalles->save()==false){
 													$msg_error="";
-													foreach($syslogger->getMessages() as $message){ 
+													foreach($detalles->getMessages() as $message){ 
 														$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
 													}
 													 $sw=1;
 													 $syslogger = new Syslogger();
-													 $syslogger->setTransaction($transaction);
+													 //$syslogger->setTransaction($transaction);
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -287,7 +287,7 @@ class Recibos_caja_movilController extends ApplicationController {
 													 /*Registro Para Audirotia*/
 							 
 													 $syslogger = new Syslogger();
-													 $syslogger->setTransaction($transaction);
+													 //$syslogger->setTransaction($transaction);
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -312,7 +312,7 @@ class Recibos_caja_movilController extends ApplicationController {
 							}catch(TransactionFailed $e){		
 								$sw=1;
 								 $syslogger = new Syslogger();
-								 //$syslogger->setTransaction($transaction);
+								 ////$syslogger->setTransaction($transaction);
 								 $syslogger->username          = '';
 								 $syslogger->module            = Router::getModule();
 								 $syslogger->application       = Router::getApplication();
@@ -350,7 +350,7 @@ class Recibos_caja_movilController extends ApplicationController {
 				}else{
 						 $sw=1;
 						 $syslogger = new Syslogger();
-						 //$syslogger->setTransaction($transaction);
+						 ////$syslogger->setTransaction($transaction);
 						 $syslogger->username          = '';
 						 $syslogger->module            = Router::getModule();
 						 $syslogger->application       = Router::getApplication();
@@ -369,7 +369,7 @@ class Recibos_caja_movilController extends ApplicationController {
 			 }else{
 				 	$sw=1;
 						 $syslogger = new Syslogger();
-						 //$syslogger->setTransaction($transaction);
+						 ////$syslogger->setTransaction($transaction);
 						 $syslogger->username          = '';
 						 $syslogger->module            = Router::getModule();
 						 $syslogger->application       = Router::getApplication();
