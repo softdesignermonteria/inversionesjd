@@ -119,15 +119,15 @@ class Recibos_caja_movilController extends ApplicationController {
 	}
 	
 	
-	public function addAction(){
+	public function addAction($jsonenc='[]'){
 			
 			$verdadero[]=array("mensaje"=>"true");	
 			$falso[]=array("mensaje"=>"false");
 			$sw=0; //true 
 			$this->setResponse('view');
 			$msg_error="";
-			 $encabezado=$_REQUEST["encabezado"];
-			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_REQUEST["encabezado"])));
+			 $encabezado=$jsonenc;
+			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
 			if($encabezado!='[]'){	
 				
 				if(json_decode($encabezado)){
@@ -368,7 +368,7 @@ class Recibos_caja_movilController extends ApplicationController {
 						 $syslogger->tipo_documento_id = "";
 						 $syslogger->prefijo           = "";
 						 $syslogger->consecutivo       = "";
-						 $syslogger->objeto            = json_decode($encabezado);
+						 $syslogger->objeto            = $encabezado;
 						 $syslogger->save();	
 				}//fin validacion json encabezado
 			 }else{
@@ -387,7 +387,7 @@ class Recibos_caja_movilController extends ApplicationController {
 						 $syslogger->tipo_documento_id = "";
 						 $syslogger->prefijo           = "";
 						 $syslogger->consecutivo       = "";
-						 $syslogger->objeto            = json_decode($encabezado);
+						 $syslogger->objeto            = $encabezado;
 						 $syslogger->save();
 				 }//finn validar json vacio
 				 /*Respuesta*/
