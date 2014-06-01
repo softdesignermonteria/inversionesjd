@@ -118,8 +118,8 @@ class Recibos_caja_movilController extends ApplicationController {
 			$sw=0; //true 
 			$this->setResponse('view');
 			$msg_error="";
-			 $encabezado=$_POST["encabezado"];
-			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_POST["encabezado"])));
+			 $encabezado=$_REQUEST["encabezado"];
+			 $encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$_REQUEST["encabezado"])));
 			if($encabezado!='[]'){	
 				
 				if(json_decode($encabezado)){
