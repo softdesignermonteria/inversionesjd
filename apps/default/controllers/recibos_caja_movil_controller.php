@@ -346,7 +346,7 @@ class Recibos_caja_movilController extends ApplicationController {
 								 $syslogger->tipo_documento_id = $tipo_documento_id;
 								 $syslogger->prefijo           = $prefijo;
 								 $syslogger->consecutivo       = $consecutivo;
-								 $syslogger->objeto            = $enc;
+								 $syslogger->objeto            = "";
 								 $syslogger->save();	
 							}	
 						 }else{
@@ -363,7 +363,7 @@ class Recibos_caja_movilController extends ApplicationController {
 									 $syslogger->tipo_documento_id = $tipo_documento_id;
 									 $syslogger->prefijo           = $prefijo;
 									 $syslogger->consecutivo       = $consecutivo;
-									 $syslogger->objeto            = $enc;
+									 $syslogger->objeto            = "";
 									 $syslogger->save();
 				
 						 } //fin si no esta provisional registrado
@@ -385,7 +385,7 @@ class Recibos_caja_movilController extends ApplicationController {
 						 $syslogger->tipo_documento_id = "";
 						 $syslogger->prefijo           = "";
 						 $syslogger->consecutivo       = "";
-						 $syslogger->objeto            = $enc;
+						 $syslogger->objeto            = "";
 						 $syslogger->save();	
 				}//fin validacion json encabezado
 			 /*}else{
