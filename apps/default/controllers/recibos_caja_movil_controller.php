@@ -257,12 +257,9 @@ class Recibos_caja_movilController extends ApplicationController {
 												}
 										//fin guardar encabezado recibos de caja
 										//$detalles = json_decode($encabezado->detalles); 
-									    print_r( $encabezado->detalles );
+									    //print_r( $encabezado->detalles );
 										foreach($encabezado->detalles  as $items):
-											//$detalle_cxc_id = ''; //$valor = '';
-											//if($items=='detalle_cxc_id'){ $detalle_cxc_id=$value; }
-											//if($items=='valor_pagado_cuota'){ $valor=$value; }
-											//print_r( $items . $value);
+										
 											$creditos_tmp  = $this->Creditos->findFirst("id   = '$rec->creditos_id' and anulado = 0 ");
 											$detalles_tmp  = $this->DetalleCxc->findFirst("id = '$items->detalle_cxc_id' and anulado = 0 ");
 											$porcentaje    = $creditos_tmp->porcentaje/100; 
@@ -272,17 +269,17 @@ class Recibos_caja_movilController extends ApplicationController {
 											$detalles = new DetalleRecibosCaja();
 											$detalles->setTransaction($transaction);
 											$detalles->id                     = "";
-											$capitaltmp = $items->valor / (1 + $porcentaje );
+											$capitaltmp = $items->valor_pagado_cuota / (1 + $porcentaje );
 											$detalles->detalle_cxc_id         = $items->detalle_cxc_id;
 											$detalles->recibos_caja_id        = $rec->id;
 											$detalles->descripcion            = "Pago movil ".$items->detalle_cxc_id."-".$rec->prefijo.$rec->consecutivo."-".$detalles_tmp->codigo;
-											$detalles->valor                  = $items->valor;
+											$detalles->valor                  = $items->valor_pagado_cuota;
 											$detalles->codigo                 = $detalles_tmp->codigo;
 											$detalles->vencimiento            = $detalles_tmp->vencimiento;
 											$detalles->descuento              = 0;
 											$detalles->dias_intereses         = 0;
 											$detalles->capital                = $capitaltmp;
-											$detalles->intereses              = $items->valor - $capitaltmp;
+											$detalles->intereses              = $items->valor_pagado_cuota - $capitaltmp;
 											$detalles->anulado                = '0';
 									
 												if($detalles->save()==false){
