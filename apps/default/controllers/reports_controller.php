@@ -244,6 +244,12 @@
 		
 		}
 		
+		public function detalle_referenciasAction(){
+			
+			$this->setResponse('view');
+		
+		}
+		
 		
 		public function creditosAction(){
 				//$this->setResponse("view");

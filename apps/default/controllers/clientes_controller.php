@@ -29,6 +29,11 @@
 		public function opcionesAction(){
 					
         }
+		
+		
+		public function pruebaAction(){
+					
+        }
 		/****
 			agregarAction vista en la cual se mostrara el 
 			formulario para agregar clientes

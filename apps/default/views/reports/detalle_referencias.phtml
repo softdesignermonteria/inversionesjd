@@ -39,7 +39,7 @@ if(isset($_REQUEST["print"])){
 	
 	if($_REQUEST["print"]=="excel"){
 		header("Content-type: application/vnd.ms-excel; name='excel'");
-		header("Content-Disposition: filename=ListadoClientes.xls");
+		header("Content-Disposition: filename=ListadoReferencias.xls");
 		header("Pragma: no-cache");
 		header("Expires: 0");	
 	} 
@@ -49,7 +49,7 @@ if(isset($_REQUEST["print"])){
 
 <table width="100%" border="1" cellpadding="1" cellspacing="1" class="gridtable" >
     <tr >
-      <th colspan="7">Informe Listado de Clientes</th>
+      <th colspan="7">Informe Listado de Referencias</th>
     </tr>
     <tr >
       <th colspan="7"><?php echo Session::get("nombre_empresa"); ?></th>
@@ -73,7 +73,40 @@ if(isset($_REQUEST["print"])){
       <th colspan="6" align="left"><?php echo $_REQUEST["direccion"] ?></th>
     </tr>
 </table>	 
-<?php } ?>
+<?php } 
+
+			$condicion1 ="";
+			$condicion2 ="";
+			$condicion3 ="";
+			
+			$condicion4 ="";
+			$condicion5 ="";
+			
+			$condicion6 =" group by c.razon_social, c.nit";
+			
+			$db = DbBase::rawConnect();
+			$sql = "SELECT c.razon_social, c.nit, c.direccion, c.telefono, 
+			c.celular, d.departamento,m.municipio FROM `clientes` c, clientes c2, departamentos d, municipios m
+            WHERE c.id = c2.referencia_id AND c.departamentos_id = d.id
+			AND c.municipios_id = m.id
+			AND d.id = m.departamentos_id";
+			
+			if($_REQUEST["nit"]!=''){ $condicion1 = " and c.nit like '%".$_REQUEST["nit"]."%'"; 
+			}
+			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and c.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%'"; 
+			}
+			if($_REQUEST["direccion"]!='' ){ $condicion3 = " and c.direccion like '%".str_replace(" ","%",$_REQUEST["direccion"])."%'"; 
+			}
+			
+			if($_REQUEST["departamentos_id"]!='' ){ $condicion4 = " and c.departamentos_id = '".$_REQUEST["departamentos_id"]."'"; 
+			}
+			if($_REQUEST["municipios_id"]!=''){ $condicion5 = " and c.municipios_id = '".$_REQUEST["municipios_id"]."'"; 
+			}
+			
+			$detalles=$db->query($sql.$condicion1.$condicion2.$condicion3.$condicion4.$condicion5.$condicion6);
+		
+		
+?>
 
 <table width="100%" border="1" cellpadding="1" cellspacing="1" class="gridtable" >
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
@@ -86,17 +119,17 @@ if(isset($_REQUEST["print"])){
         <th>Municipio</th>
     </tr>
 <tbody>
-<?php foreach($detalles as $detalles): ?>
+<?php while($row =$db->fetchArray($detalles)){ ?>
     <tr>
-        <td align="left" ><?php echo $detalles->id; ?></td>
-        <td align="left" ><?php echo $detalles->razon_social; ?></td>
-        <td align="left" ><?php echo $detalles->direccion; ?></td>
-        <td align="left" ><?php echo $detalles->telefono; ?></td>
-        <td align="left" ><?php echo $detalles->celular; ?></td>
-        <td align="left" ><?php echo $detalles->departamento; ?></td>
-        <td align="left" ><?php echo $detalles->municipio; ?></td>
+        <td align="left" ><?php echo $row[nit]; ?></td>
+        <td align="left" ><?php echo $row[razon_social]; ?></td>
+        <td align="left" ><?php echo $row[direccion]; ?></td>
+        <td align="left" ><?php echo $row[telefono]; ?></td>
+        <td align="left" ><?php echo $row[celular]; ?></td>
+        <td align="left" ><?php echo $row[departamento]; ?></td>
+        <td align="left" ><?php echo $row[municipio]; ?></td>
     </tr>
-<?php endforeach; ?>    
+<?php } ?>    
 </tbody>
 </table>
 
@@ -121,7 +154,7 @@ $content2 = "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10m
 		{
 			$html2pdf = new HTML2PDF('L', 'A4', 'es',array(mL, mT, mR, mB));
 			$html2pdf->writeHTML($content2);
-			$html2pdf->Output('Reporte_Clientes.pdf');
+			$html2pdf->Output('Reporte_Referencias.pdf');
 		}
 		catch(HTML2PDF_exception $e) {
 			echo $e;

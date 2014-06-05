@@ -174,3 +174,28 @@ img.calendarIcon {
 
 }
 
+/*Estilo para las tablas en los reportes*/
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #217ec4;
+	border-collapse: collapse;
+	border-style: solid;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #70a9d2;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #e8f4fd;
+}
+

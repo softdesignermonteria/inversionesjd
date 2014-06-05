@@ -1,6 +1,6 @@
-<h4>REPORTE LISTADO DE CLIENTES</h5>
+<h4>REPORTE LISTADO DE REFERENCIAS</h5>
 
-<?php echo Tag::formRemote(Router::getController()."/detalle_clientes", "update: resultado", "id: fx","name: fx"); ?>
+<?php echo Tag::formRemote(Router::getController()."/detalle_referencias", "update: resultado", "id: fx","name: fx"); ?>
 
 <table id="filtros" width="100%" class="ui-corner-all ui-content">
 <thead>
@@ -10,13 +10,13 @@
 </thead>
 <tbody>
     <tr>
-        <th>Identificacion</th>
+        <th>Identificaci&oacute;n</th>
         <td colspan="3"><input type="number" id="nit" name="nit" size="30"  /></td>
     </tr>
     <tr>
         <th>Busqueda por Nombre</th>
         <td><input type="text" id="nombre" name="nombre" size="50" /></td>
-        <th>Busqueda por Direccion</th>
+        <th>Busqueda por Direcci&oacute;n</th>
         <td><input type="text" id="direccion" name="direccion" size="50" /></td>
     </tr>
     <tr>
@@ -61,21 +61,21 @@ jQuery(document).ready(function(e) {
     jQuery("#imprimir").click(function(e) {
         e.preventDefault();
 		var data = jQuery("#fx").serialize();
-		url = "<?php echo core::getInstancePath(); ?>reports/detalle_clientes/?"+data+"&print=html";
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_referencias/?"+data+"&print=html";
 	    window.open(url, '_blank');
     });
 	
 	 jQuery("#imprimir2").click(function(e) {
         e.preventDefault();
 		var data = jQuery("#fx").serialize();
-		url = "<?php echo core::getInstancePath(); ?>reports/detalle_clientes/?"+data+"&print=excel";
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_referencias/?"+data+"&print=excel";
 	    window.open(url, '_blank');
     });
 	
 	jQuery("#imprimir3").click(function(e) {
         e.preventDefault();
 		var datos = jQuery("#fx").serialize();
-		url = "<?php echo core::getInstancePath(); ?>reports/detalle_clientes/?"+datos+"&print=pdf";
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_referencias/?"+datos+"&print=pdf";
 	    window.open(url, '_blank');
 		/*var datos = jQuery("#fx").serialize();
 				var jqXHR = jQuery.ajax({
