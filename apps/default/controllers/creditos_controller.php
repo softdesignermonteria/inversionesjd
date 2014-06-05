@@ -301,13 +301,12 @@
 						 $fecha =  $row['name'];
 					}
 					
-					
-					
 					$responce[$i] = array( 
 									   "id"=>"temp".rand(),
 					                   "codigo"=>$i,
 					                   "valor"=>$_REQUEST["valor"],
 					                   "vencimiento"=>$fecha,
+									   "dia"=>$fecha,
 					                   "anulado"=> "NO"
 									  );
 					
@@ -355,9 +354,9 @@
 				$sw=1;Flash::error("Esta solicitud aun no ha sido aprobada o fue rechazada");
 				}
 				*/
-			if( $cr->count("anulado = 0 and clientes_id = '".$_REQUEST["clientes_id"]."' ") > 0 ){
+			/*if( $cr->count("anulado = 0 and clientes_id = '".$_REQUEST["clientes_id"]."' ") > 0 ){
 				$sw=1;Flash::error("Esta solicitud ya fue acreditada o guardada anteriormente ");
-				}
+				}*/
 			if($sw==0){
 					//abriando transacciones
 				Flash::success("EMPEZANDO A GUARDAR LOS REGISTOS...");	
@@ -450,8 +449,10 @@
 									
 								}
 	
-								
+								$k=0;
 								foreach( $detalles_item as $items):
+								$k++;
+								
 									$detalles = new DetalleCreditos();
 									$detalles->setTransaction($transaction);
 									//$detalles->id                     = $items->id;
@@ -481,6 +482,188 @@
 											$transaction->rollback();
 											
 										}	
+								/*Generamos recibo de caja automaticamente para nuevos creditos*/		
+								
+								$fecha2 = new Date($items->vencimiento);
+								$dia_semana = $fecha2->getDayNumberOfWeek();
+								//echo $dia_semana."<br />";
+								if($dia_semana==2){
+									
+										$cons2 = new DetalleConsecutivos();
+										$cons2 = $this->DetalleConsecutivos->findFirst("activo = '0' and tipo_documento_id = '6' ");
+										/*$id = $cons->id;
+										$prefijo = $cons->prefijo;
+										$consecutivo = $cons->desde;
+										$tipo_documento_id = $cons->tipo_documento_id;*/
+										$dtc2 = new DetalleConsecutivos();
+										$dtc2 = $this->DetalleConsecutivos->findFirst("id = '$cons2->id'");
+										$dtc2->setTransaction($transaction);
+										$dtc2->desde = $dtc2->desde+1;
+										if($dtc2->save()==false){
+											$sw=1;
+											 $syslogger = new Syslogger();
+											 $syslogger->username          = '';
+											 $syslogger->module            = Router::getModule();
+											 $syslogger->application       = Router::getApplication();
+											 $syslogger->controller        = 'recibos_caja_automatico_creditos';
+											 $syslogger->action            = 'add';
+											 $syslogger->error_sistema     = "Error Actualzando consecutivo recibos_caja_automatico_creditos";
+											 $syslogger->descripcion       = "Error Actualzando consecutivo recibos_caja_automatico_creditos";
+											 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
+											 $syslogger->fecha             = date("Y-m-d H:i:s");
+											 $syslogger->tipo_documento_id = $cons2->tipo_documento_id;
+											 $syslogger->prefijo           = $cons2->prefijo;
+											 $syslogger->consecutivo       = $cons2->desde;
+											 $syslogger->objeto            = json_encode($dtc2);
+											 $syslogger->save();	
+											$transaction->rollback();
+										}
+		
+									
+											//Flash::success("VERIFICANDO LOS CONSECUTIVOS PARA ESTE DOCUMENTO");		
+											 $rec = new RecibosCaja();
+											 $rec->setTransaction($transaction);
+											//para traer el mismo modelo ya instanciado
+											 $rec->id                  = "";
+											 $rec->empresa_id          = $creditos->empresa_id;
+											 $rec->clientes_id         = $creditos->clientes_id;
+											 $rec->creditos_id         = $creditos->id;
+											 $rec->cobradores_id       = $creditos->cobradores_id;
+											 $rec->tipo_documento_id   = $dtc2->tipo_documento_id;
+											 $rec->prefijo             = $dtc2->prefijo;
+											 $rec->consecutivo         = $dtc2->desde;   
+											 $rec->fecha_act           = date("Y-m-d H:i:s");
+											 $rec->hora_act            = date("H:i:s");
+											 $rec->fecha               = $creditos->fecha;
+											 $rec->provisional         = '';
+											 $rec->anulado             = '0';
+											 $rec->activo              = '0';
+											 $rec->observaciones       = "Generado Automaticamente desde creditos (Martes) ";
+											 $rec->cheque              = "";
+											 $rec->banco               = "";
+												
+												if($rec->save()==false){
+															
+															$msg_error="";
+															foreach($rec->getMessages() as $message){ 
+																$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
+															}
+															$sw=1;
+															/*Registro Para Audirotia*/
+											 
+															 $syslogger = new Syslogger();
+															 //$syslogger->setTransaction($transaction);
+															 $syslogger->username          = Session::get(md5("admin_username"));
+															 $syslogger->module            = Router::getModule();
+															 $syslogger->application       = Router::getApplication();
+															 $syslogger->controller        = $this->getControllerName();
+															 $syslogger->action            = $this->getActionName();
+															 $syslogger->error_sistema     = "No Insertado Satisfactoriamente Movil ".$msg_error;
+															 $syslogger->descripcion       = "Registro No Insertado Movil";
+															 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
+															 $syslogger->fecha             = date("Y-m-d H:i:s");
+															 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
+															 $syslogger->prefijo           = $rec->prefijo;
+															 $syslogger->consecutivo       = $rec->consecutivo;
+															 $syslogger->objeto            = json_encode($rec);
+															 $syslogger->save();
+												
+															$transaction->rollback();
+														//cierra if
+														}else{
+															/*Registro Para Audirotia*/
+											 
+															 $syslogger = new Syslogger();
+															 //$syslogger->setTransaction($transaction);
+															 $syslogger->username          = Session::get(md5("admin_username"));
+															 $syslogger->module            = Router::getModule();
+															 $syslogger->application       = Router::getApplication();
+															 $syslogger->controller        = $this->getControllerName();
+															 $syslogger->action            = $this->getActionName();
+															 $syslogger->error_sistema     = "Insertado Satisfactoriamente Movil";
+															 $syslogger->descripcion       = "Registro Insertado Movil";
+															 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
+															 $syslogger->fecha             = date("Y-m-d H:i:s");
+															 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
+															 $syslogger->prefijo           = $rec->prefijo;
+															 $syslogger->consecutivo       = $rec->consecutivo;
+															 $syslogger->objeto            = json_encode($rec);
+															 $syslogger->save();
+														}
+												
+														$creditos_tmp  = $this->Creditos->findFirst("id   = '$rec->creditos_id' and anulado = 0 ");
+														//$detalles_tmp  = $this->DetalleCxc->findFirst("id = '$items->detalle_cxc_id' and anulado = 0 ");
+														$porcentaje    = $creditos_tmp->porcentaje/100; 
+														$capitaltmp = 0;
+														$interestmp = 0;
+											
+														$detalles_rec = new DetalleRecibosCaja();
+														$detalles_rec->setTransaction($transaction);
+														$detalles_rec->id                     = "";
+														$capitaltmp = $detalles->valor / (1 + $porcentaje );
+														$detalles_rec->detalle_cxc_id         = $detalles->id;
+														$detalles_rec->recibos_caja_id        = $rec->id;
+														$detalles_rec->descripcion            = "Descuento martes ".$detalles->id."-".$rec->prefijo.$rec->consecutivo."-".$detalles->codigo;
+														$detalles_rec->valor                  = $detalles->valor ;
+														$detalles_rec->codigo                 = $detalles->codigo;
+														$detalles_rec->vencimiento            = $detalles->vencimiento;
+														$detalles_rec->descuento              = 0;
+														$detalles_rec->dias_intereses         = 0;
+														$detalles_rec->capital                = $capitaltmp;
+														$detalles_rec->intereses              = $detalles->valor - $capitaltmp;
+														$detalles_rec->anulado                = '0';
+											
+														if($detalles_rec->save()==false){
+															$msg_error="";
+															foreach($detalles_rec->getMessages() as $message){ 
+																$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
+															}
+															 $sw=1;
+															 $syslogger = new Syslogger();
+															 //$syslogger->setTransaction($transaction);
+															 $syslogger->username          = Session::get(md5("admin_username"));
+															 $syslogger->module            = Router::getModule();
+															 $syslogger->application       = Router::getApplication();
+															 $syslogger->controller        = $this->getControllerName();
+															 $syslogger->action            = $this->getActionName();
+															 $syslogger->error_sistema     = "No Insertado Detalle Recibo Caja Movil ".$msg_error;
+															 $syslogger->descripcion       = "Registro No Insertado Movil";
+															 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
+															 $syslogger->fecha             = date("Y-m-d H:i:s");
+															 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
+															 $syslogger->prefijo           = $rec->prefijo;
+															 $syslogger->consecutivo       = $rec->consecutivo;
+															 $syslogger->objeto            = json_encode($detalles_rec);
+															 $syslogger->save();
+															 $transaction->rollback();
+															
+														}else{
+															 /*Registro Para Audirotia*/
+									 
+															 $syslogger = new Syslogger();
+															 //$syslogger->setTransaction($transaction);
+															 $syslogger->username          = Session::get(md5("admin_username"));
+															 $syslogger->module            = Router::getModule();
+															 $syslogger->application       = Router::getApplication();
+															 $syslogger->controller        = $this->getControllerName();
+															 $syslogger->action            = $this->getActionName();
+															 $syslogger->error_sistema     = "Insertado Detalle Recibo Caja ".$detalles->id;
+															 $syslogger->descripcion       = "Registro Insertado";
+															 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
+															 $syslogger->fecha             = date("Y-m-d H:i:s");
+															 $syslogger->tipo_documento_id = $rec->tipo_documento_id;
+															 $syslogger->prefijo           = $rec->prefijo;
+															 $syslogger->consecutivo       = $rec->consecutivo;
+															 $syslogger->objeto            = json_encode($detalles_rec);
+															 $syslogger->save();
+														}
+												
+												
+									
+										
+									
+						
+								} //fin condiicion dia martes
 										
 													  
 								endforeach; //cierra los detalles		
