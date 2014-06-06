@@ -126,7 +126,17 @@
     </div>
 
 
-
+<h4 style="font-size:25px;">
+&nbsp; Descontado por Martes: &nbsp;
+<?php 
+$rec = new RecibosCaja();
+$drec = new DetalleRecibosCaja();
+$rec = $rec->findFirst(" creditos_id = '$creditos_id' and anulado = 0 and fecha = '$fecha'  ");
+$descontar = $drec->sum("valor","conditions: recibos_caja_id = '$rec->id' ");
+echo "$ " . number_format($descontar)." ";
+?>
+&nbsp; Entregar: &nbsp;<?php echo "$ " . number_format($total_credito2 - $descontar); ?>
+</h4>
 <table width="400px" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front">
       <tr>
         <td align="center"><?php echo Tag::linkTo(Router::getController()."/print_jaspert/$id",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
