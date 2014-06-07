@@ -1,52 +1,95 @@
-<?php echo view::getContent(); ?>
-<?php if(isset($_REQUEST["print"])){ ?>
-<style>
-	.oculto{ display:none;}
-</style>
-<table width="100%" border="1" cellpadding="1" cellspacing="1" class="ui-corner-all ui-content" >
+<?php //echo view::getContent(); 
+
+if(isset($_REQUEST["print"])){ 
+
+	if($_REQUEST["print"]=="pdf"){ 
+		ob_start(); 
+	}
+	
+	if($_REQUEST["print"]=="html" || $_REQUEST["print"]=="pdf" || $_REQUEST["print"]=="excel"){?>
+    		<style>
+
+			/*Estilo para las tablas en los reportes*/
+			table.gridtable {
+				font-family: arial;
+				font-size:11px;
+				color:#333333;
+				border-width: 1px;
+				border-color: #217ec4;
+				border-collapse: collapse;
+				border-style: solid;
+			}
+			table.gridtable th {
+				border-width: 1px;
+				padding: 8px;
+				border-style: solid;
+				border-color: #217ec4;
+				background-color: #70a9d2;
+			}
+			table.gridtable td {
+				border-width: 1px;
+				padding: 8px;
+				border-style: solid;
+				border-color: #217ec4;
+				background-color: #e8f4fd;
+			}
+			
+			</style>
+	<?php } 
+	
+	if($_REQUEST["print"]=="excel"){
+		header("Content-type: application/vnd.ms-excel; name='excel'");
+		header("Content-Disposition: filename=ListadoCreditos.xls");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+	} 
+	
+	
+?>
+<table width="100%" border="1" cellpadding="1" cellspacing="1" class="gridtable" >
     <tr >
-      <th colspan="7">Informe Listado Creditos</th>
+      <th colspan="10">Informe Listado Creditos</th>
     </tr>
     <tr >
-      <th colspan="7"><?php echo Session::get("nombre_empresa"); ?></th>
+      <th colspan="10"><?php echo Session::get("nombre_empresa"); ?></th>
     </tr>
     <tr >
-      <th colspan="7">Reporte Impreso el dia <?php echo date("Y-m-d"); ?> </th>
+      <th colspan="10">Reporte Impreso el dia <?php echo date("Y-m-d"); ?> </th>
     </tr>
     <tr >
-      <th colspan="7">Filtrado por:</th>
+      <th colspan="10">Filtrado por:</th>
     </tr>
     <tr >
       <th width="25%" align="left">Identificacion:</th>
-      <th width="75%" colspan="6" align="left"><?php echo $_REQUEST["nit"] ?></th>
+      <th width="75%" colspan="9" align="left"><?php echo $_REQUEST["nit"] ?></th>
     </tr>
     <tr >
       <th align="left">Nombre</th>
-      <th colspan="6" align="left"><?php echo $_REQUEST["nombre"] ?></th>
+      <th colspan="9" align="left"><?php echo $_REQUEST["nombre"] ?></th>
   </tr>
     <tr >
       <th align="left">Fecha Desde:</th>
-      <th colspan="6" align="left"><?php echo $_REQUEST["desde"] ?> Fecha Hasta: <?php echo $_REQUEST["hasta"] ?></th>
+      <th colspan="9" align="left"><?php echo $_REQUEST["desde"] ?> Fecha Hasta: <?php echo $_REQUEST["hasta"] ?></th>
     </tr>
     <tr >
       <th align="left">Cobrador: </th>
-      <th colspan="6" align="left"><?php echo $_REQUEST["cobradores"] ?></th>
+      <th colspan="9" align="left"><?php echo $_REQUEST["cobradores"] ?></th>
     </tr>
 </table>	 
 <?php } ?>
-<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
 <thead>
-    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
-        <th>Codigo</th>
-        <th>Numero Recibo</th>
-        <th>Cliente</th>
-        <th>Fecha</th>
-        <th>Cobrador</th>
-        <th>Capital Prestado</th>
-        <th>Numero Cuotas</th>
-        <th>Valor Cuotas</th>
-        <th>Total Credito</th>
-        <th class="oculto">Ver</th>
+    <tr class="gridtable">
+        <th width="6%">Codigo</th>
+        <th width="13%">Num Recibo</th>
+        <th width="11%">Cliente</th>
+        <th width="7%">Fecha</th>
+        <th width="10%">Cobrador</th>
+        <th width="15%">Capital Prestado</th>
+        <th width="14%">Num Cuotas</th>
+        <th width="12%">Valor Cuotas</th>
+        <th width="12%">Total Credito</th>
+        <th width="12%">Opciones</th>
     </tr>
 </thead>
 <tbody>
@@ -56,15 +99,15 @@ $a=0;$a1=0;$a2=0;$a3=0;
 <?php foreach($detalles as $detalles): ?>
     <tr>
         <td align="left" ><?php echo $detalles->id; ?></td>
-        <td align="left" ><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
-        <td align="left" ><?php echo $detalles->nombre; ?></td>
+        <td align="center" ><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+        <td align="justify"><?php echo $detalles->nombre; ?></td>
         <td align="left" ><?php echo $detalles->fecha; ?></td>
         <td align="left" ><?php echo $detalles->razon_social; ?></td>
-        <td align="right" >$ <?php echo number_format($detalles->capital);       $a+=$detalles->capital; ?></td>
-        <td align="right" ><?php echo $detalles->cuotas;   ?></td>
-        <td align="right" >$ <?php echo number_format($detalles->valor_cuotas);  $a1+=$detalles->valor_cuotas;?></td>
+        <td align="center" >$ <?php echo number_format($detalles->capital);       $a+=$detalles->capital; ?></td>
+        <td align="center" ><?php echo $detalles->cuotas;   ?></td>
+        <td align="center" >$ <?php echo number_format($detalles->valor_cuotas);  $a1+=$detalles->valor_cuotas;?></td>
         <td align="right" >$ <?php echo number_format($detalles->total_credito); $a2+=$detalles->total_credito;?></td>
-        <td align="right"  class="oculto"><?php echo Tag::linkTo("creditos/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
+        <td align="center" ><?php echo Tag::linkTo("creditos/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
     </tr>
    
 <?php endforeach; ?>    
@@ -74,7 +117,37 @@ $a=0;$a1=0;$a2=0;$a3=0;
       <th align="right" >&nbsp;</th>
       <th align="right" >$ <?php echo number_format($a1);  ?></th>
       <th align="right" >$ <?php echo number_format($a2);  ?></th>
-      <th align="right"  class="oculto">&nbsp;</th>
-   </tr>
+      <th align="right" >&nbsp;</th>
+    </tr>
 </tbody>
 </table>
+
+<?php if($_REQUEST["print"]=="pdf"){ 
+
+$content = ob_get_clean();
+ 
+$content2 = "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'> 
+				  <page_header> 
+					   ".Session::get("nombre_empresa")."
+				  </page_header> 
+				  <page_footer> 
+					   Reporte Generado por: <a href='www.dydsoluciones.net'>dydsoluciones.net</a> fecha: ".date("Y-m-d H:i:s")."
+				  </page_footer> 
+					 $content
+				</page> ";
+	
+	
+	$path = $_SERVER['DOCUMENT_ROOT']; 
+	require($path.core::getInstancePath()."public/html2pdf/html2pdf.class.php");
+		try
+		{
+			$html2pdf = new HTML2PDF('L', 'A4', 'es',array(mL, mT, mR, mB));
+			$html2pdf->writeHTML($content2);
+			$html2pdf->Output('Reporte_ListadoCreditos.pdf');
+		}
+		catch(HTML2PDF_exception $e) {
+			echo $e;
+			exit;
+		}
+	
+} ?>

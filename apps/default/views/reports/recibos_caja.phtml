@@ -39,6 +39,10 @@
 
 <button type="button" id="imprimir" name="imprimir">Imprimir</button>
 
+<button type="button" id="imprimir2" name="imprimir2">Excel</button>
+
+<button type="button" id="imprimir3" name="imprimir3">Pdf</button>
+
 <div id="mensajes"></div>
 
 
@@ -49,9 +53,66 @@ jQuery(document).ready(function(e) {
     jQuery("#imprimir").click(function(e) {
         e.preventDefault();
 		var data = jQuery("#fx").serialize();
-		url = "<?php echo core::getInstancePath(); ?>reports/detalle_recibos_caja/?"+data+"&print=true";
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_recibos_caja/?"+data+"&print=html";
 	    window.open(url, '_blank');
     });
+	
+	 jQuery("#imprimir2").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_recibos_caja/?"+data+"&print=excel";
+	    window.open(url, '_blank');
+    });
+	
+	jQuery("#imprimir3").click(function(e) {
+        e.preventDefault();
+		var datos = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_recibos_caja/?"+datos+"&print=pdf";
+	    window.open(url, '_blank');
+		/*var datos = jQuery("#fx").serialize();
+				var jqXHR = jQuery.ajax({
+						url:"<?php //echo core::getInstancePath(); ?>reports/detalle_clientes/?"+datos+"&print=pdf",
+						type:"POST",
+						data: datos,
+							fail:function(){
+								alert("error");
+							},
+							error:function(jqXHR,textStatus,errorThrown){
+								alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+							}
+				});
+
+		 jqXHR.done(function(datos){
+			//url = "<?php //echo core::getInstancePath(); ?>reports/generarpdf/?"+data+"&print=pdf";
+	    	//window.open(url, '_blank');
+			
+				var jqXHR2 = jQuery.ajax({
+					url:"<?php echo core::getInstancePath(); ?>reports/generapdf/",
+					type:"POST",
+					dataType:"pdf",
+					data:{ 
+							print: "pdf",
+							html: datos,
+							title: "Reportes",
+							url: "www.dydsoluciones.net",
+							author: "dydsoluciones.net"
+						},
+						fail:function(jqXHR,textStatus,errorThrown){
+							alert("error erro 2 "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+						},
+						error:function(jqXHR,textStatus,errorThrown){
+							alert("error error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+						}
+				});
+				
+				jqXHR2.done(function(data){
+					jQuery("#resultado").html(data);
+					//url = "<?php //echo $_SERVER['DOCUMENT_ROOT'].core::getInstancePath(); ?>public/temp/Reportes.pdf";
+			    	//window.open(url, '_blank');
+				}); // jqXHR2
+			});// jqXHR*/
+
+	    });//imprimir 3
 });
   
   

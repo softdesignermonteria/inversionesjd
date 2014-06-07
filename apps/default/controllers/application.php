@@ -5,18 +5,14 @@ class ControllerBase {
 		
 	}
   
-	public function notFoundAction(){
-	
-	}
-  
 	public function init(){
-		//Extensions::loadExtension("Git");  
 		Router::routeTo("controller: login","action: login");
+		
 	}
 	
 	public function beforeFilter(){
 	 	
-		if(Router::getController()!='login' && !preg_match('/_movil/',Router::getController()) ){
+		if(Router::getController()!='login' && Router::getController()!='clientes_movil'){
 							//Flash::error( " md5(username) = '".Session::get(md5("admin_username"))."' and md5(id) = '".Session::get(md5("usuarios_id"))."' " );
 							
 						 if( $this->Admin->count( " md5(username) = '".Session::get(md5("admin_username"))."' and md5(id) = '".Session::get(md5("usuarios_id"))."' "  ) == 0 ){
@@ -82,7 +78,7 @@ class ControllerBase {
 									 }
 									   Flash::addMessage("No tiene permiso para usar esta aplicacion '". $this->getControllerName()."/".$this->getActionName()."' ",Flash::ERROR);
 									   
-									   Router::routeTo("controller: login", "action: login");
+									   Router::routeTo("controller: home", "action: error");
 									   return false;
 								  }
 							 /*}*/
@@ -157,6 +153,7 @@ class ControllerBase {
 					if($e->getCode()==Dispatcher::NOT_FOUND_FILE_CONTROLLER){
 		 			  // $authLog = new Logger("File", "notFoundReports.txt");
 		              // $authLog->log(" Error Lo sentimos la pagina no existe: '". $this->getControllerName()."/".$this->getActionName()."' Ip: ".$_SERVER["REMOTE_ADDR"]." Fecha ".date("Y-m-d H:i:s").$e->getCode() );
+
 					     $syslogger = new Syslogger();
 						 $syslogger->username      =  Session::get(md5("admin_username"));
 						 $syslogger->module        = Router::getModule();

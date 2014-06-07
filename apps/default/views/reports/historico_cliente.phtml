@@ -1,45 +1,73 @@
-<?php echo view::getContent(); ?>
-<br />
-<h4>Recibos de Caja</h4>
-<br />
-<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<h4>REPORTE HISTORICO DE CLIENTES</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/detalle_historicos", "update: resultado", "id: fx","name: fx"); ?>
+
+<table id="filtros" width="100%" class="ui-corner-all ui-content">
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
-        <th>Codigo</th>
-        <th>Numero Recibo</th>
-        <th>Cliente</th>
-        <th>Fecha</th>
-        <th>Cobrador</th>
-        <th>Capital</th>
-        <th>Intereses</th>
-        <th>Total Pagado</th>
-        <th class="oculto">Ver</th>
+        <th colspan="4">Filtros</th>
     </tr>
 </thead>
 <tbody>
-<?php 
-$a=0;$a1=0;$a2=0;$a3=0;
-?>
-<?php foreach($detalles_recibos_caja as $detalles): ?>
     <tr>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->nombre; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
-        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);     $a+=$detalles->capital; ?></td>
-        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->intereses);   $a1+=$detalles->intereses;?></td>
-        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->valor);      $a2+=$detalles->valor;?></td>
-        <td align="right" nowrap="nowrap" class="oculto"><?php echo Tag::image("iconos/Visa.png","border: 0","width: 32px","id: a$detalles->id","onclick: ver($detalles->id)"); ?></td>
+        <th>Cliente: </th>
+        <td colspan="3"><?php echo Tag::textFieldExt("clientes","size: 30"); ?></td>
     </tr>
-   
-<?php endforeach; ?>    
-  <tr>
-      <th colspan="5" align="right" nowrap="nowrap">Totales</th>
-      <th align="right" nowrap="nowrap">$ <?php echo number_format($a);  ?></th>
-      <th align="right" nowrap="nowrap">$ <?php echo number_format($a1);  ?></th>
-      <th align="right" nowrap="nowrap">$ <?php echo number_format($a2);  ?></th>
-      <th align="right" nowrap="nowrap" class="oculto">&nbsp;</th>
-   </tr>
+    <tr>
+      <th colspan="4"><button type="submit" id="guardar" name="guardar">Enviar</button></th>
+    </tr>
 </tbody>
 </table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="resultado" style="min-height:400px; max-height:500px; overflow:auto;" ></div>
+
+<br />
+<!--
+<table width="400px" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front">
+      <tr>
+        <td align="center"><?php //echo Tag::linkTo(Router::getController()."/print_jaspertClientes",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
+      </tr>
+      <tr>
+        <td align="center">Listado General de Clientes</td>
+      </tr>
+</table>
+-->
+<button type="button" id="imprimir" name="imprimir">Imprimir</button>
+
+<button type="button" id="imprimir2" name="imprimir2">Excel</button>
+
+<button type="button" id="imprimir3" name="imprimir3">Pdf</button>
+
+<div id="mensajes"></div>
+
+
+<script>
+	
+jQuery(document).ready(function(e) {
+    jQuery("#imprimir").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_historicos/?"+data+"&print=html";
+	    window.open(url, '_blank');
+    });
+	
+	 jQuery("#imprimir2").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_historicos/?"+data+"&print=excel";
+	    window.open(url, '_blank');
+    });
+	
+	jQuery("#imprimir3").click(function(e) {
+        e.preventDefault();
+		var datos = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_historicos/?"+datos+"&print=pdf";
+	    window.open(url, '_blank');
+    });//imprimir 3
+	
+});
+  
+
+</script>

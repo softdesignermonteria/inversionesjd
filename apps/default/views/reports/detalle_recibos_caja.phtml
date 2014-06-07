@@ -1,51 +1,94 @@
-<?php echo view::getContent(); ?>
-<?php if(isset($_REQUEST["print"])){ ?>
-<style>
-	.oculto{ display:none;}
-</style>
-<table width="100%" border="1" cellpadding="1" cellspacing="1" class="ui-corner-all ui-content" >
+<?php //echo view::getContent(); 
+
+if(isset($_REQUEST["print"])){ 
+
+	if($_REQUEST["print"]=="pdf"){ 
+		ob_start(); 
+	}
+	
+	if($_REQUEST["print"]=="html" || $_REQUEST["print"]=="pdf" || $_REQUEST["print"]=="excel"){?>
+    		<style>
+
+			/*Estilo para las tablas en los reportes*/
+			table.gridtable {
+				font-family: arial;
+				font-size:11px;
+				color:#333333;
+				border-width: 1px;
+				border-color: #217ec4;
+				border-collapse: collapse;
+				border-style: solid;
+			}
+			table.gridtable th {
+				border-width: 1px;
+				padding: 8px;
+				border-style: solid;
+				border-color: #217ec4;
+				background-color: #70a9d2;
+			}
+			table.gridtable td {
+				border-width: 1px;
+				padding: 8px;
+				border-style: solid;
+				border-color: #217ec4;
+				background-color: #e8f4fd;
+			}
+			
+			</style>
+	<?php } 
+	
+	if($_REQUEST["print"]=="excel"){
+		header("Content-type: application/vnd.ms-excel; name='excel'");
+		header("Content-Disposition: filename=ListadoRecibosCaja.xls");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+	} 
+	
+	
+?>
+<table width="100%" border="1" cellpadding="1" cellspacing="1" class="gridtable" >
     <tr >
-      <th colspan="7">Informe Listado Recibos de caja</th>
+      <th colspan="8">Informe Listado Recibos de caja</th>
     </tr>
     <tr >
-      <th colspan="7"><?php echo Session::get("nombre_empresa"); ?></th>
+      <th colspan="8"><?php echo Session::get("nombre_empresa"); ?></th>
     </tr>
     <tr >
-      <th colspan="7">Reporte Impreso el dia <?php echo date("Y-m-d"); ?> </th>
+      <th colspan="8">Reporte Impreso el d&iacute;a <?php echo date("Y-m-d"); ?> </th>
     </tr>
     <tr >
-      <th colspan="7">Filtrado por:</th>
+      <th colspan="8">Filtrado por:</th>
     </tr>
     <tr >
-      <th width="25%" align="left">Identificacion:</th>
-      <th width="75%" colspan="6" align="left"><?php echo $_REQUEST["nit"] ?></th>
+      <th width="25%" align="left">Identificaci&oacute;n:</th>
+      <th width="75%" colspan="7" align="left"><?php echo $_REQUEST["nit"] ?></th>
     </tr>
     <tr >
       <th align="left">Nombre</th>
-      <th colspan="6" align="left"><?php echo $_REQUEST["nombre"] ?></th>
+      <th colspan="7" align="left"><?php echo $_REQUEST["nombre"] ?></th>
   </tr>
     <tr >
       <th align="left">Fecha Desde:</th>
-      <th colspan="6" align="left"><?php echo $_REQUEST["desde"] ?> Fecha Hasta: <?php echo $_REQUEST["hasta"] ?></th>
+      <th colspan="7" align="left"><?php echo $_REQUEST["desde"] ?> Fecha Hasta: <?php echo $_REQUEST["hasta"] ?></th>
     </tr>
     <tr >
       <th align="left">Cobrador: </th>
-      <th colspan="6" align="left"><?php echo $_REQUEST["cobradores"] ?></th>
+      <th colspan="7" align="left"><?php echo $_REQUEST["cobradores"] ?></th>
     </tr>
 </table>	 
 <?php } ?>
-<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
-        <th>Codigo</th>
-        <th>Numero Recibo</th>
+        <th>C&oacute;digo</th>
+        <th>N&uacute;mero Recibo</th>
         <th>Cliente</th>
         <th>Fecha</th>
         <th>Cobrador</th>
         <th>Capital</th>
         <th>Intereses</th>
         <th>Total Pagado</th>
-        <th class="oculto">Ver</th>
+        <th>Opciones</th>
     </tr>
 </thead>
 <tbody>
@@ -62,7 +105,7 @@ $a=0;$a1=0;$a2=0;$a3=0;
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);     $a+=$detalles->capital; ?></td>
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->intereses);   $a1+=$detalles->intereses;?></td>
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->valor);      $a2+=$detalles->valor;?></td>
-        <td align="right" nowrap="nowrap" class="oculto"><?php echo Tag::image("iconos/Visa.png","border: 0","width: 32px","id: a$detalles->id","onclick: ver($detalles->id)"); ?></td>
+        <td align="center" nowrap="nowrap"><?php echo Tag::linkTo("recibos_caja/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
     </tr>
    
 <?php endforeach; ?>    
@@ -71,7 +114,39 @@ $a=0;$a1=0;$a2=0;$a3=0;
       <th align="right" nowrap="nowrap">$ <?php echo number_format($a);  ?></th>
       <th align="right" nowrap="nowrap">$ <?php echo number_format($a1);  ?></th>
       <th align="right" nowrap="nowrap">$ <?php echo number_format($a2);  ?></th>
-      <th align="right" nowrap="nowrap" class="oculto">&nbsp;</th>
-   </tr>
+      <th align="right" nowrap="nowrap">&nbsp;</th>
+    </tr>
 </tbody>
 </table>
+
+<?php if($_REQUEST["print"]=="pdf"){ 
+
+$content = ob_get_clean();
+ 
+$content2 = "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'> 
+				  <page_header> 
+					   ".Session::get("nombre_empresa")."
+				  </page_header> 
+				  <page_footer> 
+					   Reporte Generado por: <a href='www.dydsoluciones.net'>dydsoluciones.net</a> fecha: ".date("Y-m-d H:i:s")."
+				  </page_footer> 
+					 $content
+				</page> ";
+	
+	
+	$path = $_SERVER['DOCUMENT_ROOT']; 
+	require($path.core::getInstancePath()."public/html2pdf/html2pdf.class.php");
+		try
+		{
+			$html2pdf = new HTML2PDF('L', 'A4', 'es',array(mL, mT, mR, mB));
+			$html2pdf->writeHTML($content2);
+			$html2pdf->Output('Reporte_ListadoRecibosCaja.pdf');
+		
+		}
+		catch(HTML2PDF_exception $e) {
+			echo $e;
+			exit;
+		}
+	
+} ?>
+
