@@ -118,14 +118,6 @@
 			$this->setParamToView("detalles",$query->getResultSet());
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
 		public function recibos_cajaAction(){
 				
 		}
@@ -178,21 +170,12 @@
 		
 		public function detalle_historicosAction(){
 			
+				
 			$this->setResponse('view');
 			
 			$condicion1 ="";
-			$condicion2 ="";
-			$condicion3 ="";
 			
-			$condicion4 ="";
-			$condicion5 ="";
-			
-			if($_REQUEST["nit"]!=''       ){ $condicion1 = " and {#Clientes}.nit like '%".$_REQUEST["nit"]."%' "; }
-			if($_REQUEST["nombre"]!=''    ){ $condicion2 = " and {#Clientes}.razon_social like '%".str_replace(" ","%",$_REQUEST["nombre"])."%' "; }
-			if($_REQUEST["direccion"]!='' ){ $condicion3 = " and ( {#Clientes}.direccion like '%".str_replace(" ","%",$_REQUEST["direccion"])."%' )"; }
-			
-			if($_REQUEST["departamentos_id"]!='' ){ $condicion1 = " and {#Clientes}.departamentos_id = '".$_REQUEST["departamentos_id"]."' "; }
-			if($_REQUEST["municipios_id"]!=''    ){ $condicion1 = " and {#Clientes}.municipios_id = '".$_REQUEST["municipios_id"]."' "; }
+			if($_REQUEST["clientes_id"]!=''       ){ $condicion1 = " and {#Clientes}.id = '".$_REQUEST["clientes_id"]."' "; }
 			
 			$query = new ActiveRecordJoin(array(
 				"entities" => array("Clientes", "Departamentos", "Municipios"),
@@ -201,41 +184,91 @@
 							
 							"{#Departamentos}.departamento", 
 							"{#Municipios}.municipio"),
-				"conditions" => " 1=1 $condicion1 $condicion2 $condicion3 $condicion4 $condicion5"
+				"conditions" => " 1=1 $condicion1 "
+			));
+			
+		//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_clientes",$query->getResultSet());
+			
+		/*		$query = new ActiveRecordJoin(array(
+				"entities" => array("Solicitud","Clientes","Departamentos","Municipios"),
+				"fields" => array(
+							"{#Solicitud}.id", 
+							"{#Solicitud}.prefijo", 
+							"{#Solicitud}.consecutivo", 
+							"{#Solicitud}.clientes_id", 
+							"{#Solicitud}.deudores_id", 
+							"{#Solicitud}.deudores2_id", 
+							"{#Solicitud}.deudores3_id", 
+							"{#Solicitud}.fecha", 
+							"{#Solicitud}.estado_solicitud_id", 
+							"{#Solicitud}.porcentaje", 
+							"{#Solicitud}.capital", 
+							"{#Solicitud}.numero_cuotas", 
+							"{#Solicitud}.valor_cuota", 
+							"{#Solicitud}.total_credito", 
+							"{#Clientes}.razon_social", 
+												
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+							
+				"conditions" => " 1=1 and {#Clientes}.id={#Solicitud}.clientes_id $condicion1  "
+								
 			));
 			
 			//Flash::notice($query->getSqlQuery());
-			$this->setParamToView("detalles",$query->getResultSet());
-		}
-		
-		
-		public function historico_clienteAction($id){
+			$this->setParamToView("detalles_solicitudes",$query->getResultSet());*/
 			
-			//$this->setResponse('view');
-			/*Query Recibos de caja*/			
+			
 			$query = new ActiveRecordJoin(array(
-				"entities" => array("RecibosCaja","Clientes" ,"DetalleRecibosCaja","Cobradores"),
+				"entities" => array("Creditos","Clientes","Departamentos","Municipios"),
+				"fields" => array(
+							"{#Creditos}.id", 
+							"{#Creditos}.clientes_id", 
+							"{#Clientes}.nit", 
+							"{#Clientes}.razon_social", 
+							
+							"{#Clientes}.direccion", 
+							"{#Creditos}.prefijo", 
+							"{#Creditos}.fecha", 
+							"{#Creditos}.capital", 
+							"{#Creditos}.cuotas", 
+							"{#Creditos}.valor_cuotas", 
+							"{#Creditos}.total_credito", 
+							"{#Creditos}.consecutivo", 
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+				"conditions" => " 1=1 $condicion1 "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_creditos",$query->getResultSet());
+			
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("RecibosCaja","Clientes" ,"DetalleRecibosCaja"),
 				"groupFields" => array(
 									"{#RecibosCaja}.id",
 									"{#RecibosCaja}.prefijo",
 									"{#RecibosCaja}.consecutivo",
 									"{#RecibosCaja}.fecha",
-									"{#Cobradores}.razon_social",
-									"{#Clientes}.razon_social as nombre"
+									"{#Clientes}.razon_social"
 								   ),
 				"sumatory" => array(
 									"{#DetalleRecibosCaja}.valor",
 									"{#DetalleRecibosCaja}.capital",
 									"{#DetalleRecibosCaja}.intereses"
 									),				
-				"conditions" => " 1=1 and {#Clientes}.nit = '$id' "
+				"conditions" => " 1=1 $condicion1  "
 			));
+			
 			//Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_recibos_caja",$query->getResultSet());
-			
-			/*Fin Query Recibos de caja*/		
-			
-			
+		}
+		
+		
+		public function historico_clienteAction(){
+				
 		}
 		
 		
@@ -317,6 +350,10 @@
 				$this->setParamToView("solicitud",$solicitud);
 				
 					
+		}
+		
+		public function ingresos_mesAction(){
+				
 		}
 		
 		public function buscar_cxcAction(){

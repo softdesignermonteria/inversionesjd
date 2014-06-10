@@ -1,31 +1,217 @@
-<?php echo view::getContent(); ?>
-<table width="100%" border="1" cellpadding="2" cellspacing="2" class="ui-corner-all ui-content" id="filtros">
+<?php //echo view::getContent(); 
+
+if( isset($_REQUEST["print"]) ){ 
+ 	
+	if($_REQUEST["print"]=="pdf"){ 
+		ob_start(); 
+	}
+	
+	
+	
+	if($_REQUEST["print"]=="excel"){
+		header("Content-type: application/vnd.ms-excel; name='excel'");
+		header("Content-Disposition: filename=ficheroExcel.xls");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+	} 
+	
+}
+?>
+<style>
+
+/*Estilo para las tablas en los reportes*/
+table.gridtable {
+	width:100%;
+	font-family: arial;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #217ec4;
+	border-collapse: collapse;
+	border-style: solid;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #70a9d2;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #e8f4fd;
+}
+
+</style>
+<?php if( isset($_REQUEST["print"]) ){ ?>     
+<table  class="gridtable" align="center">
+  
+    <tr >
+      <th width="650" align="center" valign="middle" >Informe Listado Historico de Clientes</th>
+  </tr>
+    <tr >
+      <th align="center" valign="middle"><?php echo Session::get("nombre_empresa"); ?></th>
+  </tr>
+    <tr >
+      <th align="center" valign="middle">Reporte Impreso el día <?php echo date("Y-m-d"); ?> </th>
+  </tr>
+    <tr >
+      <th  align="center" valign="middle">Filtrado por:</th>
+  </tr>
+</table>	 
+
+<br />
+<?php  } ?>
+
+<h4>Informaci&oacute;n del Cliente</h4>
+
+<table  class="gridtable" align="center" width="100%" >
 <thead>
-    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
-        <th>Codigo</th>
+    <tr>
+        <th>C&oacute;digo</th>
         <th>Nombres</th>
-        <th>Direccion Casa</th>
-        <th>Telefono</th>
-        <th>celular</th>
-        <th>Departamento</th>
-        <th>Municipio</th>
-        <th>Ver Historicos</th>
+        <th>Direcci&oacute;n</th>
+        <th>Tel&eacute;fono</th>
+        <th>Celular</th>
+      <th>Municipio</th>
     </tr>
 </thead>
 <tbody>
-<?php foreach($detalles as $detalles): ?>
+<?php foreach($detalles_clientes as $detalles): ?>
     <tr>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->direccion; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->telefono; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->celular; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->departamento; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->municipio; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo Tag::linkTo("reports/historico_cliente/$detalles->id",Tag::image("iconos/buscar.jpg","border: 0","width: 32px"),"target: _blank" ); ?></td>
+        <td align="left" ><?php echo $detalles->id; ?></td>
+        <td align="left" ><?php echo $detalles->razon_social; ?></td>
+        <td align="left" ><?php echo $detalles->direccion; ?></td>
+        <td align="left" ><?php echo $detalles->telefono; ?></td>
+        <td align="left" ><?php echo $detalles->celular; ?></td>
+        
+        <td align="left" ><?php echo $detalles->municipio; ?></td>
     </tr>
 <?php endforeach; ?>    
 </tbody>
 </table>
+
+<br />
+
+<h4>Cr&eacute;ditos del Cliente</h4>
+<table width="100%"  border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
+<thead>
+    <tr>
+        <th width="7%">C&oacute;digo</th>
+        <th width="6%">N&uacute;mero</th>
+        <th width="8%">Cliente</th>
+        <th width="13%">Fecha</th>
+       
+        <th width="8%"> Prestado</th>
+        <th width="8%"> Cuotas</th>
+        <th width="8%">Valor Cuotas</th>
+        <th width="42%">Total Cr&eacute;dito</th>
+        <!--<th class="oculto">Ver</th>-->
+    </tr>
+</thead>
+<tbody>
+<?php 
+$a=0;$a1=0;$a2=0;$a3=0;
+?>
+<?php foreach($detalles_creditos as $detalles): ?>
+    <tr>
+        <td align="left" ><?php echo $detalles->id; ?></td>
+        <td align="left" ><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+        <td style="text-align:justify;width:150;"><?php echo $detalles->razon_social; ?></td>
+        <td align="left" ><?php echo $detalles->fecha; ?></td>
+
+        <td align="right" >$ <?php echo number_format($detalles->capital);       $a+=$detalles->capital; ?></td>
+        <td align="right" ><?php echo $detalles->cuotas;   ?></td>
+        <td align="right" style="text-align:justify;width:150">$ <?php echo number_format($detalles->valor_cuotas);  $a1+=$detalles->valor_cuotas;?></td>
+        <td align="right" >$ <?php echo number_format($detalles->total_credito); $a2+=$detalles->total_credito;?></td>
+        <!--<td align="right"  class="oculto"><?php //echo Tag::linkTo("creditos/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>-->
+    </tr>
+   
+<?php endforeach; ?>    
+  <tr>
+      <th colspan="4" align="right" >Totales</th>
+      <th align="right" >$ <?php echo number_format($a);  ?></th>
+      <th align="right" >&nbsp;</th>
+      <th align="right" >$ <?php echo number_format($a1);  ?></th>
+      <th align="right" >$ <?php echo number_format($a2);  ?></th>
+     <!-- <th align="right"  class="oculto">&nbsp;</th>-->
+   </tr>
+</tbody>
+</table>
+<br />
+<h4>Recibos de Caja del Cliente</h4>
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
+<thead>
+    <tr>
+        <th>C&oacute;digo</th>
+        <th>N&uacute;mero Recibo</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+       
+        <th>Capital</th>
+        <th>Intereses</th>
+        <th>Total Pagado</th>
+        <!--<th class="oculto">Ver</th>-->
+    </tr>
+</thead>
+<tbody>
+<?php 
+$a=0;$a1=0;$a2=0;$a3=0;
+?>
+<?php foreach($detalles_recibos_caja as $detalles): ?>
+    <tr>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
+
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);     $a+=$detalles->capital; ?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->intereses);   $a1+=$detalles->intereses;?></td>
+        <td align="right" nowrap="nowrap" style="text-align:justify;width:150">$ <?php echo number_format($detalles->valor);      $a2+=$detalles->valor;?></td>
+       <!-- <td align="right" nowrap="nowrap" class="oculto"><?php //echo Tag::image("iconos/Visa.png","border: 0","width: 32px","id: a$detalles->id","onclick: ver($detalles->id)"); ?></td>-->
+    </tr>
+   
+<?php endforeach; ?>    
+  <tr>
+      <th colspan="4" align="right" nowrap="nowrap">Totales</th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a);  ?></th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a1);  ?></th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a2);  ?></th>
+      <!--<th align="right" nowrap="nowrap" class="oculto">&nbsp;</th>-->
+   </tr>
+</tbody>
+</table>
+
+
+<?php if($_REQUEST["print"]=="pdf"){ 
+
+$content = ob_get_clean();
+ 
+$content2 = "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'> 
+				 
+				  <page_footer> 
+					   Reporte Generado por: <a href='www.dydsoluciones.net'>dydsoluciones.net</a> fecha: ".date("Y-m-d H:i:s")."
+				  </page_footer> 
+					 $content
+				</page> ";
+	
+	
+	$path = $_SERVER['DOCUMENT_ROOT']; 
+	require($path.core::getInstancePath()."public/html2pdf/html2pdf.class.php");
+		try
+		{
+			$html2pdf = new HTML2PDF('P', 'A4', 'es',array(mL, mT, mR, mB));
+			$html2pdf->writeHTML($content2);
+			$html2pdf->Output('Reporte_Clientes.pdf');
+		}
+		catch(HTML2PDF_exception $e) {
+			echo $e;
+			exit;
+		}
+	
+} ?>
 
 
