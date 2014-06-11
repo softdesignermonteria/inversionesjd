@@ -356,6 +356,40 @@
 				
 		}
 		
+		public function detalle_ingresos_mesAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			
+			if($_REQUEST["mes"]!=''){ $condicion1 = " and MONTH({#RecibosCaja}.fecha) = '".$_REQUEST["mes"]."' "; }
+			
+			if($_REQUEST["annio"]!=''){ $condicion2 = " and YEAR({#RecibosCaja}.fecha) = '".$_REQUEST["annio"]."' "; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities"    => array("RecibosCaja", "DetalleRecibosCaja", "Clientes"),
+				"groupFields" => array(
+							  "{#Clientes}.id",
+							  "{#Clientes}.nit",
+							  "{#Clientes}.razon_social",
+							  "{#Clientes}.direccion",
+							  "{#Clientes}.telefono",
+							  "{#Clientes}.celular"
+							  ),  
+							  "sumatory" => array(
+							  "{#DetalleRecibosCaja}.valor",
+							  "{#DetalleRecibosCaja}.capital",
+							  "{#DetalleRecibosCaja}.intereses"
+							),
+				"conditions" => " 1=1 $condicion1 $condicion2"
+			));
+			
+		//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_ingresos",$query->getResultSet());
+			
+		}
+		
 		public function buscar_cxcAction(){
 
 				$this->setResponse("view");
