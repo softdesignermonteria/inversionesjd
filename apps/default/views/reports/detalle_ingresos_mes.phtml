@@ -23,7 +23,7 @@ if( isset($_REQUEST["print"]) ){
 table.gridtable {
 	width:100%;
 	font-family: arial;
-	font-size:11px;
+	font-size:10px;
 	color:#333333;
 	border-width: 1px;
 	border-color: #217ec4;
@@ -39,7 +39,7 @@ table.gridtable th {
 }
 table.gridtable td {
 	border-width: 1px;
-	padding: 8px;
+	padding: 2px;
 	border-style: solid;
 	border-color: #217ec4;
 	background-color: #e8f4fd;
@@ -59,7 +59,7 @@ table.gridtable td {
       <th align="center" valign="middle">Reporte Impreso el día <?php echo date("Y-m-d"); ?> </th>
   </tr>
     <tr >
-      <th  align="center" valign="middle">Filtrado por:</th>
+      <th  align="center" valign="middle">Filtrado por: <?php echo $_REQUEST["annio"]; ?> - <?php  echo $_REQUEST["mes"]; ?></th>
   </tr>
 </table>	 
 
@@ -77,22 +77,28 @@ table.gridtable td {
         <th>Direcci&oacute;n</th>
         <th>Tel&eacute;fono</th>
         <th>Celular</th>
-        <th>ingresos</th>
+        <th>
+        	Capital<br />
+            Recaudado
+        </th>
+        <th>Ingresos<br />(Intereses)</th>
     </tr>
 </thead>
 <tbody>
 <?php 
 $ingresos=0;
+$capital=0;
 ?>
 <?php foreach($detalles_ingresos as $detalles): ?>
     <tr>
-      <td align="center" ><?php echo $detalles->id; ?></td>
-      <td align="center" ><?php echo $detalles->nit; ?></td>
-      <td align="center" ><?php echo $detalles->razon_social; ?></td>
-      <td align="center" ><?php echo $detalles->direccion; ?></td>
-      <td align="center" ><?php echo $detalles->telefono; ?></td>
-      <td align="center" ><?php echo $detalles->celular; ?></td>
-      <td align="center" style="text-align:center;width:150">$ <?php echo number_format($detalles->valor);  $ingresos+=$detalles->valor;?></td>
+      <td align="center" width="5"><?php echo $detalles->id; ?></td>
+      <td align="center" width="60"><?php echo $detalles->nit; ?></td>
+      <td align="center" width="200" ><?php echo $detalles->razon_social; ?></td>
+      <td align="center" width="75"><?php echo $detalles->direccion; ?></td>
+      <td align="center" width="60"><?php echo $detalles->telefono; ?></td>
+      <td align="center" width="60"><?php echo $detalles->celular; ?></td>
+      <td align="center" width="70" style="text-align:center;width:150">$ <?php echo number_format($detalles->capital);  $capital+=$detalles->capital;?></td>
+      <td align="center" width="70" style="text-align:center;width:150">$ <?php echo number_format($detalles->intereses);  $ingresos+=$detalles->intereses;?></td>
     </tr>
    <?php endforeach; ?>    
     <tr>
@@ -102,13 +108,21 @@ $ingresos=0;
        <td align="left" >&nbsp;</td>
        <td align="left" >&nbsp;</td>
        <td align="right" >Totales</td>
+       <td align="center" style="text-align:center;width:150">$ <?php echo number_format($capital); ?></td>
        <td align="center" style="text-align:center;width:150">$ <?php echo number_format($ingresos); ?></td>
     </tr>
 </tbody>
 </table>
 
 <br />
-
+<table  class="gridtable" align="right" width="200"  >
+	<tbody>
+    	<tr>
+    		<th width="50" align="right" >Total</th>
+       		<th width="50" >$ <?php echo number_format($capital + $ingresos); ?></th>
+        </tr>   
+    </tbody>
+</table>
 
 <?php if($_REQUEST["print"]=="pdf"){ 
 
