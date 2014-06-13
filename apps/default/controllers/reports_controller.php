@@ -456,8 +456,77 @@
 				"conditions" => " 1=1 $condicion1"
 			));
 			
+			
+			
 		//Flash::notice($query);
 		$this->setParamToView("detalles_ingresos",$query->getResultSet());
+			
+		}
+		
+		
+		
+		public function cartera_vencidaAction(){
+				
+		}
+		
+		
+		public function detalle_cartera_vencidaAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+			$condicion2 ="";
+			
+			//if($_REQUEST["mes"]!=''){ $condicion1 = " and MONTH({#RecibosCaja}.fecha) = '".$_REQUEST["mes"]."' "; }
+			
+			//if($_REQUEST["annio"]!=''){ $condicion2 = " and YEAR({#RecibosCaja}.fecha) = '".$_REQUEST["annio"]."' "; }
+			
+			/*$sql="select  empresa_id,clientes_id,creditos_id,
+					max(vencimiento) as vencimiento, 
+					COUNT(*) as cuotas_atrasadas,
+					valor_cuota,
+					valor_pagado,
+					valor_nota_credito,
+					( valor_cuota-valor_pagado-valor_nota_credito) as saldo,
+					DATEDIFF( '2014/07/31' , max(vencimiento) ) as dias_atraso,
+					month(max(vencimiento)) as mes,
+					year(max(vencimiento)) as anno,
+					CONCAT( year( max(vencimiento) ) , month( max(vencimiento) )) as periodo
+				from view_cartera
+			where 
+			 1=1
+			group by creditos_id
+			having  ;";*/
+			$query = new ActiveRecordJoin(array(
+				"entities"    => array("ViewCartera","Clientes"),
+				"groupFields" => array(
+							  "{#ViewCartera}.creditos_id",
+							  "{#ViewCartera}.empresa_id",
+							  "{#ViewCartera}.clientes_id",
+							  "{#ViewCartera}.prefijo",
+							  "{#ViewCartera}.consecutivo",
+							  "{#ViewCartera}.fecha",
+							  "{#ViewCartera}.tipo_documento_id",
+							  "{#Clientes}.nit",
+							  "{#Clientes}.razon_social"
+							  ),  
+			    "sumatory" => array(
+							  "{#ViewCartera}.valor_cuota",
+							  "{#ViewCartera}.valor_pagado",
+							  "{#ViewCartera}.valor_nota_credito"
+							),
+				"count" => array(
+							  "{#ViewCartera}.idt",
+							),			
+				"maximum" => array(
+							  "{#ViewCartera}.vencimiento"
+							),			
+				"conditions" => " 1=1 ",
+				"having" => " CONCAT( year( max(vencimiento) ) , month( max(vencimiento) ) ) < CONCAT( '".$_REQUEST["annio"]."', '".$_REQUEST["mes"]."' ) "
+			));
+			
+			Flash::notice($query->getSqlQuery());
+			$this->setParamToView("vencido",$query->getResultSet());
 			
 		}
 		

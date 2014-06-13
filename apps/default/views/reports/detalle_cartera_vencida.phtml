@@ -1,0 +1,146 @@
+<?php //echo view::getContent(); 
+
+if( isset($_REQUEST["print"]) ){ 
+ 	
+	if($_REQUEST["print"]=="pdf"){ 
+		ob_start(); 
+	}
+	
+	
+	
+	if($_REQUEST["print"]=="excel"){
+		header("Content-type: application/vnd.ms-excel; name='excel'");
+		header("Content-Disposition: filename=ficheroExcel.xls");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+	} 
+	
+}
+?>
+<style>
+
+/*Estilo para las tablas en los reportes*/
+table.gridtable {
+	width:100%;
+	font-family: arial;
+	font-size:10px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #217ec4;
+	border-collapse: collapse;
+	border-style: solid;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #70a9d2;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 2px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #e8f4fd;
+}
+
+</style>
+<?php if( isset($_REQUEST["print"]) ){ ?>     
+<table  class="gridtable" align="center">
+  
+    <tr >
+      <th width="650" align="center" valign="middle" >Informe Ingresos Mensuales</th>
+  </tr>
+    <tr >
+      <th align="center" valign="middle"><?php echo Session::get("nombre_empresa"); ?></th>
+  </tr>
+    <tr >
+      <th align="center" valign="middle">Reporte Impreso el día <?php echo date("Y-m-d"); ?> </th>
+  </tr>
+    <tr >
+      <th  align="center" valign="middle">Filtrado por: <?php echo $_REQUEST["annio"]; ?> - <?php  echo $_REQUEST["mes"]; ?></th>
+  </tr>
+</table>	 
+
+<br />
+<?php  } ?>
+
+<h4>Informaci&oacute;n de Clientes con Cartera Vencidas</h4>
+
+<table  class="gridtable" align="center" width="100%" >
+<thead>
+    <tr>
+        <th>Credito</th>
+        <th>Fecha</th>
+    	<th>Nombre</th>
+        <th>Vencimiento<br />Ultima Cuota</th>
+        <th>Dias<br />de Atraso</th>
+        <th>Saldo<br />Vencido</th>
+        
+    </tr>
+</thead>
+<tbody>
+<?php 
+$capital=0;
+?>
+<?php foreach($vencido as $detalles): 
+$saldo = $detalles->valor_cuota-$detalles->valor_pagado-$detalles->valor_nota_credito;
+
+$fecha = new Date(date("Y-m-d"));
+
+
+?>
+    <tr>
+      <td align="center" width="5"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+      <td align="center" width="60"><?php echo $detalles->fecha; ?></td>
+	  <td align="left" width="100" ><?php echo $detalles->razon_social; ?></td>
+      <td align="center" width="60"><?php echo $detalles->vencimiento; ?></td>
+      <td align="center" width="60"><?php echo $fecha->diffDate($detalles->vencimiento);  ?></td>
+      <td align="center" width="70" style="text-align:center;width:150">$ <?php echo number_format($saldo);  $capital+=$saldo; ?></td>
+   
+    </tr>
+   <?php endforeach; ?>    
+    <tr>
+       <td align="left" >&nbsp;</td>
+       <td align="left" >&nbsp;</td>
+
+       <td align="left" >&nbsp;</td>
+       <td align="left" >&nbsp;</td>
+       <td align="right" >Totales</td>
+       <td align="center" style="text-align:center;width:150">$ <?php echo number_format($capital); ?></td>
+    </tr>
+</tbody>
+</table>
+
+
+
+<?php if($_REQUEST["print"]=="pdf"){ 
+
+$content = ob_get_clean();
+ 
+$content2 = "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'> 
+				 
+				  <page_footer> 
+					   Reporte Generado por: <a href='www.dydsoluciones.net'>dydsoluciones.net</a> fecha: ".date("Y-m-d H:i:s")."
+				  </page_footer> 
+					 $content
+				</page> ";
+	
+	
+	$path = $_SERVER['DOCUMENT_ROOT']; 
+	require($path.core::getInstancePath()."public/html2pdf/html2pdf.class.php");
+		try
+		{
+			$html2pdf = new HTML2PDF('P', 'A4', 'es',array(mL, mT, mR, mB));
+			$html2pdf->writeHTML($content2);
+			$html2pdf->Output('Reporte_Clientes.pdf');
+		}
+		catch(HTML2PDF_exception $e) {
+			echo $e;
+			exit;
+		}
+	
+} ?>
+
+
