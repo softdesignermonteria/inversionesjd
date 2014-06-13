@@ -1,0 +1,155 @@
+<?php //echo view::getContent(); 
+
+if( isset($_REQUEST["print"]) ){ 
+ 	
+	if($_REQUEST["print"]=="pdf"){ 
+		ob_start(); 
+	}
+	
+	
+	
+	if($_REQUEST["print"]=="excel"){
+		header("Content-type: application/vnd.ms-excel; name='excel'");
+		header("Content-Disposition: filename=ficheroExcel.xls");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+	} 
+	
+}
+?>
+<style>
+
+/*Estilo para las tablas en los reportes*/
+table.gridtable {
+	width:100%;
+	font-family: arial;
+	font-size:10px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #217ec4;
+	border-collapse: collapse;
+	border-style: solid;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #70a9d2;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 2px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #e8f4fd;
+}
+
+</style>
+<?php if( isset($_REQUEST["print"]) ){ ?>     
+<table  class="gridtable" align="center">
+  
+    <tr >
+      <th width="650" align="center" valign="middle" >Informe Ingresos Diarios</th>
+  </tr>
+    <tr >
+      <th align="center" valign="middle"><?php echo Session::get("nombre_empresa"); ?></th>
+  </tr>
+    <tr >
+      <th align="center" valign="middle">Reporte Impreso el día <?php echo date("Y-m-d"); ?> </th>
+  </tr>
+    <tr >
+      <th  align="center" valign="middle">Filtrado por: <?php echo $_REQUEST["annio"]; ?> - <?php  echo $_REQUEST["mes"]; ?></th>
+  </tr>
+</table>	 
+
+<br />
+<?php  } ?>
+
+<h4>Informaci&oacute;n de los ingresos diarios por Clientes</h4>
+
+<table  class="gridtable" align="center" width="100%" >
+<thead>
+    <tr>
+        <th>C&oacute;digo</th>
+        <th>Nit</th>
+        <th>Nombres</th>
+        <th>Direcci&oacute;n</th>
+        <th>Tel&eacute;fono</th>
+        <th>Celular</th>
+        <th>
+        	Capital<br />
+            Recaudado
+        </th>
+        <th>Ingresos<br />(Intereses)</th>
+    </tr>
+</thead>
+<tbody>
+<?php 
+$ingresos=0;
+$capital=0;
+?>
+<?php foreach($detalles_ingresos as $detalles): ?>
+    <tr>
+      <td align="center" width="5"><?php echo $detalles->id; ?></td>
+      <td align="center" width="60"><?php echo $detalles->nit; ?></td>
+      <td align="center" width="200" ><?php echo $detalles->razon_social; ?></td>
+      <td align="center" width="75"><?php echo $detalles->direccion; ?></td>
+      <td align="center" width="60"><?php echo $detalles->telefono; ?></td>
+      <td align="center" width="60"><?php echo $detalles->celular; ?></td>
+      <td align="center" width="70" style="text-align:center;width:150">$ <?php echo number_format($detalles->capital);  $capital+=$detalles->capital;?></td>
+      <td align="center" width="70" style="text-align:center;width:150">$ <?php echo number_format($detalles->intereses);  $ingresos+=$detalles->intereses;?></td>
+    </tr>
+   <?php endforeach; ?>    
+    <tr>
+       <td align="left" >&nbsp;</td>
+       <td align="left" >&nbsp;</td>
+       <td align="left" >&nbsp;</td>
+       <td align="left" >&nbsp;</td>
+       <td align="left" >&nbsp;</td>
+       <td align="right" >Totales</td>
+       <td align="center" style="text-align:center;width:150">$ <?php echo number_format($capital); ?></td>
+       <td align="center" style="text-align:center;width:150">$ <?php echo number_format($ingresos); ?></td>
+    </tr>
+</tbody>
+</table>
+
+<br />
+<table  class="gridtable" align="right" width="200"  >
+	<tbody>
+    	<tr>
+    		<th width="50" align="right" >Total</th>
+       		<th width="50" >$ <?php echo number_format($capital + $ingresos); ?></th>
+        </tr>   
+    </tbody>
+</table>
+
+<?php if($_REQUEST["print"]=="pdf"){ 
+
+$content = ob_get_clean();
+ 
+$content2 = "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'> 
+				 
+				  <page_footer> 
+					   Reporte Generado por: <a href='www.dydsoluciones.net'>dydsoluciones.net</a> fecha: ".date("Y-m-d H:i:s")."
+				  </page_footer> 
+					 $content
+				</page> ";
+	
+	
+	$path = $_SERVER['DOCUMENT_ROOT']; 
+	require($path.core::getInstancePath()."public/html2pdf/html2pdf.class.php");
+		try
+		{
+			$html2pdf = new HTML2PDF('P', 'A4', 'es',array(mL, mT, mR, mB));
+			$html2pdf->writeHTML($content2);
+			$html2pdf->Output('Reporte_Clientes.pdf');
+		}
+		catch(HTML2PDF_exception $e) {
+			echo $e;
+			exit;
+		}
+	
+} ?>
+
+

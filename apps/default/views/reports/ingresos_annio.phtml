@@ -1,0 +1,67 @@
+<h4>REPORTE INGRESOS MENSUALES</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/detalle_ingresos_annio", "update: resultado", "id: fx","name: fx"); ?>
+
+<table width="100%" border="0">
+  <tr>
+    <td width="17%">Ingrese Año</td>
+    <td width="83%"><?php echo Tag::numericField("annio","size: 15","maxlength: 4") ?> </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><button type="submit" id="guardar" name="guardar">Enviar</button></td>
+  </tr>
+</table>
+<?php echo Tag::endForm() ?>
+
+<div id="resultado" style="min-height:400px; max-height:500px; overflow:auto;" ></div>
+
+<br />
+<!--
+<table width="400px" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front">
+      <tr>
+        <td align="center"><?php //echo Tag::linkTo(Router::getController()."/print_jaspertClientes",Tag::image("iconos/pdf.png","width: 50px"),"target: _blank"); ?></td>
+      </tr>
+      <tr>
+        <td align="center">Listado General de Clientes</td>
+      </tr>
+</table>
+-->
+<button type="button" id="imprimir" name="imprimir">Imprimir</button>
+
+<button type="button" id="imprimir2" name="imprimir2">Excel</button>
+
+<button type="button" id="imprimir3" name="imprimir3">Pdf</button>
+
+<div id="mensajes"></div>
+
+
+<script>
+	
+jQuery(document).ready(function(e) {
+    jQuery("#imprimir").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_ingresos_annio/?"+data+"&print=html";
+	    window.open(url, '_blank');
+    });
+	
+	 jQuery("#imprimir2").click(function(e) {
+        e.preventDefault();
+		var data = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_ingresos_annio/?"+data+"&print=excel";
+	    window.open(url, '_blank');
+    });
+	
+	jQuery("#imprimir3").click(function(e) {
+        e.preventDefault();
+		var datos = jQuery("#fx").serialize();
+		url = "<?php echo core::getInstancePath(); ?>reports/detalle_ingresos_annio/?"+datos+"&print=pdf";
+	    window.open(url, '_blank');
+    });//imprimir 3
+	
+});
+  
+
+</script>
+

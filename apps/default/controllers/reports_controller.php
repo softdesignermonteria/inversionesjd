@@ -352,10 +352,50 @@
 					
 		}
 		
+		public function ingresos_diarioAction(){
+				
+		}
+		
 		public function ingresos_mesAction(){
 				
 		}
 		
+		public function ingresos_annioAction(){
+				
+		}
+		
+		public function detalle_ingresos_annioAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+					
+			if($_REQUEST["annio"]!=''){ $condicion1 = " and YEAR({#RecibosCaja}.fecha) = '".$_REQUEST["annio"]."' "; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities"    => array("RecibosCaja", "DetalleRecibosCaja", "Clientes"),
+				"groupFields" => array(
+							  "{#Clientes}.id",
+							  "{#Clientes}.nit",
+							  "{#Clientes}.razon_social",
+							  "{#Clientes}.direccion",
+							  "{#Clientes}.telefono",
+							  "{#Clientes}.celular"
+							  ),  
+							  "sumatory" => array(
+							  "{#DetalleRecibosCaja}.valor",
+							  "{#DetalleRecibosCaja}.capital",
+							  "{#DetalleRecibosCaja}.intereses"
+							),
+				"conditions" => " 1=1 $condicion1"
+			));
+			
+		//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_ingresos",$query->getResultSet());
+			
+		}
+		
+			
 		public function detalle_ingresos_mesAction(){
 			
 			$this->setResponse('view');
@@ -387,6 +427,37 @@
 			
 		//Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_ingresos",$query->getResultSet());
+			
+		}
+		
+		public function detalle_ingresos_diarioAction(){
+			
+			$this->setResponse('view');
+			
+			$condicion1 ="";
+						
+			if($_REQUEST["factual"]!=''){ $condicion1 = " AND {#RecibosCaja}.fecha = '".$_REQUEST["factual"]."'"; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities"    => array("RecibosCaja", "DetalleRecibosCaja", "Clientes"),
+				"groupFields" => array(
+							  "{#Clientes}.id",
+							  "{#Clientes}.nit",
+							  "{#Clientes}.razon_social",
+							  "{#Clientes}.direccion",
+							  "{#Clientes}.telefono",
+							  "{#Clientes}.celular"
+							  ),  
+							  "sumatory" => array(
+							  "{#DetalleRecibosCaja}.valor",
+							  "{#DetalleRecibosCaja}.capital",
+							  "{#DetalleRecibosCaja}.intereses"
+							),
+				"conditions" => " 1=1 $condicion1"
+			));
+			
+		//Flash::notice($query);
+		$this->setParamToView("detalles_ingresos",$query->getResultSet());
 			
 		}
 		
