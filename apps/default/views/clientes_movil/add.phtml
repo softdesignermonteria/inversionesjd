@@ -3,6 +3,45 @@ header('Cache-Control: no-cache, must-revalidate');
 header('Expires: 0');
 header('Content-Type: application/json');
 
+$cli  = new Clientes();
+$msg="";
 
+$respuesta[0]=array("mensaje"=>"true","descripcion"=>"por defecto");	
+
+
+$sw = 0;
+//Flash::error($sw1);
+					
+if( $sw==0 ){
+
+	$cli->id             = '0';
+	$cli->nit            = $_REQUEST["cedula"];
+	$cli->nombre1        = trim($_REQUEST["nombre1"]);
+	$cli->nombre2        = trim($_REQUEST["nombre2"]);
+	$cli->apellido1      = trim($_REQUEST["apellido1"]);
+	$cli->apellido2      = trim($_REQUEST["apellido2"]);
+	$cli->razon_social   = trim($cli->nombre1 + " " + $cli->nombre2 + " " + $cli->apellido1 + " " + $cli->apellido2);
+	$cli->direccion      = $_REQUEST["direccion"];
+	$cli->telefono       = $_REQUEST["telefono"];
+	$cli->celular        = $_REQUEST["celular"];
+	$cli->referencia_id  = 1;
+	//$cli->departamentos_id = $_REQUEST["departamentos_id");
+	//$cli->municipios_id = $_REQUEST["municipios_id");				
+		
+
+	if( $cli->save() ){
+			$msg="Se insertó correctamente el registro";
+			$respuesta[0]=array("mensaje"=>"true","descripcion"=>$msg);	
+		}else{
+			$msg="";
+			$i=1;
+			foreach($cli->getMessages() as $message){
+					$msg.=" Error $i : " . $message->getMessage(); $i++;
+			}
+			$respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
+		 }
+	}
+		   		   
+echo json_encode($respuesta);
 		
 ?>			
