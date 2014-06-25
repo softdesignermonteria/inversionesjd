@@ -57,7 +57,8 @@
 			    }
 			 		   
 					   
-			$this->setParamToView("respuesta",$respuesta);		   
+			//$this->setParamToView("respuesta",$respuesta);		   
+			echo json_encode($respuesta);
 					   
 		}
 		
