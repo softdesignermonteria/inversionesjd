@@ -23,20 +23,28 @@
 					
 					$respuesta[0]=array("mensaje"=>"true","descripcion"=>"por defecto");	
 					
-					if( count($_POST) > 0 ){
-						
-							$respuesta[0]=array("mensaje"=>"true","descripcion"=>"post viene lleno ".json_decode($_POST));
-							$clientes = json_decode($_POST);	
-					}else{
-							$respuesta[0]=array("mensaje"=>"error","descripcion"=>"post viene vacio");	
-							$sw=1;
+					if(!json_decode($encabezado)){
+							 $syslogger = new Syslogger();
+							 $syslogger->username      = "";
+							 $syslogger->module        = Router::getModule();
+							 $syslogger->application   = Router::getApplication();
+							 $syslogger->controller    = $this->getControllerName();
+							 $syslogger->action        = $this->getActionName();
+							 $syslogger->error_sistema = "Json Incorrepto";
+							 $syslogger->descripcion   = "Json Incorrepto";
+							 $syslogger->ip_remota     = $_SERVER['REMOTE_ADDR'];
+							 $syslogger->fecha         = date("Y-m-d H:i:s");
+							// $syslogger->objeto        = json_encode($cli);
+							 $syslogger->save();
+						     $sw=1;
+							 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Json Incorrecto");
 					}
 					
 					$sw = 0;
 					//Flash::error($sw1);
 										
 					if( $sw==0 ){
-					
+						$clientes = json_decode($encabezado);
 						/*$cli->id             = '0';
 						$cli->nit            = $_REQUEST["cedula"];
 						$cli->nombre1        = trim($_REQUEST["nombre1"]);
