@@ -22,7 +22,7 @@
 					$msg="";
 					
 					$respuesta[0]=array("mensaje"=>"true","descripcion"=>"por defecto");	
-					
+					$encabezado=$_RQUEST["clientes"];
 					if(!json_decode($encabezado)){
 							 $syslogger = new Syslogger();
 							 $syslogger->username      = "";
