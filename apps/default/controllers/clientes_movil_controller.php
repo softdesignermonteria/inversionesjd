@@ -4,17 +4,12 @@
 	
 			
 		public function initialize() {
-		   //$this->setTemplateAfter("a_bit_boxy");
-		   
-		   // $this->setTemplateAfter("menu_azul");
-		   	//$temp=$this->Admin->findFirst(" id = '".Session::get("tipo_usuario")."' ")->plantilla;
 			$this->setTemplateAfter("adminiziolite");
 		}
 		
 		public function indexAction(){
 		
 		}
-		
 		
 		public function addAction(){
 					$this->setResponse("view");
@@ -44,18 +39,8 @@
 					//Flash::error($sw1);
 										
 					if( $sw==0 ){
+						
 						$clientes = json_decode($encabezado);
-						/*$cli->id             = '0';
-						$cli->nit            = $_REQUEST["cedula"];
-						$cli->nombre1        = trim($_REQUEST["nombre1"]);
-						$cli->nombre2        = trim($_REQUEST["nombre2"]);
-						$cli->apellido1      = trim($_REQUEST["apellido1"]);
-						$cli->apellido2      = trim($_REQUEST["apellido2"]);
-						$cli->razon_social   = trim($cli->nombre1 + " " + $cli->nombre2 + " " + $cli->apellido1 + " " + $cli->apellido2);
-						$cli->direccion      = $_REQUEST["direccion"];
-						$cli->telefono       = $_REQUEST["telefono"];
-						$cli->celular        = $_REQUEST["celular"];
-						$cli->referencia_id  = 1;*/
 						
 						$cli->id             = '0';
 						$cli->nit            = $clientes->cedula;
@@ -65,12 +50,8 @@
 						$cli->apellido2      = trim($clientes->apellido2);
 						$cli->razon_social   = trim($cli->nombre1 + " " + $cli->nombre2 + " " + $cli->apellido1 + " " + $cli->apellido2);
 						$cli->direccion      = $clientes->direccion;
-						$cli->telefono       = $clientes->telefono;
-						$cli->celular        = $clientes->celular;
+						$cli->celular        = $clientes->telefono;
 						$cli->referencia_id  = 1;
-						//$cli->departamentos_id = $_REQUEST["departamentos_id");
-						//$cli->municipios_id = $_REQUEST["municipios_id");				
-							
 					
 						if( $cli->save() ){
 								$msg="Se insertó correctamente el registro";
@@ -112,7 +93,7 @@
 					
 							 }
 						}
-					
+						
 					 $this->setParamToView("responce",$respuesta);
 										   
 		}
