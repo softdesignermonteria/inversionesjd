@@ -63,6 +63,7 @@
 									
 										if( $cli->save() == false){
 													
+													$transaction->rollback();
 													$msg="";
 													$i=1;
 													foreach($cli->getMessages() as $message){
@@ -82,8 +83,6 @@
 													 $syslogger->fecha         = date("Y-m-d H:i:s");
 													 $syslogger->objeto        = json_encode($cli);
 													 $syslogger->save();
-													 
-													 $transaction->rollback();
 																	
 											}else{
 													
@@ -105,32 +104,44 @@
 									
 											 }// fin error guardando clientes
 										
-										$transaction->commit();
+							$transaction->commit();
+							$error = "";
 							}catch(TransactionFailed $e){		
-								 
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
-								 
-								 $syslogger = new Syslogger();
-								 ////$syslogger->setTransaction($transaction);
-								 $syslogger->username          = '';
-								 $syslogger->module            = Router::getModule();
-								 $syslogger->application       = Router::getApplication();
-								 $syslogger->controller        = 'recibos_caja_movil';
-								 $syslogger->action            = 'add';
-								 $syslogger->error_sistema     = "Error en la transaccion";
-								 $syslogger->descripcion       = "Error en la transaccion".$e->getMessage();
-								 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
-								 $syslogger->fecha             = date("Y-m-d H:i:s");
-								 $syslogger->tipo_documento_id = $tipo_documento_id;
-								 $syslogger->prefijo           = $prefijo;
-								 $syslogger->consecutivo       = $consecutivo;
-								 $syslogger->objeto            = "";
-								 $syslogger->save();	
-							
-							}	// fin try catch
+								// fin try catch
+							}catch(DbException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								// fin try catch
+							}catch(DbSQLGrammarException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								// fin try catch
+							}catch(DbContraintViolationException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								// fin try catch
+							}catch(DbInvalidFormatException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								// fin try catch
+							}
 							
 						} //fin sw=0
-										
+						
+				 $syslogger = new Syslogger();
+				 ////$syslogger->setTransaction($transaction);
+				 $syslogger->username          = '';
+				 $syslogger->module            = Router::getModule();
+				 $syslogger->application       = Router::getApplication();
+				 $syslogger->controller        = 'recibos_caja_movil';
+				 $syslogger->action            = 'add';
+				 $syslogger->error_sistema     = "Error en la transaccion";
+				 $syslogger->descripcion       = "Error en la transaccion".$msg;
+				 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
+				 $syslogger->fecha             = date("Y-m-d H:i:s");
+				 $syslogger->tipo_documento_id = $tipo_documento_id;
+				 $syslogger->prefijo           = $prefijo;
+				 $syslogger->consecutivo       = $consecutivo;
+				 $syslogger->objeto            = "";
+				 $syslogger->save();	
+				 						
 				 $this->setParamToView("responce",$respuesta);
 										   
 		}
