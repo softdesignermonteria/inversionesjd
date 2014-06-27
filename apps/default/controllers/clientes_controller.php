@@ -125,8 +125,10 @@
 				$cli->telefono = $this->getPostParam("telefono");
 				$cli->celular = $this->getPostParam("celular");
 				$cli->referencia_id = $this->getPostParam("clientes_id");
-				$cli->departamentos_id = $this->getPostParam("departamentos_id");
-				$cli->municipios_id = $this->getPostParam("municipios_id");				
+				//$cli->departamentos_id = $this->getPostParam("departamentos_id");
+				//$cli->municipios_id = $this->getPostParam("municipios_id");				
+				$cli->departamentos_id = 23;
+				$cli->municipios_id = 108;				
 					
 	
 				if($cli->save()){
@@ -196,10 +198,10 @@
 				Tag::displayTo("telefono",$cli->telefono);
 				Tag::displayTo("celular",$cli->celular);
 				Tag::displayTo("clientes",$cli->referencia_id);
-				Tag::displayTo("departamentos",$cli->departamentos_id);
-				Tag::displayTo("departamento",$dpto->departamento);
-				Tag::displayTo("municipios",$cli->municipios_id);
-				Tag::displayTo("municipio",$mpio->municipio);
+				//Tag::displayTo("departamentos",$cli->departamentos_id);
+				//Tag::displayTo("departamento",$dpto->departamento);
+				//Tag::displayTo("municipios",$cli->municipios_id);
+				//Tag::displayTo("municipio",$mpio->municipio);
 				
 				
 			}else{
@@ -231,10 +233,10 @@
 				Tag::displayTo("telefono",$cli->telefono);
 				Tag::displayTo("celular",$cli->celular);
 				Tag::displayTo("clientes",$cli->referencia_id);
-				Tag::displayTo("departamentos",$cli->departamentos_id);
-				Tag::displayTo("departamento",$dpto->departamento);
-				Tag::displayTo("municipios",$cli->municipios_id);
-				Tag::displayTo("municipio",$mpio->municipio);
+				//Tag::displayTo("departamentos",$cli->departamentos_id);
+				//Tag::displayTo("departamento",$dpto->departamento);
+				//Tag::displayTo("municipios",$cli->municipios_id);
+				//Tag::displayTo("municipio",$mpio->municipio);
 				
 			}else{
 					Flash::error("Parametro incorrecto, vuelva a buscar ".strtoupper(Router::getController())." para modificarlo.");
@@ -349,8 +351,10 @@
 				$cli->telefono = $this->getPostParam("telefono");
 				$cli->celular = $this->getPostParam("celular");
 				$cli->referencia_id = $this->getPostParam("clientes_id");
-				$cli->departamentos_id = $this->getPostParam("departamentos_id");
-				$cli->municipios_id = $this->getPostParam("municipios_id");				
+				//$cli->departamentos_id = $this->getPostParam("departamentos_id");
+				//$cli->municipios_id = $this->getPostParam("municipios_id");				
+				$cli->departamentos_id = 23;
+				$cli->municipios_id = 108;				
 					
 	
 				if($cli->save()){
@@ -371,59 +375,7 @@
 			}
 			
 		}
-		
-		public function clientes_con_equipoAction(){
-		
-			
-			$sql = '';
-
-			if( isset( $_REQUEST['empresa_id']   )==true ) { if( $_REQUEST['empresa_id'] != ''   ) { $sql .= " and {#SaldoRemisiones}.empresa_id like '%".$_REQUEST['empresa_id']."%'";                   } }	
-			if( isset( $_REQUEST['nit']          )==true ) { if( $_REQUEST['nit'] != ''          ) { $sql .= " and {#Clientes}.nit like '".$_REQUEST['nit']."%'";                   } }
-			if( isset( $_REQUEST['razon_social'] )==true ) { if( $_REQUEST['razon_social'] != '' ) { $sql .= " and {#Clientes}.razon_social like '%".str_replace(' ',"%",utf8_decode($_REQUEST['razon_social']))."%'"; } }
-			
-			
-			$query = new ActiveRecordJoin(array(
-						"entities" => array("Clientes","SaldoRemisiones"),
-						"groupFields" => array(
-							"{#Clientes}.razon_social",
-							"{#Clientes}.id",
-							"{#Clientes}.nit",
-							"{#SaldoRemisiones}.empresa_id"
-						),
-						"conditions" => "{#SaldoRemisiones}.anulado = 0 and {#Clientes}.activo = 0 and  ( {#SaldoRemisiones}.cantidad - {#SaldoRemisiones}.devueltos ) <> 0 $sql "
-						
-				));
-				
-				$this->setParamToView("detalles", $query->getResultSet());
-				$this->setParamToView("sql", $query->getSqlQuery());
-				//Flash::error($query->getSqlQuery());
-		
-		}
-		
-		
-		public function clientes_sin_equipoAction(){
-		
-			$sql = '';
-
-			if( isset( $_REQUEST['nit']          )==true ) { if( $_REQUEST['nit'] != ''          ) { $sql .= " and c1.nit like '".$_REQUEST['nit']."%'";                   } }
-			if( isset( $_REQUEST['razon_social'] )==true ) { if( $_REQUEST['razon_social'] != '' ) { $sql .= " and c1.razon_social like '%".str_replace(' ',"%",utf8_decode($_REQUEST['razon_social']))."%'"; } }
-			
-		
-			$query = new ActiveRecordJoin(array(
-				"entities"=> array("Clientes","SaldoRemisiones"),
-				"groupFields"=> array(
-							"{#Clientes}.id"
-				),
-				"conditions" => " {#SaldoRemisiones}.anulado = 0 and {#Clientes}.activo = 0 and ( {#SaldoRemisiones}.cantidad - {#SaldoRemisiones}.devueltos ) <> 0  "
-			));
-			
-			$query2 = $query->getSQLQuery();
-			$sql = "SELECT c1.* FROM clientes c1 WHERE c1.id not in ($query2) $sql order by c1.razon_social";
 	
-			$this->setParamToView("detalles", $this->Clientes->findAllBySql($sql) );
-			//$this->setParamToView("sql", $query->getSqlQuery());
-		
-		}
 		
 		
 		public function buscarAction(){
