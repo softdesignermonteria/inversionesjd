@@ -122,7 +122,7 @@
 								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
 							}catch(DbContraintViolationException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Cedula/nit ya existe");
 								 $error.=$msg." ".$e->getMessage();	
 								// fin try catch
 							}catch(DbInvalidFormatException $e){		
