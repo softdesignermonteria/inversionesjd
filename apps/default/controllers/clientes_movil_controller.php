@@ -14,7 +14,7 @@
 		public function addAction(){
 					
 					$this->setResponse("view");
-					$cli  = new Clientes();
+					
 					$msg="";
 					
 					$respuesta[0]=array("mensaje"=>"true","descripcion"=>"por defecto");	
@@ -44,9 +44,10 @@
 							try{
 								$transaction = TransactionManager::getUserTransaction(); 
 										$clientes = json_decode($encabezado);
-										
-										$cli->id             = '0';
+
+										$cli  = new Clientes();
 										$cli->setTransaction($transaction);
+										$cli->id             = '0';
 										$cli->nit            = $clientes->cedula;
 										$cli->nombre1        = trim($clientes->nombre1);
 										$cli->nombre2        = trim($clientes->nombre2);
@@ -60,24 +61,8 @@
 										$cli->celular        = $clientes->telefono;
 										$cli->referencia_id  = 1;
 									
-										if( $cli->save() ){
-													$msg="Se insertó correctamente el registro";
-													$respuesta[0]=array("mensaje"=>"true","descripcion"=>$msg);	
-												
-													 $syslogger = new Syslogger();
-													 $syslogger->username      = "";
-													 $syslogger->module        = Router::getModule();
-													 $syslogger->application   = Router::getApplication();
-													 $syslogger->controller    = $this->getControllerName();
-													 $syslogger->action        = $this->getActionName();
-													 $syslogger->error_sistema = "Cliente Agregado desde Dispositivo Movil";
-													 $syslogger->descripcion   = "Cliente Agregado desde Dispositivo Movil";
-													 $syslogger->ip_remota     = $_SERVER['REMOTE_ADDR'];
-													 $syslogger->fecha         = date("Y-m-d H:i:s");
-													 $syslogger->objeto        = json_encode($cli);
-													 $syslogger->save();
-																	
-											}else{
+										if( $cli->save() == false){
+													
 													$msg="";
 													$i=1;
 													foreach($cli->getMessages() as $message){
@@ -99,6 +84,24 @@
 													 $syslogger->save();
 													 
 													 $transaction->rollback();
+																	
+											}else{
+													
+													$msg="Se insertó correctamente el registro";
+													$respuesta[0]=array("mensaje"=>"true","descripcion"=>$msg);	
+												
+													 $syslogger = new Syslogger();
+													 $syslogger->username      = "";
+													 $syslogger->module        = Router::getModule();
+													 $syslogger->application   = Router::getApplication();
+													 $syslogger->controller    = $this->getControllerName();
+													 $syslogger->action        = $this->getActionName();
+													 $syslogger->error_sistema = "Cliente Agregado desde Dispositivo Movil";
+													 $syslogger->descripcion   = "Cliente Agregado desde Dispositivo Movil";
+													 $syslogger->ip_remota     = $_SERVER['REMOTE_ADDR'];
+													 $syslogger->fecha         = date("Y-m-d H:i:s");
+													 $syslogger->objeto        = json_encode($cli);
+													 $syslogger->save();
 									
 											 }// fin error guardando clientes
 										
