@@ -112,23 +112,22 @@
 							}catch(TransactionFailed $e){		
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Transaccion fallida. ".$msg);	
 								 $error.=$msg." ".$e->getMessage();
-								// fin try catch
-							}catch(DbException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Exepcion en la base de datos. ".$msg);	
-								 $error.=$msg." ".$e->getMessage();
+							}catch(DbContraintViolationException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Cedula Ya existe (Se esta violando llave unica o llave Primaria) ".$msg);
+								 $error.=$msg." ".$e->getMessage();	
 								// fin try catch
 							}catch(DbSQLGrammarException $e){		
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Error en sql. ".$msg);	
 								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
-							}catch(DbContraintViolationException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Cedula Ya existe (Se esta violando llave unica o llave Primaria) ".$msg);
-								 $error.=$msg." ".$e->getMessage();	
-								// fin try catch
 							}catch(DbInvalidFormatException $e){		
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Formato Invalido para Columna de la db ".$msg);	
 								 $error.=$msg." ".$e->getMessage();
 								// fin try catch*/
+							}catch(DbException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Exepcion en la base de datos. ".$msg);	
+								 $error.=$msg." ".$e->getMessage();
+								// fin try catch
 							}
 							
 						} //fin sw=0
