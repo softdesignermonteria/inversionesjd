@@ -47,7 +47,7 @@
 
 										$cli  = new Clientes();
 										$cli->setTransaction($transaction);
-										$cli->id             = '0';
+										$cli->id             = '';
 										$cli->nit            = $clientes->cedula;
 										$cli->nombre1        = trim($clientes->nombre1);
 										$cli->nombre2        = trim($clientes->nombre2);
