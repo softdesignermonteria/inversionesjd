@@ -70,7 +70,7 @@
 													foreach($cli->getMessages() as $message){
 															$msg.=" Error $i : " . $message->getMessage(); $i++;
 													}
-													$respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
+													$respuesta[0]=array("mensaje"=>"false","descripcion"=>"Errores: ".$msg);	
 													
 													 $syslogger = new Syslogger();
 													 $syslogger->username      = "";
@@ -113,7 +113,7 @@
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
 								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
-							}catch(DbException $e){		
+							/*}catch(DbException $e){		
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
 								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
@@ -128,7 +128,7 @@
 							}catch(DbInvalidFormatException $e){		
 								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
 								 $error.=$msg." ".$e->getMessage();
-								// fin try catch
+								// fin try catch*/
 							}
 							
 						} //fin sw=0
