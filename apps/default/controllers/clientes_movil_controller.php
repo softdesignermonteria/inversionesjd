@@ -33,12 +33,13 @@
 							// $syslogger->objeto        = json_encode($cli);
 							 $syslogger->save();
 						     $sw=1;
+							 $msg.="Json Incorrecto";
 							 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Json Incorrecto");
 					}
 					
 					$sw = 0;
 					//Flash::error($sw1);
-										
+							
 					if( $sw==0 ){
 						$transaction = new ActiveRecordTransaction(true);   
 							try{
@@ -63,8 +64,8 @@
 									
 										if( $cli->save() == false){
 													
-													$transaction->rollback();
-													$msg="";
+													
+													
 													$i=1;
 													foreach($cli->getMessages() as $message){
 															$msg.=" Error $i : " . $message->getMessage(); $i++;
@@ -83,6 +84,8 @@
 													 $syslogger->fecha         = date("Y-m-d H:i:s");
 													 $syslogger->objeto        = json_encode($cli);
 													 $syslogger->save();
+													 
+													 $transaction->rollback();
 																	
 											}else{
 													
