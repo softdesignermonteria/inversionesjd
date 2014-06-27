@@ -107,19 +107,24 @@
 							$transaction->commit();
 							$error = "";
 							}catch(TransactionFailed $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
+								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
 							}catch(DbException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
+								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
 							}catch(DbSQLGrammarException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
+								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
 							}catch(DbContraintViolationException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);
+								 $error.=$msg." ".$e->getMessage();	
 								// fin try catch
 							}catch(DbInvalidFormatException $e){		
-								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg." ".$e->getMessage());	
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>$msg);	
+								 $error.=$msg." ".$e->getMessage();
 								// fin try catch
 							}
 							
@@ -133,7 +138,7 @@
 				 $syslogger->controller        = 'recibos_caja_movil';
 				 $syslogger->action            = 'add';
 				 $syslogger->error_sistema     = "Error en la transaccion";
-				 $syslogger->descripcion       = "Error en la transaccion".$msg;
+				 $syslogger->descripcion       = "Error en la transaccion".$error;
 				 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
 				 $syslogger->fecha             = date("Y-m-d H:i:s");
 				 $syslogger->tipo_documento_id = $tipo_documento_id;
