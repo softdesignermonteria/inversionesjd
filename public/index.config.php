@@ -23,7 +23,12 @@
 
 //define('KEF_ABS_PATH', getcwd().'/');
 
-define('KEF_ABS_PATH', $_SERVER['DOCUMENT_ROOT']."/");
+if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){ 
+	define('KEF_ABS_PATH', $_SERVER['DOCUMENT_ROOT']."/inversionesjd/");
+}else{
+	define('KEF_ABS_PATH', $_SERVER['DOCUMENT_ROOT']."/");
+}
+
 
 //Indica si se debe usar el framework rápido ó el de debug
 define('KEF_OFAST', false);

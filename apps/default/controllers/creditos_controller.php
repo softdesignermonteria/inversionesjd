@@ -935,7 +935,18 @@
 		  
 		
 
-}	
+		}	
+
+			public function calcular_rangosAction(){
+				
+			    $this->setResponse("ajax");
+				$valor = $_REQUEST["valor"];
+				$rango = new Rangos();
+				$rango = $rango->findFirst(" '$valor'>= desde and '$valor'<=hasta  ");
+				
+				echo "<script>jQuery(\"#numero_cuotas\").val($rango->dias);</script>";
+				
+		}
 
 		
 

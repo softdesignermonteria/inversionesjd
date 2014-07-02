@@ -1,0 +1,59 @@
+<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes", "id: fx","name: fx"); ?>
+
+<h1>MODIFICAR <?php echo  strtoupper( str_replace("_"," ",Router::getController()) ); ?></h1>
+
+<table width="100%">
+    	<tr>
+    	  <th height="25" colspan="2">FORMULARIO PARA MODIFICAR <?php echo  strtoupper( str_replace("_"," ",Router::getController()) ); ?></th>
+   	  </tr>
+    	     <tr>
+    	  
+    	  <th width="30%" align="right">CODIGO:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("id","size: 50","maxlength: 50"); ?></td>
+    	  
+   	  </tr>
+       <tr>
+    	  <th width="30%" align="right" >VALOR DESDE:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("valor_desde","size: 50","placeholder: Valor Desde"); ?></td>
+   	  </tr>
+       <tr>
+    	  <th width="30%" align="right" >VALOR HASTA:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("valor_hasta","size: 50","placeholder: Valor Hasta"); ?></td>
+   	  </tr>
+       <tr>
+    	  <th width="30%" align="right" >DIAS CREDITO:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("dia","size: 50","placeholder: Dias Credito"); ?></td>
+   	  </tr>
+      
+      <tr>
+    	  <td colspan="2" align="center"><button id="guardar" name="guardar">Eliminar Datos</button></td>
+   	  </tr>
+  </table>
+
+<?php echo Tag::endForm(); ?>
+<div id="mensajes"></div>
+<?php echo view::getContent(); ?>
+
+<script>
+/*campos requeridos*/
+jQuery(document).ready(function(e) {
+	
+   <?php 
+		$entidad = new Departamentos();
+		
+		foreach( $entidad->getPrimaryKeyAttributes() as $filas):
+			echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
+		endforeach;	
+		
+		foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
+				foreach( $entidad->getNonPrimaryKeyAttributes() as $filas2):
+					if($filas==$filas2){ echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n"; break;} 
+				endforeach;	
+				
+		endforeach;	
+		
+	?> 
+});
+
+
+</script>

@@ -237,11 +237,31 @@ jQuery("#capital").blur(function(e) {
 	totaltmp = totaltmp * parseFloat( this.value );
 	//alert (totaltmp);
 	jQuery("#total_credito").val(totaltmp);
-	if(parseFloat(jQuery("#total_credito").val())>1000000){
+	
+	var jqXHR = jQuery.ajax({
+				url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/calcular_rangos/",
+				type:"POST",
+				data:{
+						valor: jQuery("#total_credito").val()
+					}
+					,
+					fail:function(){
+						alert("error");
+					},
+					error:function(jqXHR,textStatus,errorThrown){
+						alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+					}
+
+			});
+		jqXHR.done(function(data){
+			jQuery("#mensajes").html(data);
+		});			
+					
+	/*if(parseFloat(jQuery("#total_credito").val())>1000000){
 			jQuery("#numero_cuotas").val(40)
 		}else{
 			jQuery("#numero_cuotas").val(30)
-			}
+			}*/
 });
 
 jQuery("#numero_cuotas").blur(function(e) {

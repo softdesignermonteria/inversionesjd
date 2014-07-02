@@ -1,0 +1,59 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<div id="div_modal_<?php echo Router::getController(); ?>">
+    <table id="tabla<?php echo Router::getController(); ?>"></table>
+    <div id="pager<?php echo Router::getController(); ?>"></div>
+</div>
+<script>
+jQuery(document).ready(function(){
+			
+			
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Codigo','Valor Desde','Valor Hasta','Dias Credito'],
+			colModel:[ 
+				{ name:'id'      ,index:'id'       , width:50,  formatter: "integer"  }, 
+				{ name:'desde'   ,index:'desde'    , width:100, formatter: "number" }, 
+				{ name:'hasta'   ,index:'hasta'    , width:100, formatter: "number" },
+				{ name:'dias'    ,index:'dias'     , width:50,  formatter: "integer" } 
+			], 
+			autoWidth:true,
+			width: jQuery('#content').width()-25,
+			height: 250,
+			rowNum:20, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de los Rangos Registrados",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					//if( jQuery("#rangos_id")    ){ jQuery("#rangos_id").val(fila['rangos_id']); }
+					//if( jQuery("#rangos") ){ jQuery("#rangos").val(fila['rango']); } 
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+						redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/" + fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php  echo Router::getController(); ?>").dialog("close");
+					<?php  } ?>
+					
+       		 }
+		}); 
+		
+		jQuery(window).bind('resize', function() {
+			jQuery("#tabla<?php echo Router::getController(); ?>").setGridWidth(jQuery('#content').width()-25, true);
+	});
+		
+});
+</script>
