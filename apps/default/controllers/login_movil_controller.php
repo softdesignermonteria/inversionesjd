@@ -52,12 +52,12 @@
 				
 				
 				if($usuario){
-					 $cobrador = $cobrador->findFirst(" id = '"+$admin->cobradores_id+"' ");
+					 $cobrador = $cobrador->findFirst(" id = '"+$usuario->cobradores_id+"' ");
 					 $respuesta[0]=array("mensaje"=>"true","descripcion"=>"Usuario Registrado");	
 					 $respuesta[1]=array(
-					 						"nombre"=>$admin->nombre_completo,
-											"clave"=>$admin->password,
-											"cobradores_id"=>$admin->cobradores_id,
+					 						"nombre"=>$usuario->nombre_completo,
+											"clave"=>$usuario->password,
+											"cobradores_id"=>$usuario->cobradores_id,
 											"cedula_cobrador"=>$cobrador->nit
 										);	
 					 //nombre,clave,cobradores_id,cedula_cobrador
