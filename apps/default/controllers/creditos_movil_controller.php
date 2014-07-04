@@ -161,12 +161,12 @@
 									 $creditos->fecha_act           = date("Y-m-d H:i:s");
 									 $creditos->fecha               = date("Y-m-d");
 									 $creditos->fecha_cuota         = date("Y-m-d");
-									 $creditos->capital             = $creditos_json->valor;
+									 $creditos->capital             = round($creditos_json->valor);
 									 $creditos->anulado             = '0';
 									 $creditos->observaciones       = "creados desde dispositivo movil";
 									 
 									 $porcentaje = ($emp->porcentaje/100)+1;
-									 $total_credito = ($porcentaje*$creditos_json->valor) + $creditos_json->valor;
+									 $total_credito =  round(($porcentaje*$creditos_json->valor));
 									
 											 if($rangos->count(" $total_credito>=desde and $total_credito<=hasta ")==0){
 										 
@@ -195,7 +195,7 @@
 											 }
 											 
 									 $creditos->cuotas              = $rangos->dias;
-									 $creditos->valor_cuotas        = ($total_credito/$rangos->dias);
+									 $creditos->valor_cuotas        =  round(($total_credito/$rangos->dias));
 									 $creditos->total_credito       = $total_credito;
 									 $creditos->porcentaje          = $emp->porcentaje;
 									 //Flash::error($cons->desde);
