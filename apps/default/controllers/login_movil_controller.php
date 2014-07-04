@@ -18,9 +18,36 @@
 			
 				$respuesta[0]=array("mensaje"=>"true","descripcion"=>"por defecto");	
 				$admin=$_REQUEST["login"];
+				
+				//$encabezado=$_REQUEST["creditos"];
+					/* Validaciones */
+					
+				/* 1.- Validacion json */
+				if(!json_decode($admin)){
+						 $syslogger = new Syslogger();
+						 $syslogger->username      = "";
+						 $syslogger->module        = Router::getModule();
+						 $syslogger->application   = Router::getApplication();
+						 $syslogger->controller    = $this->getControllerName();
+						 $syslogger->action        = $this->getActionName();
+						 $syslogger->error_sistema = "Json Incorrepto";
+						 $syslogger->descripcion   = "Json Incorrepto";
+						 $syslogger->ip_remota     = $_SERVER['REMOTE_ADDR'];
+						 $syslogger->fecha         = date("Y-m-d H:i:s");
+						 $syslogger->objeto        = $admin;
+						 $syslogger->save();
+						 $sw=1;
+						 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Json Incorrecto");
+				}
+				
+				
+				/* Fin Validaciones */
 
 				$Usuario = new Admin();
 				$cobrador = new Cobradores();
+				
+				$admin = json_decode($admin);
+				
 				$usuario = $Usuario->findFirst("username = '".$admin->usuario."' and password = md5('".$admin->clave."') ");
 				
 				
@@ -58,6 +85,7 @@
 					 $syslogger->descripcion   = "Usuario Clave incorrectos";
 					 $syslogger->ip_remota     = $_SERVER['REMOTE_ADDR'];
 					 $syslogger->fecha         = date("Y-m-d H:i:s");
+					 $syslogger->objeto        = date("Y-m-d H:i:s");
 					 $syslogger->save();
 
 				}
