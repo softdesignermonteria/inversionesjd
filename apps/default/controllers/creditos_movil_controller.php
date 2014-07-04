@@ -206,6 +206,7 @@
 														$msg_error.=$message; 
 													}
 													 
+													 $syslogger = new Syslogger();
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -225,7 +226,8 @@
 													$transaction->rollback();
 							
 										}else{
-												     $syslogger->username          = '';
+												      $syslogger = new Syslogger();
+													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
 													 $syslogger->controller        = $this->getControllerName();
@@ -277,6 +279,7 @@
 														$msg_error.=$message; 
 														
 													}
+													 $syslogger = new Syslogger();
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -295,6 +298,7 @@
 													$transaction->rollback();
 													
 												}else{
+													 $syslogger = new Syslogger();
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
@@ -318,7 +322,8 @@
 							if( $total_credito_detalles <> $total_credito ){ 
 								
 								$dif = $total_credito - $_REQUEST["total_credito"];
-													$syslogger->username          = '';
+													  $syslogger = new Syslogger();
+													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
 													 $syslogger->application       = Router::getApplication();
 													 $syslogger->controller        = $this->getControllerName();
