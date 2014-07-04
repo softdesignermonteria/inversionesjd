@@ -61,7 +61,8 @@
 					 $syslogger->save();
 
 				}
-
+			
+			$this->setParamToView("responce",$respuesta);
 		
 		}
 		
