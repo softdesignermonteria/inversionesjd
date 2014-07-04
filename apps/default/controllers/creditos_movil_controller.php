@@ -103,7 +103,7 @@
 										
 					if( $sw==0 ){
 						
-						$creditos = json_decode($encabezado);
+						$creditos_json = json_decode($encabezado);
 						
 						$emp = new Empresa();
 						$emp = $emp->findFirst(" activo = 0 ");
@@ -153,15 +153,15 @@
 									//para traer el mismo modelo ya instanciado
 									 $creditos->id                  = "";
 									 $creditos->empresa_id          = $emp->id;
-									 $creditos->clientes_id         = $creditos->clientes_id;
-									 $creditos->cobradores_id       = $creditos->cobradores_id;
+									 $creditos->clientes_id         = $creditos_json->clientes_id;
+									 $creditos->cobradores_id       = $creditos_json->cobradores_id;
 									 $creditos->tipo_documento_id   = $cons->tipo_documento_id;
 									 $creditos->prefijo             = $cons->prefijo;
 									 $creditos->consecutivo         = $cons->desde;   
 									 $creditos->fecha_act           = date("Y-m-d H:i:s");
 									 $creditos->fecha               = date("Y-m-d");
 									 $creditos->fecha_cuota         = date("Y-m-d");
-									 $creditos->capital             = $creditos->valor;
+									 $creditos->capital             = $creditos_json->valor;
 									 $creditos->anulado             = '0';
 									 $creditos->observaciones       = "creados desde dispositivo movil";
 									 
