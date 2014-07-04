@@ -166,7 +166,7 @@
 									 $creditos->observaciones       = "creados desde dispositivo movil";
 									 
 									 $porcentaje = ($emp->porcentaje/100)+1;
-									 $total_credito = ($porcentaje*$creditos->valor) + $creditos->valor;
+									 $total_credito = ($porcentaje*$creditos_json->valor) + $creditos_json->valor;
 									
 											 if($rangos->count(" $total_credito>=desde and $total_credito<=hasta ")==0){
 										 
