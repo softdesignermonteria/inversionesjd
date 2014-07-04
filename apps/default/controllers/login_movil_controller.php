@@ -54,12 +54,12 @@
 				if($usuario){
 					 $cobrador = $cobrador->findFirst(" id = '"+$usuario->cobradores_id+"' ");
 					 $respuesta[0]=array("mensaje"=>"true","descripcion"=>"Usuario Registrado");	
-					 /*$respuesta[1]=array(
+					 $respuesta[1]=array(
 					 						"nombre"=>$usuario->nombre_completo,
 											"clave"=>$usuario->password,
 											"cobradores_id"=>$usuario->cobradores_id,
 											"cedula_cobrador"=>$cobrador->nit
-										);	*/
+										);	
 					 //nombre,clave,cobradores_id,cedula_cobrador
 					 $syslogger = new Syslogger();
 					 $syslogger->username      = '';
