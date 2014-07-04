@@ -21,7 +21,7 @@
 
 				$Usuario = new Admin();
 				$cobrador = new Cobradores();
-				$usuario = $Usuario->findFirst("usuario = '".$admin->usuario."'	and password = '".$admin->clave."'");
+				$usuario = $Usuario->findFirst("username = '".$admin->usuario."'	and password = '".$admin->clave."'");
 				
 				
 				if($usuario){
