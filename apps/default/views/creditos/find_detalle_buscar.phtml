@@ -40,7 +40,7 @@ $sql = "select cr.*,(cxc.valor_total + cxc.pagado) as saldo,c.nit,c.nombre1,c.no
 			and cxc.creditos_id = cr.id
 			and cxc.anulado = 0
 			and cr.anulado = 0
-			(cxc.valor_total + cxc.pagado) <> 0
+			and (cxc.valor_total + cxc.pagado) <> 0
 			$condicion1
 			";
 
