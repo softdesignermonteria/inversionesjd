@@ -95,15 +95,29 @@
 							 $syslogger->save();
 						     $sw=1;
 							 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Json Incorrecto");
-					}
+					}else{
+						
+						$creditos_json = json_decode($encabezado);
+						
+						}
+						/* 1.- Fin Validaciones json */
 					
-					
-					/* Fin Validaciones */
+						/* 2.- Validacion creditos  */
+						if( $this->Cxc->count(" (valor_total + pagado) <> 0 and clientes_id = '$creditos_json->clientes_id' ")>0 ){
+								$sw=1; $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Cliente Tiene Un Credito Activo");
+							}
+						/* 2.- Validacion  creditos */
+						
+						/* 3.- Validacion creditos  */
+						if( $this->RecibosCaja->count(" fecha = '".date("Y-m-d")."' and clientes_id = '$creditos_json->clientes_id' and anulado = 0 ")>0 ){
+								$sw=1; $respuesta[0]=array("mensaje"=>"false","descripcion"=>"No se puede Realizar Credito ya que acaba de terminar de pagar hoy.. espere el dia de mañana para acreditar de nuevo ");
+							}
+						/* 3.- Validacion  creditos */
 					
 										
 					if( $sw==0 ){
 						
-						$creditos_json = json_decode($encabezado);
+						//$creditos_json = json_decode($encabezado);
 						
 						$emp = new Empresa();
 						$emp = $emp->findFirst(" activo = 0 ");

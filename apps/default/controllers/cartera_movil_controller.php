@@ -64,51 +64,69 @@
 					"having" => " (valor_cuota - valor_pagado - valor_nota_credito ) > 0 and valor_cuota > 0 "
 			));
 			
-			//echo $query->getSqlQuery(); 
 			
-			/*$db = DbBase::rawConnect();
-			 /*si se modifica el sql de detallecxc/fin_detalle_buscar cambiar este tambien*/
-			/*$sql = "SELECT 
-					  creditos.empresa_id,
-					  creditos.clientes_id,
-					  creditos.fecha,
-					  detalle_cxc.id,
-					  detalle_cxc.idt,
-					  detalle_cxc.tipo_documento_id,
-					  detalle_cxc.prefijo,
-					  detalle_cxc.consecutivo,
-					  detalle_cxc.vencimiento,
-					  detalle_cxc.codigo,
-					  sum(detalle_cxc.valor * detalle_cxc.multiplicar) AS valor_cuota,
-					  ifnull((SELECT sum(rc.valor) AS valor FROM detalle_recibos_caja rc WHERE rc.detalle_cxc_id = detalle_cxc.id and rc.anulado = 0), 0) AS valor_pagado,
-					  ifnull((SELECT sum(nc.valor) AS valor FROM detalle_notas_credito nc WHERE nc.detalle_cxc_id = detalle_cxc.id and nc.anulado = 0), 0) AS valor_nota_credito
-					FROM
-					  creditos,
-					  detalle_cxc,
-					  cobradores
-					WHERE
-					  
-					  creditos.id = detalle_cxc.creditos_id
-					  and creditos.cobradores_id = cobradores.id
-					  and detalle_cxc.anulado = 0
-					  $condicion
-					GROUP BY
-					  creditos.empresa_id,
-					  creditos.clientes_id,
-					  creditos.fecha,
-					  detalle_cxc.tipo_documento_id,
-					  detalle_cxc.prefijo,
-					  detalle_cxc.consecutivo,
-					  detalle_cxc.vencimiento,
-					  detalle_cxc.codigo,
-					  
-					  ifnull((SELECT sum(rc.valor) AS valor FROM detalle_recibos_caja rc WHERE rc.detalle_cxc_id = detalle_cxc.id and rc.anulado=0), 0),
-					  ifnull((SELECT sum(nc.valor) AS valor FROM detalle_notas_credito nc WHERE nc.detalle_cxc_id = detalle_cxc.id and nc.anulado = 0), 0)
-					HAVING
-					  (valor_cuota - valor_pagado - valor_nota_credito ) > 0  and valor_cuota > 0 ";
+			$this->setParamToView("detalles",$query->getResultSet());
+			//$this->setParamToView("detalles",$result );
+			$this->setResponse("view");
+		
+		}
+		
+		public function extraer_cartera_martesAction(){
+			$condicion = "";
 			
-			$result = $db->query( $sql ); */
-			echo $sql;
+			$encabezado = $_REQUEST["clientes"];
+			$encabezado = json_decode($encabezado);
+		    //if($_REQUEST["cobradores_id"]!=''){ $condicion .= "  and creditos.cobradores_id = '".$_REQUEST["cobradores_id"]."'"; }
+
+			
+			$groupFields = "Group by 
+			                {#DetalleCxc}.id,
+							{#DetalleCxc}.creditos_id,
+							{#Creditos}.clientes_id,
+							{#Clientes}.nit,
+							{#Creditos}.cobradores_id,
+							{#Cobradores}.nit ,
+							{#DetalleCxc}.vencimiento,
+							{#DetalleCxc}.valor
+						";
+
+			$query = new ActiveRecordJoin(array(
+				    "entities" => array("Creditos", "DetalleCxc","Clientes","Cobradores"),
+					"fields" => array(
+						"{#DetalleCxc}.id",
+						"{#DetalleCxc}.creditos_id",
+						"{#Creditos}.clientes_id",
+						"{#Clientes}.nit",
+						"{#Creditos}.cobradores_id",
+						"{#Cobradores}.nit as nit_cobrador",
+						"{#DetalleCxc}.vencimiento",
+						"sum(detalle_cxc.valor * detalle_cxc.multiplicar) AS valor_cuota",
+						"ifnull((SELECT sum(rc.valor) AS valor FROM detalle_recibos_caja rc WHERE rc.detalle_cxc_id = detalle_cxc.id and rc.anulado = 0), 0) AS valor_pagado",
+						"ifnull((SELECT sum(nc.valor) AS valor FROM detalle_notas_credito nc WHERE nc.detalle_cxc_id = detalle_cxc.id and nc.anulado = 0), 0) AS valor_nota_credito"
+						),
+					/*"groupFields" => array("DetalleCxc}.id")*/
+					/*"groupFields" => array(
+											"{#DetalleCxc}.id",
+											"{#DetalleCxc}.creditos_id",
+											"{#Creditos}.clientes_id",
+											"{#Clientes}.nit",
+											"{#Creditos}.cobradores_id",
+											"{#Cobradores}.nit as nit_cobrador",
+											"{#DetalleCxc}.vencimiento",
+											"{#DetalleCxc}.valor",
+											"sum(detalle_cxc.valor * detalle_cxc.multiplicar) AS valor_cuota",
+											"ifnull((SELECT sum(rc.valor) AS valor FROM detalle_recibos_caja rc WHERE rc.detalle_cxc_id = detalle_cxc.id and rc.anulado = 0), 0) AS valor_pagado",
+											"ifnull((SELECT sum(nc.valor) AS valor FROM detalle_notas_credito nc WHERE nc.detalle_cxc_id = detalle_cxc.id and nc.anulado = 0), 0) AS valor_nota_credito"
+										),*/
+					"conditions" => " {#DetalleCxc}.anulado = 0 
+										and clientes_id = '$encabezado->clientes_id' 
+										and date_format({#DetalleCxc}.vencimiento, '%w') = 2 
+										$condicion 
+										$groupFields ",
+					"having" => " (valor_cuota - valor_pagado - valor_nota_credito ) > 0 and valor_cuota > 0 "
+			));
+			
+			
 			$this->setParamToView("detalles",$query->getResultSet());
 			//$this->setParamToView("detalles",$result );
 			$this->setResponse("view");

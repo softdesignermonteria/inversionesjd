@@ -422,29 +422,51 @@ class Recibos_caja_movilController extends ApplicationController {
 	}
 
 	
-	
+	/*
 	public function addmartesAction(){
 			
-			$verdadero[]=array("mensaje"=>"true");	
-			$falso[]=array("mensaje"=>"false");
+			$respuesta[0]=array("mensaje"=>"true","descripcion"=>"por defecto");	
+			
 			$sw=0; //true 
 			$this->setResponse('view');
-			$encabezado = $_REQUEST["encabezado"];
+			
+			$encabezado = $_REQUEST["recibosmartes"];
 			$msg_error="";
 			
 			$emp = new Empresa();
 			$emp = $emp->findFirst(" activo = 0 ");
+			
+			
+					if(!json_decode($encabezado)){
+							 $syslogger = new Syslogger();
+							 $syslogger->username      = "";
+							 $syslogger->module        = Router::getModule();
+							 $syslogger->application   = Router::getApplication();
+							 $syslogger->controller    = $this->getControllerName();
+							 $syslogger->action        = $this->getActionName();
+							 $syslogger->error_sistema = "Json Incorrepto";
+							 $syslogger->descripcion   = "Json Incorrepto";
+							 $syslogger->ip_remota     = $_SERVER['REMOTE_ADDR'];
+							 $syslogger->fecha         = date("Y-m-d H:i:s");
+							 $syslogger->objeto        = $encabezado;
+							 $syslogger->save();
+						     $sw=1;
+							 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Json Incorrecto");
+					}else{
+						
+						$encabezado = json_decode($encabezado);
+						
+						}
+			
+			
+			
 		 
 			 //$encabezado = str_replace("]\"","]",str_replace("\"[","[",str_replace("\\","",$jsonenc)));
 			//if($encabezado!='[]'){	
+			if($sw==0){	
 				
-				if(json_decode($encabezado)){
-					//$encabezado = json_decode($_REQUEST["encabezado"]);	
-					$enc        = json_decode($_REQUEST["encabezado"]);	
-					
-					$detalles_tmp  = $this->DetalleCxc->findFirst("id = '$enc->clientes_id' and anulado = 0 ");
-					
-					//foreach( $encabezado as $enc):
+					$enc        = $encabezado ;
+
 						 if($this->RecibosCaja->count(" provisional = '$enc->provisional' and anulado = 0 ")==0){
 							$transaction = new ActiveRecordTransaction(true);   
 							try{
@@ -462,7 +484,7 @@ class Recibos_caja_movilController extends ApplicationController {
 								$dtc->setTransaction($transaction);
 								$dtc->desde = $dtc->desde+1;
 								if($dtc->save()==false){
-									$sw=1;
+								
 									 $syslogger = new Syslogger();
 									 $syslogger->username          = '';
 									 $syslogger->module            = Router::getModule();
@@ -508,9 +530,6 @@ class Recibos_caja_movilController extends ApplicationController {
 													foreach($rec->getMessages() as $message){ 
 														$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
 													}
-													$sw=1;
-													/*Registro Para Audirotia*/
-									 
 													 $syslogger = new Syslogger();
 													 //$syslogger->setTransaction($transaction);
 													 $syslogger->username          = '';
@@ -531,7 +550,7 @@ class Recibos_caja_movilController extends ApplicationController {
 													$transaction->rollback();
 												//cierra if
 												}else{
-													/*Registro Para Audirotia*/
+													
 									 
 													 $syslogger = new Syslogger();
 													 //$syslogger->setTransaction($transaction);
@@ -553,10 +572,18 @@ class Recibos_caja_movilController extends ApplicationController {
 										//fin guardar encabezado recibos de caja
 										//$detalles = json_decode($encabezado->detalles); 
 									    //print_r( $encabezado->detalles );
-										foreach($encabezado->detalles  as $items):
+										if($this->DetalleCxc->count("id = '$enc->clientes_id' and dia_semana = 2 and anulado = 0 ")==0){
+												$respuesta[0]=array("mensaje"=>"false","descripcion"=>"No hay Martes a Descontar");
+												$transaction->rollback();
+											}
+										$detalles_tmp  = $this->DetalleCxc->findFirst("id = '$enc->clientes_id' and dia_semana = 2 and anulado = 0 ");
 										
+										foreach($detalles_tmp  as $items):
+											
+											$saldo = $items->valor_cuota - $items->valor_pagado - $items->valor_nota_credito;
+											
 											$creditos_tmp  = $this->Creditos->findFirst("id   = '$rec->creditos_id' and anulado = 0 ");
-											$detalles_tmp  = $this->DetalleCxc->findFirst("id = '$items->detalle_cxc_id' and anulado = 0 ");
+											
 											$porcentaje    = $creditos_tmp->porcentaje/100; 
 											$capitaltmp = 0;
 											$interestmp = 0;
@@ -564,17 +591,17 @@ class Recibos_caja_movilController extends ApplicationController {
 											$detalles = new DetalleRecibosCaja();
 											$detalles->setTransaction($transaction);
 											$detalles->id                     = "";
-											$capitaltmp = $items->valor_pagado_cuota / (1 + $porcentaje );
-											$detalles->detalle_cxc_id         = $items->detalle_cxc_id;
+											$capitaltmp = $saldo / (1 + $porcentaje );
+											$detalles->detalle_cxc_id         = $items->id;
 											$detalles->recibos_caja_id        = $rec->id;
-											$detalles->descripcion            = "Pago movil ".$items->detalle_cxc_id."-".$rec->prefijo.$rec->consecutivo."-".$detalles_tmp->codigo;
+											$detalles->descripcion            = "Pago movil Martes ".$items->id."-".$rec->prefijo.$rec->consecutivo."-".$items->codigo;
 											$detalles->valor                  = $items->valor_pagado_cuota;
-											$detalles->codigo                 = $detalles_tmp->codigo;
-											$detalles->vencimiento            = $detalles_tmp->vencimiento;
+											$detalles->codigo                 = $items->codigo;
+											$detalles->vencimiento            = $items->vencimiento;
 											$detalles->descuento              = 0;
 											$detalles->dias_intereses         = 0;
 											$detalles->capital                = $capitaltmp;
-											$detalles->intereses              = $items->valor_pagado_cuota - $capitaltmp;
+											$detalles->intereses              = $saldo - $capitaltmp;
 											$detalles->anulado                = '0';
 									
 												if($detalles->save()==false){
@@ -582,7 +609,7 @@ class Recibos_caja_movilController extends ApplicationController {
 													foreach($detalles->getMessages() as $message){ 
 														$msg_error.=$message;//Flash::error("Tabla de errores del sistema: ".$message); 
 													}
-													 $sw=1;
+													 
 													 $syslogger = new Syslogger();
 													 //$syslogger->setTransaction($transaction);
 													 $syslogger->username          = '';
@@ -602,7 +629,7 @@ class Recibos_caja_movilController extends ApplicationController {
 													 $transaction->rollback();
 													
 												}else{
-													 /*Registro Para Audirotia*/
+													
 							 
 													 $syslogger = new Syslogger();
 													 //$syslogger->setTransaction($transaction);
@@ -627,25 +654,28 @@ class Recibos_caja_movilController extends ApplicationController {
 								
 							
 							$transaction->commit();
+							
 							}catch(TransactionFailed $e){		
-								$sw=1;
-								 $syslogger = new Syslogger();
-								 ////$syslogger->setTransaction($transaction);
-								 $syslogger->username          = '';
-								 $syslogger->module            = Router::getModule();
-								 $syslogger->application       = Router::getApplication();
-								 $syslogger->controller        = 'recibos_caja_movil';
-								 $syslogger->action            = 'add';
-								 $syslogger->error_sistema     = "Error en la transaccion";
-								 $syslogger->descripcion       = "Error en la transaccion".$e->getMessage();
-								 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
-								 $syslogger->fecha             = date("Y-m-d H:i:s");
-								 $syslogger->tipo_documento_id = $tipo_documento_id;
-								 $syslogger->prefijo           = $prefijo;
-								 $syslogger->consecutivo       = $consecutivo;
-								 $syslogger->objeto            = "";
-								 $syslogger->save();	
-							}	
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Transaccion fallida. ".$msg);	
+								 $error.=$msg." ".$e->getMessage();
+							}catch(DbContraintViolationException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Se esta violando llave unica o llave Primaria) ".$msg);
+								 $error.=$msg." ".$e->getMessage();	
+								// fin try catch
+							}catch(DbSQLGrammarException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Error en sql. ".$msg);	
+								 $error.=$msg." ".$e->getMessage();
+								// fin try catch
+							}catch(DbInvalidFormatException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Formato Invalido para Columna de la db ".$msg);	
+								 $error.=$msg." ".$e->getMessage();
+								// fin try catch
+							}catch(DbException $e){		
+								 $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Exepcion en la base de datos. ".$msg);	
+								 $error.=$msg." ".$e->getMessage();
+								// fin try catch
+							}
+							
 						 }else{
 									 $syslogger = new Syslogger();
 									 $syslogger->username          = '';
@@ -666,55 +696,13 @@ class Recibos_caja_movilController extends ApplicationController {
 						 } //fin si no esta provisional registrado
 					//endforeach;	//fin encabezado
 					
-				}else{
-						 $sw=1;
-						 $syslogger = new Syslogger();
-						 ////$syslogger->setTransaction($transaction);
-						 $syslogger->username          = '';
-						 $syslogger->module            = Router::getModule();
-						 $syslogger->application       = Router::getApplication();
-						 $syslogger->controller        = 'recibos_caja_movil';
-						 $syslogger->action            = 'add';
-						 $syslogger->error_sistema     = "Error json No Valido";
-						 $syslogger->descripcion       = "Error json No Valido";
-						 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
-						 $syslogger->fecha             = date("Y-m-d H:i:s");
-						 $syslogger->tipo_documento_id = "";
-						 $syslogger->prefijo           = "";
-						 $syslogger->consecutivo       = "";
-						 $syslogger->objeto            = "";
-						 $syslogger->save();	
-				}//fin validacion json encabezado
-			 /*}else{
-				 	$sw=1;
-						 $syslogger = new Syslogger();
-						 ////$syslogger->setTransaction($transaction);
-						 $syslogger->username          = '';
-						 $syslogger->module            = Router::getModule();
-						 $syslogger->application       = Router::getApplication();
-						 $syslogger->controller        = 'recibos_caja_movil';
-						 $syslogger->action            = 'add';
-						 $syslogger->error_sistema     = "Error json vacio";
-						 $syslogger->descripcion       = "Error json vacio";
-						 $syslogger->ip_remota         = $_SERVER['REMOTE_ADDR'];
-						 $syslogger->fecha             = date("Y-m-d H:i:s");
-						 $syslogger->tipo_documento_id = "";
-						 $syslogger->prefijo           = "";
-						 $syslogger->consecutivo       = "";
-						 $syslogger->objeto            = $encabezado;
-						 $syslogger->save();
-				 }//finn validar json vacio*/
-				 /*Respuesta*/
-				 if($sw==0){
-						 $this->setParamToView("responce",$verdadero);
-					 }else{
-						  $this->setParamToView("responce",$falso);
-						 }
+				
 			 
+			}
 			
 			 
 			
-	}
+	}*/
 
 }
 
