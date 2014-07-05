@@ -55,7 +55,7 @@
 					 $cobrador = $cobrador->findFirst(" id = '"+$usuario->cobradores_id+"' ");
 					 $respuesta[0]=array("mensaje"=>"true","descripcion"=>"Usuario Registrado");	
 					 $respuesta[1]=array(
-					 						"nombre"=>$usuario->nombre_completo,
+					 						"nombre"=>$usuario->username,
 											"clave"=>$usuario->password,
 											"cobradores_id"=>$usuario->cobradores_id,
 											"cedula_cobrador"=>$cobrador->nit
