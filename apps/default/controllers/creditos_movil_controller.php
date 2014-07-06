@@ -103,7 +103,7 @@
 						/* 1.- Fin Validaciones json */
 					
 						/* 2.- Validacion creditos  */
-						if( $this->Cxc->count(" (valor_total + pagado) <> 0 and clientes_id = '$creditos_json->clientes_id' ")>0 ){
+						if( $this->ViewCartera->count(" (valor_cuota - valor_pagado - valor_nota_credito) <> 0 and clientes_id = '$creditos_json->clientes_id' ")>0 ){
 								$sw=1; $respuesta[0]=array("mensaje"=>"false","descripcion"=>"Cliente Tiene Un Credito Activo");
 							}
 						/* 2.- Validacion  creditos */
