@@ -716,6 +716,7 @@
 							 $encabezado->fecha_act           = date("Y-m-d H:i:s");
 							 $encabezado->hora_act            = date("H:i:s");
 							 $encabezado->fecha               = $_REQUEST["fecha"];
+							 $encabezado->provisional         = $_REQUEST["provisional"];
 							 $encabezado->anulado             = '0';
 							 $encabezado->activo              = '0';
 							 $encabezado->observaciones       = "";
