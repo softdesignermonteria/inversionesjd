@@ -54,13 +54,13 @@
 										$cli->nombre2        = trim($clientes->nombre2);
 										$cli->apellido1      = trim($clientes->apellido1);
 										$cli->apellido2      = trim($clientes->apellido2);
-										$cli->razon_social   = trim($cli->nombre1 + " " + $cli->nombre2 + " " + $cli->apellido1 + " " + $cli->apellido2);
+										$cli->razon_social   = trim($clientes->nombre1 + " " + $clientes->nombre2 + " " + $clientes->apellido1 + " " + $clientes->apellido2);
 										$cli->direccion      = $clientes->direccion;
 										$cli->celular        = $clientes->telefono;
 										$cli->departamentos_id     = 23;
 										$cli->municipios_id        = 108;
 										$cli->celular        = $clientes->telefono;
-										$cli->referencia_id  = 1;
+										$cli->referencia_id  = $clientes->referencia_id;
 									
 										if( $cli->save() == false){
 													
