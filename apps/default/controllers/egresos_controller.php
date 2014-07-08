@@ -12,8 +12,9 @@
 		public function initialize() {
 		   //$this->setTemplateAfter("a_bit_boxy");
 		   // $this->setTemplateAfter("menu_azul");
-		   	$temp=$this->Admin->findFirst(" md5(id) = '".Session::get(md5("usuarios_id"))."' ")->plantilla;
-			$this->setTemplateAfter("$temp");
+		   	//$temp=$this->Admin->findFirst(" id = '".Session::get("usuarios_id")."' ")->plantilla;
+			//$this->setTemplateAfter("$temp");
+			$this->setTemplateAfter("adminiziolite");
 		}
 
 		
@@ -111,6 +112,14 @@
 			formulario para agregar clientes
 		***/
 		public function agregarAction(){
+			
+			$empresa = $this->Empresa->findFirst(" id = '".Session::get("id_empresa")."' ");
+			Tag::displayTo("fecha",date("Y-m-d"));
+			Tag::displayTo("hora",date("H:i:s"));
+			Tag::displayTo("tipo_documento_id",$this->tipo_documento);
+			Tag::displayTo("prefijo",$this->prefijo);
+			Tag::displayTo("nombre_empresa",Session::get("nombre_empresa"));
+			Tag::displayTo("empresa_id",Session::get("id_empresa"));
 					
         }
 		
