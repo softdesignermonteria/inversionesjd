@@ -1,98 +1,636 @@
+<form id="fx" name="fx">
+<table width="80%" border="0" align="center" cellpadding="2" cellspacing="4">
+  <thead >
+	<tr>
+    	<th colspan="2" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left"><?php echo $tipo_documento; echo " - "; echo $tipo_documento_nombre;  ?></th>
+  	</tr>
+</thead>
 
-<h1>EGRESOS DE LA EMPRESA</h1>
-
-<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="f1">
   <tr>
-    <th colspan="4" align="left"> EGRESO NUMERO: <?php echo $encabezado->prefijo.$encabezado->consecutivo; ?></th>
+    <td width="18%" align="right">EMPRESA</td>
+    <td>
+        <?php echo Tag::hiddenField("id"); ?> 
+		<?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+        <?php echo Tag::hiddenField("empresa_id"); ?> 
+        <?php echo Tag::hiddenField("prefijo2"); ?> 
+        <?php echo Tag::hiddenField("consecutivo"); ?> 
+        <?php echo Tag::hiddenField("anulado"); ?> 
+		<?php echo Tag::textField("nombre_empresa","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?>       </td>
   </tr>
   
+   <tr>
+    <td align="right">COBRADORES:</td>
+    <td align="left">
+	<?php echo Tag::textFieldExt("cobradores","size: 8"); ?>         </tr>
+  <!--<tr>
+     <td align="right" valign="top">BANCO</td>
+     <td><?php //echo Tag::textFieldExt("bancos","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?></td>
+     <td colspan="3"><button id="buscar_bancos" type="button">Buscar</button>
+	     </td>
+  </tr>-->
   <tr>
-    <td align="right" valign="top">EMPRESA</td>
-    <td><?php $e = new Empresa(); echo $e->findFirst(" id = '$encabezado->empresa_id' ")->nombre_empresa; ?></td>
-    <td align="right" valign="top">&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
+    <td align="right" valign="top">FECHA</td>
+    <td><?php echo Tag::textField("fecha","size: 20"); ?></td>
+    </tr>
   <tr>
-    <td align="right" valign="top">PROVEEDOR</td>
-    <td><?php $p = new Proveedores(); echo $p->findFirst(" id = '$encabezado->proveedores_id' ")->razon_social; ?></td>
-    <td align="right" valign="top">&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td width="25%" align="right" valign="top">FECHA: </td>
-    <td width="24%">
-		<?php echo $encabezado->fecha; ?></td>
-    <td width="8%" align="right" valign="top">HORA: </td>
-    <td width="43%"><?php echo $encabezado->hora; ?></td>
+    <td align="right" valign="top">HORA</td>
+    <td><?php echo Tag::textField("hora","size: 20"); ?></td>
   </tr>
   <tr>
     <td align="right" valign="top">FORMA DE PAGO</td>
-    <td><?php $f = new FormaPago(); echo $f->findFirst(" id = '$encabezado->forma_pago_id' ")->forma_pago; ?></td>
-    <td align="right" valign="top">&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
+    <td>
+    	<select id="forma_pago_id">
+    <?php 
+		$fp = new FormaPago();
+		foreach($fp->find() as $fp):
+	?>
+    	<option value="<?php echo $fp->id; ?>"><?php echo $fp->forma_pago; ?></option>
+     <?php endforeach; ?>   
+     </select>
+     <script>jQuery("#forma_pago_id").val("EF");</script>
+    </td>
+    </tr>
   <tr>
-    <td align="right" valign="top">CHEQUE NUMERO</td>
-    <td><?php echo $encabezado->cheque; ?></td>
-    <td align="right" valign="top">&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
+    <td align="right" valign="top">CHEQUE</td>
+    <td><?php echo Tag::textField("chuque","size: 50"); ?></td>
+    </tr>
+</table>
+
+<table id="grid_<?php echo Router::getController(); ?>"></table>
+<div id="pagegresos"></div>
+  
+
+<button id="agregar_item" type="button">Agregar</button>
+
+<button id="modificar_item" type="button">Modificar</button>
+
+<button id="borrar_item" type="button">Borrar</button>
+
+ <br />
+
+<table width="80%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
   <tr>
-    <td align="right" valign="top">BANCO</td>
-    <td><?php $b = new Bancos(); echo $b->findFirst(" id = '$encabezado->bancos_id' ")->descripcion; ?></td>
-    <td align="right" valign="top">&nbsp;</td>
-    <td>&nbsp;</td>
+    <td width="50%">&nbsp;</td>
+    <th align="right">CANTIDAD TOTAL </th>
+    <td><?php echo Tag::textField("total","size: 12"); ?></td>
   </tr>
 </table>
 
-<br />
+	<div align="center">
+    	<button id="guardar" type="button">Guardar</button>
+        <button id="cancelar" type="button">Cancelar</button>
+    </div>
 
-<?php foreach($detalles as $det): ?>
+<p>&nbsp;</p>
 
-<table width="60%" cellpadding="1" cellspacing="1" style="font-size:11pt;" align="center">
-    	<tr>
-          <th><div align="center">CONCEPTO</div></th>
-         <th><div align="right">VALOR</div></th>
+<div id="mensajes"></div>
+
+</form>
+
+<div title="Agergar Detalle al Egreso" id="dialogo_agregar_item">
+	
+ <table width="90%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+       	    <td>Id</td>
+            <td colspan="2"><input type="text"  id="tmp_id"  name="tmp_id" size="40" readonly="readonly"/></td>
+        </tr>
+        <!--<tr>
+   	       <td>Compra Mercancia</td>
+            <td>
+            	<input type="hidden" readonly="readonly" size="2" id="tmp_idtemp" name="tmp_idtemp" />
+                <input type="text" readonly="readonly" size="2" id="tmp_cxp_id" name="tmp_cxp_id" />
+            </td>
+            <td><input type="text"  id="tmp_factura" name="tmp_factura"/> <button id="buscar_cxp" type="button">Buscar</button></td>
+        </tr>-->
+        <tr>
+       	    <td>Concepto</td>
+            <td colspan="2"><input type="text"  id="tmp_concepto"  name="tmp_concepto" size="40"/></td>
         </tr>
         <tr>
-            <td><?php echo $det->concepto; ?></td>
-            <td><?php echo $det->total; ?></td>
+   	      <td>Valor</td>
+           <td colspan="2"><input type="text"  id="tmp_valor" name="tmp_valor" value="0" size="10" /></td>
+        </tr>
         <tr>
-<?php 
-endforeach;
-?>        
-</table>
-
-<br />
-
-<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
- <tr>
-    <td width="58%">&nbsp;</td>
-    <th width="21%" align="right"><div align="right">TOTAL EGRESO:</div></th>
-    <td width="21%"><?php  $dt2 = new DetalleEgresos(); echo $dt2->sum("total","conditions: id = '$idt' and anulado = 0"); ?></td>
-  </tr>
-</table>
-
-
-<br /><br />
-<div align="center">
-<table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
-  
-          <tr>
-            <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
-            <td align="center"><?php echo Tag::linkTo("egresos/show/$idt", Tag::image("64x64/Search.png",'width: 32px')); ?></td>
-            <td align="center"><?php echo Tag::linkTo("egresos/modificar/$idt", Tag::image("64x64/Edit.png",'width: 32px')); ?></td>
-            <td align="center"><?php echo Tag::linkTo("print/egresos_html/$idt", Tag::image("iconos/impresora.png",'width: 32px'),"target: _blank"); ?></td>
-          <!--   <td align="center"><?php //echo Tag::linkTo("print/remisiones/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank"); ?></td>-->
-          </tr>
-          <tr>
-            <td align="center">Inicio</td>
-            <td align="center">Mostrar</td>
-            <td align="center">Modificar</td>
-            <td align="center">Imprimir</td>
-            <!--<td align="center">Pdf</td>-->
-    	</tr>
- </table>
-
-
+       	    <td>Suma/Resta</td>
+            <td colspan="2">
+            	<select id="tmp_multiplica">
+                	<option value="1">SUMA</option>
+                    <option value="-1">RESTA</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    
 </div>
+
+
+<div title="Modificar Detalle al Egreso" id="dialogo_modificar_item">
+	
+ <table width="90%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+       	    <td>Id</td>
+            <td colspan="2"><input type="text"  id="tmp_id_mod"  name="tmp_id_mod" size="40" readonly="readonly" /></td>
+        </tr>
+        <!--<tr>
+   	       <td>Compra Mercancia</td>
+            <td>
+            	<input type="hidden" readonly="readonly" size="2" id="tmp_idtemp" name="tmp_idtemp" />
+                <input type="text" readonly="readonly" size="2" id="tmp_cxp_id" name="tmp_cxp_id" />
+            </td>
+            <td><input type="text"  id="tmp_factura" name="tmp_factura"/> <button id="buscar_cxp" type="button">Buscar</button></td>
+        </tr>-->
+        <tr>
+       	    <td>Concepto</td>
+            <td colspan="2"><input type="text"  id="tmp_concepto_mod"  name="tmp_concepto_mod" size="40"/></td>
+        </tr>
+        <tr>
+   	      <td>Valor</td>
+           <td colspan="2"><input type="text"  id="tmp_valor_mod" name="tmp_valor_mod" value="0" size="10" /></td>
+        </tr>
+        <tr>
+       	    <td>Suma/Resta</td>
+            <td colspan="2">
+            	<select id="tmp_multiplica_mod">
+                	<option value="1">SUMA</option>
+                    <option value="-1">RESTA</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    
+</div>
+
+
+<script type="text/javascript">
+
+
+
+
+var detalles = [];
+
+/*
+* Funcion para agregar al vector Detalles[] una posicion
+* 
+**/
+function agregar_item(data){
+
+	var existe = false;   
+	/* for(i=0;i<detalles.length;i++) {  
+
+		if (detalles[i]["detalle_cxc_id"] == data["detalle_cxc_id"]) {  
+
+	  	 alert("Ojo no se Puede bajar La misma cuota 2 Veces");  
+
+	  	 existe = true;  
+
+		 }   
+
+	}  */
+
+	if (!existe) {  
+		//value = parseFloat(jQuery.trim(jQuery("#total").val()));
+		detalles.push(
+			{
+				 id:            data["id"]
+				,cxp_id:        data["cxp_id"]
+				,factura:       data["factura"]
+				,concepto:      data["concepto"]
+				,valor:         data["valor"]
+				,anulado:       "NO"
+				,multiplica:    data["multiplica"]
+				
+			}
+		);
+		//jQuery("#detalles_items").html(JSON.stringify(detalles));
+		reload_grid();
+	
+	}  
+
+}
+
+/*
+* Recarga la grilla
+*/
+function reload_grid(){
+		jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('setGridParam',
+			{ 	datatype: 'local',
+				data:detalles
+			}).trigger("reloadGrid");
+			totalizar();
+}
+
+
+//agregar un item al vector json de items
+
+function modificar_item(data,mod_id){
+	
+	for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==mod_id){
+				if(detalles[i].anulado=='NO'){
+					 
+					 detalles[i].id        =    data["id"]
+					 detalles[i].cxp_id    =    data["cxp_id"]
+					 detalles[i].factura   =    data["factura"]
+					 detalles[i].concepto  =    data["concepto"]
+					 detalles[i].valor     =    data["valor"]
+					 detalles[i].anulado   =    data["anulado"]
+					 detalles[i].multiplica=    data["multiplica"]
+				
+					//detalles[i].id                = data["id"];
+					//detalles[i].detalle_cxc_id    = data["detalle_cxc_id"];
+					//detalles[i].codigo            = data["codigo"];
+					//detalles[i].numero_credito    = data["numero_credito"];
+					//detalles[i].descripcion       = data["descripcion"];
+					//detalles[i].valor             = data["valor"];
+					//detalles[i].vencimiento       = data["vencimiento"];
+					//detalles[i].anulado           = data["anulado"];
+				}else{
+					jQuery("#dialogo_mensajes").html("");
+					jQuery("#dialogo_mensajes").html("Ojo No se Puede Modificar por que ya esta anulado");
+					jQuery("#dialogo_mensajes").dialog("open");
+				}
+			
+			}
+
+	}
+
+	reload_grid();
+	
+}
+
+
+/*
+* Funcion Totalizar Egreso
+*/
+function totalizar(){
+	var total = 0;
+	for(i=0;i<detalles.length;i++) {  
+		if(detalles[i].anulado=='NO'){
+			total += parseFloat(detalles[i].valor)*parseFloat(detalles[i].multiplica);	
+		}
+	}
+	jQuery("#total").val(total);
+}
+
+
+jQuery(document).ready(function(){
+	
+	
+jQuery("#fx").find("input,textarea").attr("readonly","readonly");
+jQuery("#fx").find("input[button],button").attr("style","Display: none");
+
+	
+	<?php foreach($detalles as $detalles): ?>
+			detalles.push(
+				{
+					 id              : '<?php echo $detalles->id; ?>'
+					,cxp_id          : '<?php echo $detalles->cxp_id; ?>'
+					,factura         : ''
+					,concepto        : '<?php echo $detalles->concepto; ?>'
+					,valor           : '<?php echo $detalles->total; ?>'
+					,multiplica      : '<?php echo $detalles->multiplica; ?>'
+					,anulado: '<?php if($detalles->anulado==0){ echo "NO"; }else{ echo "SI"; }?>'
+		
+				});
+	<?php endforeach; ?>
+		reload_grid();
+		
+		
+	if( jQuery( "#tmp_multiplica"      ) ){ jQuery( "#tmp_multiplica"  ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#tmp_multiplica_mod"  ) ){ jQuery( "#tmp_multiplica_mod"  ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#forma_pago_id"   ) ){ jQuery( "#forma_pago_id"   ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#buscar_item"     ) ){ jQuery( "#buscar_item"     ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#agregar_item"    ) ){ jQuery( "#agregar_item"    ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#modificar_item"  ) ){ jQuery( "#modificar_item"  ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#borrar_item"     ) ){ jQuery( "#borrar_item"     ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+	
+	jQuery("#forma_pago_id").val("EF");
+	jQuery("#tmp_multiplica").val("1");
+	jQuery("#tmp_multiplica_mod").val("1");
+	
+	
+	jQuery("#cobradores_id").val("<?php echo $cobradores_id; ?>");
+	jQuery("#forma_pago_id").val("<?php echo $forma_pago_id; ?>");
+
+/*---------------------------------------------Guardar Egresos-------------------------------------------------------------------------*/
+
+jQuery("#guardar").click(function(){
+	guardar_egreso();
+	
+});
+
+function guardar_egreso(){
+		
+	var srv = JSON.stringify(detalles);
+		//	alert(jQuery("#forma_pago_id").val());
+		var datos = jQuery("#egresos").serialize();
+			datos += "&forma_pago_id="+jQuery("#forma_pago_id").val();
+			datos += "&detalles="+srv;
+		jQuery( "#progressbar" ).progressbar({ value: 50 });	
+		
+		var jqXHR = jQuery.ajax({
+			type: "POST",
+			url: "<?php echo core::getInstancePath(); ?>egresos/add",
+			data: datos,
+
+			success: function(data) {
+				
+				jQuery( '#mensajes' ).html("");
+				jQuery( "#progressbar" ).progressbar({ value: 90 });
+				jQuery( '#mensajes' ).html(data);
+				
+			},
+			error: function(data) {
+				jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+				jQuery( "#progressbar" ).progressbar({ value: 0 });
+				jQuery('#dialogo_mensajes').dialog("open");
+			}
+		});
+		
+		 jqXHR.done(function(data){
+			jQuery( "#progressbar" ).progressbar({ value: 0 });
+		});
+	
+	}
+
+
+/*------------------------------------------Agregar Item--------------------------------------------------------*/
+
+
+	
+jQuery("#dialogo_agregar_item").dialog(
+	{ 
+		autoOpen:false
+		, width:700 
+		, heigth:500 
+		,modal: true
+		,buttons:[
+			{
+				text:  "Agregar"
+				,click: function(){
+					
+					/**/
+					
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/agregar_item/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									id:            jQuery("#tmp_id").val(),
+									cxc_id:        "",
+									factura:       "",
+									concepto:      jQuery("#tmp_concepto").val(),
+									valor:         jQuery("#tmp_valor").val(),
+									multiplica:    jQuery("#tmp_multiplica").val(),
+								},
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+
+					 jqXHR.done(function(data){
+						agregar_item(data);
+					});
+					
+					/**/
+						jQuery(this).dialog("close"); 
+						
+					}	
+			}
+		]
+	});
+//var srv = JSON.stringify(detalle_servicios)
+
+
+
+jQuery("#dialogo_modificar_item").dialog(
+	{ 
+		autoOpen:false
+		, width:700 
+		, heigth:500 
+		,modal: true
+		,buttons:[
+			{
+				text:  "Agregar"
+				,click: function(){
+					
+					/**/
+					var mod_id =         jQuery("#tmp_id_mod").val();
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/agregar_item/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									id:            jQuery("#tmp_id_mod").val(),
+									cxc_id:        "",
+									factura:       "",
+									concepto:      jQuery("#tmp_concepto_mod").val(),
+									valor:         jQuery("#tmp_valor_mod").val(),
+									multiplica:    jQuery("#tmp_multiplica_mod").val(),
+								},
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+
+					 jqXHR.done(function(data){
+						modificar_item(data,mod_id);
+					});
+					
+					/**/
+						jQuery(this).dialog("close"); 
+						
+					}	
+			}
+		]
+	});
+//var srv = JSON.stringify(detalle_servicios)
+
+/*
+* Cuadro de Dialogo Agregar Item
+*/
+jQuery("#agregar_item").click(function(){
+	 jQuery("#tmp_id").val("");
+	 jQuery("#tmp_concepto").val("");
+	 jQuery("#tmp_valor").val("");
+	 jQuery("#tmp_multiplica").val("1");
+	jQuery("#dialogo_agregar_item").dialog("open");
+});
+
+
+/*
+*Modificar Item
+*/
+
+
+//cuadro de dialogo de agregar item...	 
+
+jQuery("#modificar_item").click(function(){
+	
+	 jQuery("#tmp_id_mod").val("");
+	 jQuery("#tmp_concepto_mod").val("");
+	 jQuery("#tmp_valor_mod").val("");
+	 jQuery("#tmp_multiplica_mod").val("1");
+
+
+		toMod = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
+	if(toMod!=null){
+		var sw = 0;
+
+		for(i=0;i<detalles.length;i++){
+
+			if(detalles[i].id==toMod){
+
+				//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+
+				if( detalles[i].anulado == "SI" ){
+
+					alert("Elemento Anulado no se Puede Modificar");
+
+					sw=1;
+
+				}else{
+					//alert("liena guardada en la base de datos anular");
+					jQuery("#tmp_id_mod").val(detalles[i].id);
+					jQuery("#tmp_concepto_mod").val(detalles[i].concepto);
+					jQuery("#tmp_valor_mod").val(detalles[i].valor);
+					jQuery("#tmp_multiplica_mod").val(detalles[i].multiplica);
+					
+					sw=0;
+
+				}
+
+			}
+
+		}
+
+		
+
+		if(sw==0){
+
+			jQuery("#dialogo_modificar_item").dialog("open");
+
+		}
+	}else{
+			alert("FAvor escoja Una linea para Modificar");
+		}
+
+	//reload_grid();
+
+});
+
+		
+//cuadro de dialogo de agregar item...	 
+
+jQuery("#borrar_item").click(function(){
+	//jQuery("#dialogo_agregar_item").dialog("open");
+
+if(confirm("Realmente Desea Borrar o Anular el Registro")){
+
+	//var gr = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
+
+	//jQuery("#grid_<?php echo Router::getController(); ?>").find("#"+gr).remove();
+
+	toDelete = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
+
+	var sw = 0;
+
+
+	for(i=0;i<detalles.length;i++){
+
+		if(detalles[i].id==toDelete){
+			//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+			if( detalles[i].id.substring(0,4) == 'temp' ){
+				//alert("linea temporarl borrar");
+				sw=0;
+			}else{
+				//alert("liena guardada en la base de datos anular");
+				sw=1;
+				detalles[i].anulado = "SI";
+			}
+
+		}
+
+	}
+
+	//alert(detalles["id"][toDelete]);
+	//jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('delGridRow',toDelete,myDelOptions);
+	if(sw==0){
+		if( toDelete != null ) {
+			if(jQuery("#grid_<?php echo Router::getController(); ?>").delGridRow(toDelete,delSettings)){
+				detalles = jQuery.grep(
+							detalles, 
+							function (item,index) { 
+							  return item.id !=  toDelete; 
+							});
+			}else{
+					alert("no borro nada");
+				}
+			//getSelectedRow();
+		}else{ alert("Por favor seleccione una fila para borrar!"); }
+
+	}else{
+			//alert("anular");
+			reload_grid();
+	}
+	//reload_grid();
+
+}
+
+});
+
+
+/*------------------------------------------------Configuracion Grilla----------------------------------------------------------*/
+/*grib maestros de clientes*/
+function config_gridCompras(){
+		grid_fndCompras = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid({
+							datatype:"local",
+							data: detalles,
+							height:200,
+							rowNum:25,
+							autowidth:true,
+
+							pager:"#pagegresos",
+							
+							colNames:['Id','Cxp Id','Factura','Concepto','Valor','Anulado','Naturaleza'],
+							colModel:[
+							{   name:'id',          index:'id',          sorttype:'text'                        },
+							{	name:'cxp_id',	    index:'cxp_id',	     sorttype:'integer'	                    },
+							{	name:'factura',		index:'factura',	 sorttype:'text' },
+							{	name:'concepto',    index:'concepto',    sorttype:'text',  width: 400 },
+							{	name:'valor',		index:'valor',       sorttype:'double',	 formatter:"number" },
+							{	name:'anulado',		index:'anulado',     sorttype:'text', },
+							{	name:'multiplica',	index:'multiplica',     sorttype:'integer', }
+							],
+							multiselect:false,
+							caption:"Detalle Egresos",
+							sortname: 'id', 
+							viewrecords: true, 
+							sortorder: "desc",
+							
+							ondblClickRow:function(rowid,iRow,iCol,e){
+								
+								/*var fila = $(this).jqGrid('getRowData',rowid);
+								
+								$("#cod_medico").val(fila['codigo'])
+								$("#desc_medico").val(fila['nombres']+" "+fila['apellidos'])
+								
+								diag_fndMedicos.dialog("close")*/
+							}
+		});
+	}
+
+config_gridCompras();
+
+jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('hideCol',["cxp_id","factura"]);
+
+});
+</script>
+
+

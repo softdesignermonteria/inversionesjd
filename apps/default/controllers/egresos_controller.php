@@ -267,7 +267,7 @@
 											$detalles->id                     = $items->id;
 											//Flash::notice(substr($items->id,0,4));
 											}
-										$detalles->cxp_id                 = $items->cxp_id;
+										$detalles->cxp_id                 = "0";
 										$detalles->egresos_id             = $encabezado->id;
 										$detalles->conceptos_id           = 0;
 										$detalles->concepto               = $items->concepto;
@@ -397,10 +397,27 @@
 		
 		
 		
-		public function showAction($id){
+		public function showAction($id=''){
 		
-			 $this->setParamToView("encabezado",$this->Egresos->findFirst("id = '$id' "));
-			 $this->setParamToView("idt",$id);								
+			 //$this->setParamToView("encabezado",$this->Egresos->findFirst("id = '$id' "));
+			 //$this->setParamToView("idt",$id);	
+			$eg = new Egresos();
+			$emp = new Empresa();
+			$eg  = $eg->findFirst("  id = '$id' "); 
+			$emp = $emp->findFirst(" id = '$eg->empresa_id'  ");
+			Tag::displayTo("fecha",$eg->fecha);
+			Tag::displayTo("hora",$eg->hora);
+			Tag::displayTo("tipo_documento_id",$eg->tipo_documento_id);
+			Tag::displayTo("prefijo",$eg->prefijo);
+			Tag::displayTo("consecutivo",$eg->consecutivo);
+			Tag::displayTo("nombre_empresa",$emp->nombre_empresa);
+			Tag::displayTo("empresa_id",$emp->id);
+			
+			Tag::displayTo("cobradores_id",$eg->cobradores_id);
+			Tag::displayTo("forma_pago_id",$eg->forma_pago_id);
+
+			 $this->setParamToView("cobradores_id",$eg->cobradores_id);		
+			 $this->setParamToView("forma_pago_id",$eg->forma_pago_id);											
 			 $this->setParamToView("detalles",$this->DetalleEgresos->find("egresos_id = '$id' and anulado = 0"));				
  			
 		}
@@ -577,7 +594,7 @@
 											$detalles->id                     = $items->id;
 											//Flash::notice(substr($items->id,0,4));
 											}
-										$detalles->cxp_id                 = $items->cxp_id;
+										$detalles->cxp_id                 = "0";
 										$detalles->egresos_id             = $encabezado->id;
 										$detalles->conceptos_id           = 0;
 										$detalles->concepto               = $items->concepto;
@@ -653,7 +670,7 @@
 					$transaction->commit();
 					Flash::success("EGRESO GUARDADO SATISFACTORIAMENTE");	
 					echo "<script>alert('EGRESO GUARDADO SATISFACTORIAMENTE');";
-					echo "redireccionar_action('egresos/show/id=$encabezado');</script>";
+					echo "redireccionar_action('egresos/show/$encabezado->id');</script>";
 					}catch(TransactionFailed $e){		
 						Flash::error($e->getMessage());
 						//cierre cacth try
