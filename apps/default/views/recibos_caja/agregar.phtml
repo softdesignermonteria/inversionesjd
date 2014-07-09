@@ -815,7 +815,7 @@ jQuery("#modificar_item").click(function(){
 	 jQuery("#tmp_vencimiento_mod").val("");
 
 		toMod = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
-
+	if( toMod != null ) {
 		var sw = 0;
 
 		for(i=0;i<detalles.length;i++){
@@ -846,14 +846,14 @@ jQuery("#modificar_item").click(function(){
 
 		}
 
-		
-
 		if(sw==0){
 
 			jQuery("#dialogo_modificar_item").dialog("open");
 
 		}
-
+	}else{
+				alert("Escoja una linea a Modificar");
+		}
 	//reload_grid();
 
 });

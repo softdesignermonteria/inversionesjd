@@ -1,5 +1,5 @@
 <form id="egresos" name="egresos">
-<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+<table width="80%" border="0" align="center" cellpadding="2" cellspacing="4">
   <thead >
 	<tr>
     	<th colspan="2" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left"><?php echo $tipo_documento; echo " - "; echo $tipo_documento_nombre;  ?></th>
@@ -21,7 +21,7 @@
    <tr>
     <td align="right">COBRADORES:</td>
     <td align="left">
-	<?php echo Tag::textFieldExt("cobradores","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>         </tr>
+	<?php echo Tag::textFieldExt("cobradores","size: 8"); ?>         </tr>
   <!--<tr>
      <td align="right" valign="top">BANCO</td>
      <td><?php //echo Tag::textFieldExt("bancos","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?></td>
@@ -47,6 +47,7 @@
     	<option value="<?php echo $fp->id; ?>"><?php echo $fp->forma_pago; ?></option>
      <?php endforeach; ?>   
      </select>
+     <script>jQuery("#forma_pago_id").val("EF");</script>
     </td>
     </tr>
   <tr>
@@ -55,7 +56,7 @@
     </tr>
 </table>
 
-<table id="grid_egresos"></table>
+<table id="grid_<?php echo Router::getController(); ?>"></table>
 <div id="pagegresos"></div>
   
 
@@ -67,7 +68,7 @@
 
  <br />
 
-<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+<table width="80%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
   <tr>
     <td width="50%">&nbsp;</td>
     <th align="right">CANTIDAD TOTAL </th>
@@ -86,18 +87,21 @@
 
 </form>
 
-<div title="Agergar Producto a la Compra" id="dialogo_agregar_item">
+<div title="Agergar Detalle al Egreso" id="dialogo_agregar_item">
 	
  <table width="90%" cellpadding="2" cellspacing="2" align="center">
-        
         <tr>
+       	    <td>Id</td>
+            <td colspan="2"><input type="text"  id="tmp_id"  name="tmp_id" size="40" readonly="readonly"/></td>
+        </tr>
+        <!--<tr>
    	       <td>Compra Mercancia</td>
             <td>
             	<input type="hidden" readonly="readonly" size="2" id="tmp_idtemp" name="tmp_idtemp" />
                 <input type="text" readonly="readonly" size="2" id="tmp_cxp_id" name="tmp_cxp_id" />
             </td>
             <td><input type="text"  id="tmp_factura" name="tmp_factura"/> <button id="buscar_cxp" type="button">Buscar</button></td>
-        </tr>
+        </tr>-->
         <tr>
        	    <td>Concepto</td>
             <td colspan="2"><input type="text"  id="tmp_concepto"  name="tmp_concepto" size="40"/></td>
@@ -120,13 +124,158 @@
 </div>
 
 
+<div title="Modificar Detalle al Egreso" id="dialogo_modificar_item">
+	
+ <table width="90%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+       	    <td>Id</td>
+            <td colspan="2"><input type="text"  id="tmp_id_mod"  name="tmp_id_mod" size="40" readonly="readonly" /></td>
+        </tr>
+        <!--<tr>
+   	       <td>Compra Mercancia</td>
+            <td>
+            	<input type="hidden" readonly="readonly" size="2" id="tmp_idtemp" name="tmp_idtemp" />
+                <input type="text" readonly="readonly" size="2" id="tmp_cxp_id" name="tmp_cxp_id" />
+            </td>
+            <td><input type="text"  id="tmp_factura" name="tmp_factura"/> <button id="buscar_cxp" type="button">Buscar</button></td>
+        </tr>-->
+        <tr>
+       	    <td>Concepto</td>
+            <td colspan="2"><input type="text"  id="tmp_concepto_mod"  name="tmp_concepto_mod" size="40"/></td>
+        </tr>
+        <tr>
+   	      <td>Valor</td>
+           <td colspan="2"><input type="text"  id="tmp_valor_mod" name="tmp_valor_mod" value="0" size="10" /></td>
+        </tr>
+        <tr>
+       	    <td>Suma/Resta</td>
+            <td colspan="2">
+            	<select id="tmp_multiplica_mod">
+                	<option value="1">SUMA</option>
+                    <option value="-1">RESTA</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    
+</div>
+
+
 <script type="text/javascript">
 
 
 
+var detalles = [];
+
+/*
+* Funcion para agregar al vector Detalles[] una posicion
+* 
+**/
+function agregar_item(data){
+
+	var existe = false;   
+	/* for(i=0;i<detalles.length;i++) {  
+
+		if (detalles[i]["detalle_cxc_id"] == data["detalle_cxc_id"]) {  
+
+	  	 alert("Ojo no se Puede bajar La misma cuota 2 Veces");  
+
+	  	 existe = true;  
+
+		 }   
+
+	}  */
+
+	if (!existe) {  
+		//value = parseFloat(jQuery.trim(jQuery("#total").val()));
+		detalles.push(
+			{
+				 id:            data["id"]
+				,cxp_id:        data["cxp_id"]
+				,factura:       data["factura"]
+				,concepto:      data["concepto"]
+				,valor:         data["valor"]
+				,anulado:       "NO"
+				,multiplica:    data["multiplica"]
+				
+			}
+		);
+		//jQuery("#detalles_items").html(JSON.stringify(detalles));
+		reload_grid();
+	
+	}  
+
+}
+
+/*
+* Recarga la grilla
+*/
+function reload_grid(){
+		jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('setGridParam',
+			{ 	datatype: 'local',
+				data:detalles
+			}).trigger("reloadGrid");
+			totalizar();
+}
+
+
+//agregar un item al vector json de items
+
+function modificar_item(data,mod_id){
+	
+	for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==mod_id){
+				if(detalles[i].anulado=='NO'){
+					 
+					 detalles[i].id        =    data["id"]
+					 detalles[i].cxp_id    =    data["cxp_id"]
+					 detalles[i].factura   =    data["factura"]
+					 detalles[i].concepto  =    data["concepto"]
+					 detalles[i].valor     =    data["valor"]
+					 detalles[i].anulado   =    data["anulado"]
+					 detalles[i].multiplica=    data["multiplica"]
+				
+					//detalles[i].id                = data["id"];
+					//detalles[i].detalle_cxc_id    = data["detalle_cxc_id"];
+					//detalles[i].codigo            = data["codigo"];
+					//detalles[i].numero_credito    = data["numero_credito"];
+					//detalles[i].descripcion       = data["descripcion"];
+					//detalles[i].valor             = data["valor"];
+					//detalles[i].vencimiento       = data["vencimiento"];
+					//detalles[i].anulado           = data["anulado"];
+				}else{
+					jQuery("#dialogo_mensajes").html("");
+					jQuery("#dialogo_mensajes").html("Ojo No se Puede Modificar por que ya esta anulado");
+					jQuery("#dialogo_mensajes").dialog("open");
+				}
+			
+			}
+
+	}
+
+	reload_grid();
+	
+}
+
+
+/*
+* Funcion Totalizar Egreso
+*/
+function totalizar(){
+	var total = 0;
+	for(i=0;i<detalles.length;i++) {  
+		if(detalles[i].anulado=='NO'){
+			total += parseFloat(detalles[i].valor)*parseFloat(detalles[i].multiplica);	
+		}
+	}
+	jQuery("#total").val(total);
+}
+
+
 jQuery(document).ready(function(){
 	
-	if( jQuery( "#tmp_multiplica"  ) ){ jQuery( "#tmp_multiplica"  ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#tmp_multiplica"      ) ){ jQuery( "#tmp_multiplica"  ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
+	if( jQuery( "#tmp_multiplica_mod"  ) ){ jQuery( "#tmp_multiplica_mod"  ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
 	if( jQuery( "#forma_pago_id"   ) ){ jQuery( "#forma_pago_id"   ).chosen({ disable_search_threshold: 5, width: "250px", Height: "150px" });   }
 	if( jQuery( "#buscar_item"     ) ){ jQuery( "#buscar_item"     ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
 	if( jQuery( "#agregar_item"    ) ){ jQuery( "#agregar_item"    ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
@@ -136,7 +285,7 @@ jQuery(document).ready(function(){
 	jQuery("#forma_pago_id").val("EF");
 	jQuery("#tmp_multiplica").val("1");
 	
-var detalles = [];
+
 
 /*---------------------------------------------Guardar Egresos-------------------------------------------------------------------------*/
 
@@ -150,8 +299,10 @@ function guardar_egreso(){
 	var srv = JSON.stringify(detalles);
 		//	alert(jQuery("#forma_pago_id").val());
 		var datos = jQuery("#egresos").serialize();
+			datos += "&forma_pago_id="+jQuery("#forma_pago_id").val();
 			datos += "&detalle="+srv;
 		jQuery( "#progressbar" ).progressbar({ value: 50 });	
+		
 		var jqXHR = jQuery.ajax({
 			type: "POST",
 			url: "<?php echo core::getInstancePath(); ?>egresos/add",
@@ -186,75 +337,251 @@ jQuery("#dialogo_agregar_item").dialog(
 	{ 
 		autoOpen:false
 		, width:700 
-		, heigth:400 
+		, heigth:500 
 		,modal: true
 		,buttons:[
 			{
-				text:  "Escoger"
+				text:  "Agregar"
 				,click: function(){
-						//agregar_item(data);
-						
-						if(jQuery("#tmp_multiplica").val()==1){ suma = "SUMA"; }else{ suma="RESTA"; }
-						detalles.push(
-							{
-								 id:            jQuery("#tmp_idtemp").val()
-								,cxp_id:        jQuery("#tmp_cxp_id").val()
-								,factura:       jQuery("#tmp_factura").val()
-								,concepto:      jQuery("#tmp_concepto").val()
-								,valor:         jQuery("#tmp_valor").val()
-								,anulado:       "NO"
-								,multiplica:    suma
-								
-							}
-						);
-						reload_grid();
-						
+					
+					/**/
+					
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/agregar_item/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									id:            jQuery("#tmp_id").val(),
+									cxc_id:        "",
+									factura:       "",
+									concepto:      jQuery("#tmp_concepto").val(),
+									valor:         jQuery("#tmp_valor").val(),
+									multiplica:    jQuery("#tmp_multiplica").val(),
+								},
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+
+					 jqXHR.done(function(data){
+						agregar_item(data);
+					});
+					
+					/**/
 						jQuery(this).dialog("close"); 
+						
 					}	
 			}
 		]
 	});
 //var srv = JSON.stringify(detalle_servicios)
 
+
+
+jQuery("#dialogo_modificar_item").dialog(
+	{ 
+		autoOpen:false
+		, width:700 
+		, heigth:500 
+		,modal: true
+		,buttons:[
+			{
+				text:  "Agregar"
+				,click: function(){
+					
+					/**/
+					var mod_id =         jQuery("#tmp_id_mod").val();
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/agregar_item/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									id:            jQuery("#tmp_id_mod").val(),
+									cxc_id:        "",
+									factura:       "",
+									concepto:      jQuery("#tmp_concepto_mod").val(),
+									valor:         jQuery("#tmp_valor_mod").val(),
+									multiplica:    jQuery("#tmp_multiplica_mod").val(),
+								},
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+
+					 jqXHR.done(function(data){
+						modificar_item(data,mod_id);
+					});
+					
+					/**/
+						jQuery(this).dialog("close"); 
+						
+					}	
+			}
+		]
+	});
+//var srv = JSON.stringify(detalle_servicios)
+
+/*
+* Cuadro de Dialogo Agregar Item
+*/
 jQuery("#agregar_item").click(function(){
+	 jQuery("#tmp_id").val("");
+	 jQuery("#tmp_concepto").val("");
+	 jQuery("#tmp_valor").val("");
+	 jQuery("#tmp_multiplica").val("1");
 	jQuery("#dialogo_agregar_item").dialog("open");
 });
 
 
+/*
+*Modificar Item
+*/
+
+
+//cuadro de dialogo de agregar item...	 
+
+jQuery("#modificar_item").click(function(){
+	
+	 jQuery("#tmp_id_mod").val("");
+	 jQuery("#tmp_concepto_mod").val("");
+	 jQuery("#tmp_valor_mod").val("");
+	 jQuery("#tmp_multiplica_mod").val("1");
+
+
+		toMod = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
+	if(toMod!=null){
+		var sw = 0;
+
+		for(i=0;i<detalles.length;i++){
+
+			if(detalles[i].id==toMod){
+
+				//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+
+				if( detalles[i].anulado == "SI" ){
+
+					alert("Elemento Anulado no se Puede Modificar");
+
+					sw=1;
+
+				}else{
+					//alert("liena guardada en la base de datos anular");
+					jQuery("#tmp_id_mod").val(detalles[i].id);
+					jQuery("#tmp_concepto_mod").val(detalles[i].concepto);
+					jQuery("#tmp_valor_mod").val(detalles[i].valor);
+					jQuery("#tmp_multiplica_mod").val(detalles[i].multiplica);
+					
+					sw=0;
+
+				}
+
+			}
+
+		}
+
 		
 
-//detalles.push({id:1,referencia:123,nombre:"prueba",costo:10000,tarifaiva:16,iva:16000,descuento:20000,porc_desc:20,total:80000});
-function reload_grid(){
-		jQuery("#grid_egresos").jqGrid('setGridParam',
-			{ 	datatype: 'local',
-				data:detalles
-			}).trigger("reloadGrid");
+		if(sw==0){
+
+			jQuery("#dialogo_modificar_item").dialog("open");
+
+		}
+	}else{
+			alert("FAvor escoja Una linea para Modificar");
+		}
+
+	//reload_grid();
+
+});
+
+		
+//cuadro de dialogo de agregar item...	 
+
+jQuery("#borrar_item").click(function(){
+	//jQuery("#dialogo_agregar_item").dialog("open");
+
+if(confirm("Realmente Desea Borrar o Anular el Registro")){
+
+	//var gr = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
+
+	//jQuery("#grid_<?php echo Router::getController(); ?>").find("#"+gr).remove();
+
+	toDelete = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('getGridParam','selrow');
+
+	var sw = 0;
+
+
+	for(i=0;i<detalles.length;i++){
+
+		if(detalles[i].id==toDelete){
+			//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+			if( detalles[i].id.substring(0,4) == 'temp' ){
+				//alert("linea temporarl borrar");
+				sw=0;
+			}else{
+				//alert("liena guardada en la base de datos anular");
+				sw=1;
+				detalles[i].anulado = "SI";
+			}
+
+		}
+
+	}
+
+	//alert(detalles["id"][toDelete]);
+	//jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('delGridRow',toDelete,myDelOptions);
+	if(sw==0){
+		if( toDelete != null ) {
+			if(jQuery("#grid_<?php echo Router::getController(); ?>").delGridRow(toDelete,delSettings)){
+				detalles = jQuery.grep(
+							detalles, 
+							function (item,index) { 
+							  return item.id !=  toDelete; 
+							});
+			}else{
+					alert("no borro nada");
+				}
+			//getSelectedRow();
+		}else{ alert("Por favor seleccione una fila para borrar!"); }
+
+	}else{
+			//alert("anular");
+			reload_grid();
+	}
+	//reload_grid();
+
 }
 
-
-
+});
 
 
 /*------------------------------------------------Configuracion Grilla----------------------------------------------------------*/
 /*grib maestros de clientes*/
 function config_gridCompras(){
-		grid_fndCompras = jQuery("#grid_egresos").jqGrid({
+		grid_fndCompras = jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid({
 							datatype:"local",
 							data: detalles,
 							height:200,
 							rowNum:25,
 							autowidth:true,
+
 							pager:"#pagegresos",
 							
 							colNames:['Id','Cxp Id','Factura','Concepto','Valor','Anulado','Naturaleza'],
 							colModel:[
 							{   name:'id',          index:'id',          sorttype:'text'                        },
-							{	name:'cxp_id',	    index:'cxp_id',	 sorttype:'integer'	                    },
+							{	name:'cxp_id',	    index:'cxp_id',	     sorttype:'integer'	                    },
 							{	name:'factura',		index:'factura',	 sorttype:'text' },
-							{	name:'concepto',    index:'concepto',    sorttype:'text',  width: 300 },
+							{	name:'concepto',    index:'concepto',    sorttype:'text',  width: 400 },
 							{	name:'valor',		index:'valor',       sorttype:'double',	 formatter:"number" },
 							{	name:'anulado',		index:'anulado',     sorttype:'text', },
-							{	name:'multiplica',	index:'multiplica',     sorttype:'text', }
+							{	name:'multiplica',	index:'multiplica',     sorttype:'integer', }
 							],
 							multiselect:false,
 							caption:"Detalle Egresos",
@@ -276,6 +603,7 @@ function config_gridCompras(){
 
 config_gridCompras();
 
+jQuery("#grid_<?php echo Router::getController(); ?>").jqGrid('hideCol',["cxp_id","factura"]);
 
 });
 </script>
