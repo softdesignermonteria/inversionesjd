@@ -1,0 +1,46 @@
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<h1>MODIFICAR <?php echo  strtoupper( str_replace("_"," ",Router::getController()) ); ?></h1>
+
+<table width="100%">
+
+      <tr>
+    	  <th height="25" colspan="4">FORMULARIO PARA MODIFICAR <?php echo  strtoupper( str_replace("_"," ",Router::getController()) ); ?></th>
+   	  </tr>
+    	<tr>
+    	  
+    	  <th width="30%" align="right">id:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("id","size: 10","maxlength: 50","readOnly: readOnly", "background: #ccc"); ?></td>
+    	  
+   	  </tr>
+      <tr>
+    	  
+    	  <th width="30%" align="right">Cobrador:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textFieldExt("cobradores","size: 8"); ?></td>
+    	  
+   	  </tr>
+        <tr>
+    	  <th width="30%" align="right" >Fecha:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("fecha","size: 30","placeholder: año/mes/dia"); ?></td>
+   	  </tr>
+       <tr>
+    	  <th width="30%" align="right" >valor:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("valor","size: 30","placeholder: Valor Entregado"); ?></td>
+   	  </tr>
+      <tr>
+    	  <td  colspan="4" align="center"><button id="guardar" name="guardar" >Guardar</button></td>
+   	  </tr>
+  </table>
+<?php echo Tag::endForm(); ?>
+<div id="mensajes"></div>
+<?php echo view::getContent(); ?>
+
+<script>
+/*campos requeridos*/
+jQuery(document).ready(function(e) {
+	
+ jQuery("#cobradores_id").val("<?php echo $cobradores_id; ?>");
+});
+
+
+</script>

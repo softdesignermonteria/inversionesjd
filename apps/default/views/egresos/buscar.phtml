@@ -1,40 +1,114 @@
-<?php echo Tag::formRemote("egresos/detalle_buscar", "update: mensajes", "id: remisiones","name: remisiones"); ?>
-<br />
-<table width="100%" border="0" cellpadding="0" id="r1" class="ui-corner-all">
-<thead>
-  <tr>
-    <th colspan="4" align="center" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">LISTADO DE EGRESOS</th>
-  </tr>
-</thead>  
-<tbody>
-  <tr>
-    <td align="right">NOMBRE PROVEEDOR</td>
-    <td colspan="3">
-		<?php echo Tag::textField("proveedores_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
-		<?php echo Tag::textField("nombre_proveedores","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
-    	<button id="buscar_proveedor" type="button">Buscar</button>
-    </td>
-  </tr>
-  <tr>
-    <td width="15%" align="right"><div align="right">DESDE</div></td>
-    <td width="10%"><input type="text" id="finicial" name="finicial" /></td>
-    <td width="19%"><div align="right">HASTA</div></td>
-    <td width="10%"><input type="text" id="ffinal" name="ffinal" /></td>
-  </tr>
-  <tr>
-    <td colspan="4" align="center"><button type="submit" id="enviar" name="enviar">Enviar Consulta</button></td>
-  </tr>
- </tbody> 
-</table>
-<div id="mensajes"></div>
-
-<?php echo Tag::endForm(); ?>
-
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<div id="div_modal_<?php echo Router::getController(); ?>">
+  <table id="filtros" width="100%" class="ui-corner-all ui-content">
+    <thead>
+        <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+            <th colspan="2">Filtros</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th align="right">Identificacion Cobrador</th>
+          <td align="left"><?php echo Tag::textFieldExt("cobradores","size: 8"); ?>      </td>
+      </tr>
+        <tr>
+            <th align="right">Numero Recibo</th>
+          <td align="left">
+          <input type="number" id="numero" name="numero" size="10"  />
+          <strong>Valor</strong>
+          <input type="text" id="valor" name="valor" size="10" />
+          <strong>Desde</strong>
+          <input type="text" id="desde" name="desde" size="10"  />
+          <strong>Hasta</strong>
+          <input type="text" id="hasta" name="hasta" size="10" />
+          </td>
+      </tr>
+         <tr>
+            <th colspan="2" align="center"><button type="button" id="buscar" name="buscar">Filtrar</button></th>
+      </tr>
+    </tbody>
+    </table>
+    <table id="tabla<?php echo Router::getController(); ?>"></table>
+    <div id="pager<?php echo Router::getController(); ?>"></div>
+</div>
 <script>
 jQuery(document).ready(function(){
-
-	jQuery("#progressbar").attr('style','display:none;');
-	jQuery("#progressbarWrapper").attr('style','display:none;');
-
+			
+			jQuery("#buscar").click(function() {
+				//alert("entro");
+				jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+					postData:{ 
+								nit:       jQuery("#nit").val(), 
+								nombre:    jQuery("#nombre").val(), 
+								numero:    jQuery("#numero").val(), 
+								valor:     jQuery("#valor").val(), 
+								desde:     jQuery("#desde").val(), 
+								hasta:     jQuery("#hasta").val(), 
+								nit:       jQuery("#nit").val()
+							 } 
+				}).trigger('reloadGrid');
+			});
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Identificacion','Nombre Completo','Fecha','Numero Egreso','Valor'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:200},
+				{ name:'nit',index:'nit', width:200}, 
+				{ name:'nombre_completo',index:'apellido1', width:500},
+				{ name:'fecha',index:'fecha', width:200}, 
+				{ name:'consecutivo',index:'consecutivo', width:200}, 
+				{ name:'total',index:'total', width:200, align:"right", formatter: 'number' }
+			], 
+			autoWidth:true,
+			width: jQuery('#content').width()-25,
+			height: 300,
+			rowNum:25, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE EGRESOS",
+			footerrow : true,
+			userDataOnFooter : true, 
+			
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					/*if( jQuery("#nit")    ){ jQuery("#nit").val(fila['nit']); }
+					if( jQuery("#nombre1") ){ jQuery("#nombre1").val(fila['nombre1']); } 
+					if( jQuery("#nombre2") ){ jQuery("#nombre2").val(fila['nombre2']); } 
+					if( jQuery("#apellido1") ){ jQuery("#apellido1").val(fila['apellido1']); } 
+					if( jQuery("#apellido2") ){ jQuery("#apellido2").val(fila['apellido2']); } */
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/"+fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+					
+       		 }
+		}); 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+	jQuery(window).bind('resize', function() {
+			jQuery("#tabla<?php echo Router::getController(); ?>").setGridWidth(jQuery('#content').width()-25, true);
+	});
 });
 </script>

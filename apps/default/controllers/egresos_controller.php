@@ -183,7 +183,7 @@
 								 $encabezado->fecha               = $_REQUEST["fecha"];
 								 $encabezado->hora                =  $_REQUEST["hora"];
 								 $encabezado->hora_act            =  date("H:m:s");
-								 $encabezado->anulado             = $_REQUEST["anulado"];
+								 $encabezado->anulado             = 0;
 								
 								if($encabezado->save()==false){
 									$msg_error="";
@@ -430,43 +430,36 @@
 		}
 		
 		
-		public function detalle_buscarAction(){
-				
+		public function find_detalle_buscarAction(){
 				$this->setResponse('ajax');
-				
-				if( isset( $_REQUEST['razon_social']   )==true ) { if( $_REQUEST['razon_social'] != '' ) { $sql .= " and {#Proveedores}.razon_social like '%".str_replace(' ',"%",$_REQUEST['razon_social'])."%'"; } }
-				//if( isset( $_REQUEST['direccion']      )==true ) { if( $_REQUEST['direccion'] != ''      ) { $sql .= " and {#Direccion}.direccion like '%".str_replace(' ',"%",$_REQUEST['direccion'])."%'";           } }
-				if( isset( $_REQUEST['finicial']       )==true ) { if( $_REQUEST['finicial'] != ''       ) { $sql .= " and {#Egresos}.fecha >=  '".$_REQUEST['finicial']."'";           } }
-				if( isset( $_REQUEST['ffinal']         )==true ) { if( $_REQUEST['ffinal'] != ''         ) { $sql .= " and {#Egresos}.fecha <=  '".$_REQUEST['ffinal']."'";           } }
-				$empresa_id  = $_REQUEST["empresa_id"];
-			
-				$query = new ActiveRecordJoin(array(
-						"entities" => array("Egresos","Proveedores","Empresa"),
-					 	"fields"=>array(
-										"{#Egresos}.id",
-										"{#Egresos}.prefijo",
-										"{#Egresos}.consecutivo",
-										"{#Egresos}.fecha",
-										"{#Egresos}.proveedores_id",
-										"{#Proveedores}.razon_social",
-										"{#Proveedores}.direccion_casa"
-										),
-						"conditions"=>(" {#Egresos}.empresa_id = '$empresa_id' $sql ")
-				));
-				
-				//$clientes = $this->Clientes->findAllBySql($sql);
-				//Flash::error($query->getSqlQuery());
-				$this->setParamToView('detalles',$query->getResultSet());
-				//$this->setParamToView('query',$query);
-				//$this->setParamToView('query2',"hola");
-				
-				
-				
 		}
 		
 		
-		public function modificarAction(){
-					
+		public function modificarAction($id=''){
+			if($id==''){ $id = $_REQUEST["id"]; }
+				//$this->setParamToView("encabezado",$this->Egresos->findFirst("id = '$id' "));
+			 //$this->setParamToView("idt",$id);	
+			 $eg = new Egresos();
+			 $emp = new Empresa();
+			 $eg  = $eg->findFirst("  id = '$id' "); 
+			 $emp = $emp->findFirst(" id = '$eg->empresa_id'  ");
+			 Tag::displayTo("id",$eg->id);
+			 Tag::displayTo("fecha",$eg->fecha);
+			 Tag::displayTo("hora",$eg->hora);
+			 Tag::displayTo("tipo_documento_id",$eg->tipo_documento_id);
+			 Tag::displayTo("prefijo",$eg->prefijo);
+			 Tag::displayTo("consecutivo",$eg->consecutivo);
+			 Tag::displayTo("nombre_empresa",$emp->nombre_empresa);
+			 Tag::displayTo("empresa_id",$emp->id);
+			 Tag::displayTo("anulado",$eg->anulado);
+			 Tag::displayTo("cheque",$eg->cheque);
+			
+			 Tag::displayTo("cobradores_id",$eg->cobradores_id);
+			 Tag::displayTo("forma_pago_id",$eg->forma_pago_id);
+
+			 $this->setParamToView("cobradores_id",$eg->cobradores_id);		
+			 $this->setParamToView("forma_pago_id",$eg->forma_pago_id);											
+			 $this->setParamToView("detalles",$this->DetalleEgresos->find("egresos_id = '$id' and anulado = 0"));					
         }
 		
 		

@@ -267,6 +267,92 @@
 		}
 		
 		
+		
+		public function caja_cobradorAction(){
+				
+		}
+		
+		public function detalle_caja_cobradorAction(){
+			
+				
+			$this->setResponse('view');
+			
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#CajaCobrador}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#CajaCobrador}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			
+		
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("CajaCobrador"),
+				"fields" => array(
+							"{#CajaCobrador}.id", 
+							"{#CajaCobrador}.cobradores_id", 
+							"{#CajaCobrador}.fecha", 
+							"{#CajaCobrador}.vaca"
+							),
+				"conditions" => " 1=1 and {#CajaCobrador}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_creditos",$query->getResultSet());
+			
+				
+			$condicion1 ="";
+
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#Creditos}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#Creditos}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			
+		
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("Creditos","Clientes","Departamentos","Municipios"),
+				"fields" => array(
+							"{#Creditos}.id", 
+							"{#Creditos}.clientes_id", 
+							"{#Clientes}.nit", 
+							"{#Clientes}.razon_social", 
+							
+							"{#Clientes}.direccion", 
+							"{#Creditos}.prefijo", 
+							"{#Creditos}.fecha", 
+							"{#Creditos}.capital", 
+							"{#Creditos}.cuotas", 
+							"{#Creditos}.valor_cuotas", 
+							"{#Creditos}.total_credito", 
+							"{#Creditos}.consecutivo", 
+							"{#Departamentos}.departamento", 
+							"{#Municipios}.municipio"),
+				"conditions" => " 1=1 and {#Creditos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_creditos",$query->getResultSet());
+			
+			$condicion1 ="";
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#RecibosCaja}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#RecibosCaja}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("RecibosCaja","Clientes" ,"DetalleRecibosCaja"),
+				"groupFields" => array(
+									"{#RecibosCaja}.id",
+									"{#RecibosCaja}.prefijo",
+									"{#RecibosCaja}.consecutivo",
+									"{#RecibosCaja}.fecha",
+									"{#Clientes}.razon_social"
+								   ),
+				"sumatory" => array(
+									"{#DetalleRecibosCaja}.valor",
+									"{#DetalleRecibosCaja}.capital",
+									"{#DetalleRecibosCaja}.intereses"
+									),				
+				"conditions" => " 1=1  and {#RecibosCaja}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1  "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_recibos_caja",$query->getResultSet());
+			
+			
+		}
+		
 		public function historico_clienteAction(){
 				
 		}
