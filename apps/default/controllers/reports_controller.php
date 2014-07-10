@@ -287,7 +287,7 @@
 							"{#CajaCobrador}.id", 
 							"{#CajaCobrador}.cobradores_id", 
 							"{#CajaCobrador}.fecha", 
-							"{#CajaCobrador}.vaca"
+							"{#CajaCobrador}.valor"
 							),
 				"conditions" => " 1=1 and {#CajaCobrador}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
