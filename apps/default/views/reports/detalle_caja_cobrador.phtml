@@ -92,9 +92,9 @@ $a_a=0;
 ?>
 <?php foreach($detalles_caja_cobrador as $detalles): ?>
     <tr>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->nombre; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->id; ?></td>
         <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
-        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);     $rc_a +=$detalles->capital; ?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->valor);     $a_a +=$detalles->valor; ?></td>
         <td align="center" nowrap="nowrap" class="no_mostrar"><?php echo Tag::linkTo("caja_cobrador/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
     </tr>
    
@@ -114,7 +114,7 @@ $a_a=0;
 <table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
-        <th>N&uacute;mero Recibo</th>
+        <th>N&uacute;mero <br />Recibo Caja</th>
         <th>Cliente</th>
         <th>Fecha</th>
         <th>Capital</th>
@@ -155,7 +155,7 @@ $rc_a=0;$rc_a1=0;$rc_a2=0;$rc_a3=0;
 <table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
-        <th>N&uacute;mero Credito</th>
+        <th>N&uacute;mero <br />Credito</th>
         <th>Cliente</th>
         <th>Fecha</th>
         <th>Capital</th>
@@ -193,6 +193,75 @@ $c_a=0;$c_a1=0;$c_a2=0;$c_a3=0;
 </tbody>
 </table>
 
+<br />
+<h4>Relacion de Egresos</h4>
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th>N&uacute;mero <br />Egreso</th>
+        <th>Fecha</th>
+        <th>Descripcion</th>
+        <th>Valor<br />Cuotas</th>
+        <th class="no_mostrar">Opciones</th>
+    </tr>
+</thead>
+<tbody>
+<?php 
+$e_a=0;
+?>
+<?php foreach($detalles_egresos as $detalles): ?>
+    <tr>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->concepto; ?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->total*$detalles->multiplica); $e_a2+=($detalles->total*$detalles->multiplica);?></td>
+      <td align="center" nowrap="nowrap" class="no_mostrar"><?php echo Tag::linkTo("egresos/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
+    </tr>
+   
+<?php endforeach; ?>    
+  <tr>
+      <th colspan="3" align="right" nowrap="nowrap">Totales</th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($e_a);  ?></th>
+      <th align="right" nowrap="nowrap" class="no_mostrar">&nbsp;</th>
+    </tr>
+</tbody>
+</table>
+<br />
+<h4>Resumen</h4>
+<table width="100%" border="1" cellpadding="2" cellspacing="2" class="gridtable" id="filtros">
+<thead>
+    <tr class="ui-jqgrid-titlebar ui-widget-header  ">
+        <th>Documento</th>
+        <th>Valor</th>
+    </tr>
+</thead>
+<tbody>
+
+<?php foreach($detalles_creditos as $detalles): ?>
+    <tr>
+      <td align="left" nowrap="nowrap"><strong>ANTICIPO</strong></td>
+      <td align="right" nowrap="nowrap">$ <?php echo number_format($a_a);  ?></td>
+    </tr>
+    <tr>
+      <td align="left" nowrap="nowrap"><strong>RECIBOS DE CAJA</strong></td>
+      <td align="right" nowrap="nowrap">$ <?php echo number_format($rc_a2);  ?></td>
+    </tr>
+    <tr>
+      <td align="left" nowrap="nowrap"><strong>CREDITOS</strong></td>
+      <td align="right" nowrap="nowrap">$ <?php echo number_format($c_a2*-1);  ?></td>
+    </tr>
+    <tr>
+      <td align="left" nowrap="nowrap"><strong>EGRESOS</strong></td>
+      <td align="right" nowrap="nowrap">$ <?php echo number_format($e_a-1);  ?></td>
+    </tr>
+   
+<?php endforeach; ?>    
+  <tr>
+      <th align="right" nowrap="nowrap">Totales Dinero Efectivo</th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a_a + $rc_a - $c_a - $e_a);  ?></th>
+    </tr>
+</tbody>
+</table>
 
 
 <?php if($_REQUEST["print"]=="pdf"){ 

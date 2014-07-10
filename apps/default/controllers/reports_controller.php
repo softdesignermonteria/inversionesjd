@@ -351,6 +351,28 @@
 			$this->setParamToView("detalles_recibos_caja",$query->getResultSet());
 			
 			
+			$condicion1 ="";
+
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#Egresos}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#Egresos}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			
+		
+			$query = new ActiveRecordJoin(array(
+				"entities" => array("Egresos","DetalleEgresos"),
+				"fields" => array(
+							"{#Egresos}.id", 
+							"{#Egresos}.fecha", 
+							"{#DetalleEgresos}.concepto", 
+							"{#DetalleEgresos}.total", 
+							"{#DetalleEgresos}.multiplica"
+						),
+				"conditions" => " 1=1 and {#Egresos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
+			));
+			
+			//Flash::notice($query->getSqlQuery());
+			$this->setParamToView("detalles_egresos",$query->getResultSet());
+			
+			
 		}
 		
 		public function historico_clienteAction(){
