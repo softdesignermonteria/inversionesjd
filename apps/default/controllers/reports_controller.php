@@ -293,7 +293,7 @@
 			));
 			
 			//Flash::notice($query->getSqlQuery());
-			$this->setParamToView("detalles_creditos",$query->getResultSet());
+			$this->setParamToView("detalles_caja_cobrador",$query->getResultSet());
 			
 				
 			$condicion1 ="";
