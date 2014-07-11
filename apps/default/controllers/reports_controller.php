@@ -362,6 +362,8 @@
 				"fields" => array(
 							"{#Egresos}.id", 
 							"{#Egresos}.fecha", 
+							"{#Egresos}.prefijo", 
+							"{#Egresos}.consecutivo", 
 							"{#DetalleEgresos}.concepto", 
 							"{#DetalleEgresos}.total", 
 							"{#DetalleEgresos}.multiplica"
