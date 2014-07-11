@@ -115,7 +115,7 @@ $a_a=0;
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
         <th>N&uacute;mero <br />Recibo Caja</th>
-        <th>Cliente</th>
+        
         <th>Fecha</th>
         <th>Capital</th>
         <th>Intereses</th>
@@ -130,7 +130,7 @@ $rc_a=0;$rc_a1=0;$rc_a2=0;$rc_a3=0;
 <?php foreach($detalles_recibos_caja as $detalles): ?>
     <tr>
         <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->nombre; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
         <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);     $rc_a +=$detalles->capital; ?></td>
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->intereses);   $rc_a1+=$detalles->intereses;?></td>
@@ -172,7 +172,7 @@ $c_a=0;$c_a1=0;$c_a2=0;$c_a3=0;
 <?php foreach($detalles_creditos as $detalles): ?>
     <tr>
         <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
-        <td align="left" nowrap="nowrap"><?php echo $detalles->nombre; ?></td>
+        <td align="left" nowrap="nowrap"><?php echo $detalles->razon_social; ?></td>
         <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->capital);       $c_a +=$detalles->capital; ?></td>
         <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->valor_cuotas);  $c_a1+=$detalles->valor_cuotas;?></td>
