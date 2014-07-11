@@ -303,7 +303,7 @@
 			
 		
 			$query = new ActiveRecordJoin(array(
-				"entities" => array("Creditos","Clientes","Departamentos","Municipios"),
+				"entities" => array("Creditos","Clientes"),
 				"fields" => array(
 							"{#Creditos}.id", 
 							"{#Creditos}.clientes_id", 
@@ -317,9 +317,7 @@
 							"{#Creditos}.cuotas", 
 							"{#Creditos}.valor_cuotas", 
 							"{#Creditos}.total_credito", 
-							"{#Creditos}.consecutivo", 
-							"{#Departamentos}.departamento", 
-							"{#Municipios}.municipio"),
+							"{#Creditos}.consecutivo"),
 				"conditions" => " 1=1 and {#Creditos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
 			
