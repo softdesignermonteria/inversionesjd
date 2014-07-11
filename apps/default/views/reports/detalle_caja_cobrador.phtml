@@ -115,7 +115,7 @@ $a_a=0;
 <thead>
     <tr class="ui-jqgrid-titlebar ui-widget-header  ">
         <th>N&uacute;mero <br />Recibo Caja</th>
-        
+        <th>Cliente</th>
         <th>Fecha</th>
         <th>Capital</th>
         <th>Intereses</th>
@@ -214,7 +214,7 @@ $e_a=0;
         <td align="left" nowrap="nowrap"><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
         <td align="left" nowrap="nowrap"><?php echo $detalles->fecha; ?></td>
         <td align="left" nowrap="nowrap"><?php echo $detalles->concepto; ?></td>
-        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->total*$detalles->multiplica); $e_a2+=($detalles->total*$detalles->multiplica);?></td>
+        <td align="right" nowrap="nowrap">$ <?php echo number_format($detalles->total*$detalles->multiplica); $e_a+=($detalles->total*$detalles->multiplica);?></td>
       <td align="center" nowrap="nowrap" class="no_mostrar"><?php echo Tag::linkTo("egresos/show/$detalles->id",Tag::image("iconos/Visa.png","border: 0","width: 32px"),"target: _blank"); ?></td>
     </tr>
    
@@ -257,7 +257,7 @@ $e_a=0;
 
   <tr>
       <th align="right" nowrap="nowrap">Totales Dinero Efectivo</th>
-      <th align="right" nowrap="nowrap">$ <?php echo number_format($a_a + $rc_a - $c_a - $e_a);  ?></th>
+      <th align="right" nowrap="nowrap">$ <?php echo number_format($a_a + $rc_a2 - $c_a2 - $e_a);  ?></th>
     </tr>
 </tbody>
 </table>
