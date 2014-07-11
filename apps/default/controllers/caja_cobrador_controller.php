@@ -42,6 +42,19 @@
 
 		}
 		
+			public function showAction($id){
+				$encabezado = new CajaCobrador();
+				$encabezado = $this->CajaCobrador->findFirst(" id = '$id' ");
+				
+				Tag::displayTo("id",$encabezado->id);
+				Tag::displayTo("cobradores_id",$encabezado->cobradores_id);
+				Tag::displayTo("fecha",$encabezado->fecha);
+				Tag::displayTo("valor",$encabezado->valor);
+				
+				$this->setParamToView("cobradores_id",$encabezado->cobradores_id);
+
+		}
+		
 						
 		public function agregarAction(){
 

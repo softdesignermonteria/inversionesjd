@@ -277,8 +277,8 @@
 				
 			$this->setResponse('view');
 			
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#CajaCobrador}.fecha "; }
-			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#CajaCobrador}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 .= " and '".$_REQUEST["desde"]."' >= {#CajaCobrador}.fecha "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 .= " and {#CajaCobrador}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 		
 			$query = new ActiveRecordJoin(array(
@@ -298,8 +298,8 @@
 				
 			$condicion1 ="";
 
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#Creditos}.fecha   "; }
-			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#Creditos}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 .= " and '".$_REQUEST["desde"]."' >= {#Creditos}.fecha   "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 .= " and {#Creditos}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 		
 			$query = new ActiveRecordJoin(array(
@@ -327,8 +327,8 @@
 			$this->setParamToView("detalles_creditos",$query->getResultSet());
 			
 			$condicion1 ="";
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#RecibosCaja}.fecha  "; }
-			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#RecibosCaja}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 .= " and '".$_REQUEST["desde"]."' >= {#RecibosCaja}.fecha  "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 .= " and {#RecibosCaja}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 			$query = new ActiveRecordJoin(array(
 				"entities" => array("RecibosCaja","Clientes" ,"DetalleRecibosCaja"),
@@ -353,8 +353,8 @@
 			
 			$condicion1 ="";
 
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#Egresos}.fecha  "; }
-			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#Egresos}.fecha <= '".$_REQUEST["hasta"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 .= " and '".$_REQUEST["desde"]."' >= {#Egresos}.fecha  "; }
+			if($_REQUEST["hasta"]!=''         ){ $condicion1 .= " and {#Egresos}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 		
 			$query = new ActiveRecordJoin(array(
