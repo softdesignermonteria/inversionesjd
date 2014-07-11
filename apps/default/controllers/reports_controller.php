@@ -277,7 +277,7 @@
 				
 			$this->setResponse('view');
 			
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#CajaCobrador}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#CajaCobrador}.fecha "; }
 			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#CajaCobrador}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 		
@@ -292,13 +292,13 @@
 				"conditions" => " 1=1 and {#CajaCobrador}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
 			
-			//Flash::notice($query->getSqlQuery());
+			Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_caja_cobrador",$query->getResultSet());
 			
 				
 			$condicion1 ="";
 
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#Creditos}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#Creditos}.fecha   "; }
 			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#Creditos}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 		
@@ -323,11 +323,11 @@
 				"conditions" => " 1=1 and {#Creditos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
 			
-			//Flash::notice($query->getSqlQuery());
+			Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_creditos",$query->getResultSet());
 			
 			$condicion1 ="";
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#RecibosCaja}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#RecibosCaja}.fecha  "; }
 			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#RecibosCaja}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 			$query = new ActiveRecordJoin(array(
@@ -347,13 +347,13 @@
 				"conditions" => " 1=1  and {#RecibosCaja}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1  "
 			));
 			
-			//Flash::notice($query->getSqlQuery());
+			Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_recibos_caja",$query->getResultSet());
 			
 			
 			$condicion1 ="";
 
-			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and {#Egresos}.fecha >= '".$_REQUEST["desde"]."' "; }
+			if($_REQUEST["desde"]!=''         ){ $condicion1 = " and '".$_REQUEST["desde"]."' >= {#Egresos}.fecha  "; }
 			if($_REQUEST["hasta"]!=''         ){ $condicion1 = " and {#Egresos}.fecha <= '".$_REQUEST["hasta"]."' "; }
 			
 		
@@ -371,7 +371,7 @@
 				"conditions" => " 1=1 and {#Egresos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
 			
-			//Flash::notice($query->getSqlQuery());
+			Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_egresos",$query->getResultSet());
 			
 			

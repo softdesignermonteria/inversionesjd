@@ -237,8 +237,7 @@ $e_a=0;
 </thead>
 <tbody>
 
-<?php foreach($detalles_creditos as $detalles): ?>
-    <tr>
+   <tr>
       <td align="left" nowrap="nowrap"><strong>ANTICIPO</strong></td>
       <td align="right" nowrap="nowrap">$ <?php echo number_format($a_a);  ?></td>
     </tr>
@@ -248,14 +247,14 @@ $e_a=0;
     </tr>
     <tr>
       <td align="left" nowrap="nowrap"><strong>CREDITOS</strong></td>
-      <td align="right" nowrap="nowrap">$ <?php echo number_format($c_a2*-1);  ?></td>
+      <td align="right" nowrap="nowrap">$ <?php echo number_format($c_a2*(-1));  ?></td>
     </tr>
     <tr>
       <td align="left" nowrap="nowrap"><strong>EGRESOS</strong></td>
-      <td align="right" nowrap="nowrap">$ <?php echo number_format($e_a-1);  ?></td>
+      <td align="right" nowrap="nowrap">$ <?php echo number_format($e_a*(-1));  ?></td>
     </tr>
    
-<?php endforeach; ?>    
+
   <tr>
       <th align="right" nowrap="nowrap">Totales Dinero Efectivo</th>
       <th align="right" nowrap="nowrap">$ <?php echo number_format($a_a + $rc_a - $c_a - $e_a);  ?></th>
