@@ -318,7 +318,7 @@
 							"{#Creditos}.valor_cuotas", 
 							"{#Creditos}.total_credito", 
 							"{#Creditos}.consecutivo"),
-				"conditions" => " 1=1 and {#Creditos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
+				"conditions" => " {#Creditos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
 			
 			Flash::notice($query->getSqlQuery());
