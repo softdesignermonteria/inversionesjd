@@ -323,7 +323,7 @@
 				"conditions" => " 1=1 and {#Creditos}.cobradores_id = '".$_REQUEST["cobradores_id"]."' $condicion1 "
 			));
 			
-			//Flash::notice($query->getSqlQuery());
+			Flash::notice($query->getSqlQuery());
 			$this->setParamToView("detalles_creditos",$query->getResultSet());
 			
 			$condicion1 ="";
