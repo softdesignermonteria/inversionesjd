@@ -626,7 +626,7 @@
 													$capitaltmp = 0;
 													$interestmp = 0;
 													
-													$detallesc = new DetalleCreditos();
+													$detallesc = new DetalleCxc();
 													$detallesc->setTransaction($transaction); 
 													foreach($detallesc->find(" creditos_id = '$creditos->id' and anulado = 0 ") as $items): 			
 															$fecha2 = new Date($items->vencimiento);
