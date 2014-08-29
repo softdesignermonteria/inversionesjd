@@ -14,9 +14,9 @@ foreach($clientes->find($condicion) as $clientes):
 					"nit"=>$clientes->nit,
 					"nombres"=>utf8_encode($clientes->nombre1." ".$clientes->nombre2." ".$clientes->apellido1." ".$clientes->apellido2),
 					"direccion"=>$clientes->direccion,
-					"telefono"=>$clientes->telefono,
+					"telefono"=>$clientes->telefono ? is_null($clientes->telefono) : 0,
 					"celular"=>$clientes->celular,
-					"referencia_id"=>$clientes->referencia_id
+					"referencia_id"=>$clientes->referencia_id  ? is_null($clientes->telefono) : 0
 				); 						
 	$i++;
 endforeach;
