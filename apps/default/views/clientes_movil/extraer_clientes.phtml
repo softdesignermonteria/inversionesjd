@@ -16,7 +16,7 @@ foreach($clientes->find($condicion) as $clientes):
 					"direccion"=>$clientes->direccion,
 					"telefono"=>$clientes->telefono ? is_null($clientes->telefono) : 0,
 					"celular"=>$clientes->celular,
-					"referencia_id"=>$clientes->referencia_id  ? is_null($clientes->telefono) : 0
+					"referencia_id"=>$clientes->referencia_id
 				); 						
 	$i++;
 endforeach;
