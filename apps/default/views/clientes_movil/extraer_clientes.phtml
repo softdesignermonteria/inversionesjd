@@ -4,7 +4,11 @@ header('Expires: 0');
 header('Content-Type: application/json');
 $clientes = new Clientes();
 $i=0;
-foreach($clientes->find() as $clientes):
+$condicion="";
+if(isset($_REQUEST["nit"])){
+		$condicion=" nit = '".$_REQUEST["nit"]."' ";
+	}
+foreach($clientes->find($condicion) as $clientes):
 	$responce[]=array(
 					"id"=>$clientes->id,
 					"nit"=>$clientes->nit,
