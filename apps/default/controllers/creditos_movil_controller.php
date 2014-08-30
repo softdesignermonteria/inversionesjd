@@ -209,7 +209,7 @@
 											 }
 											 
 									 $creditos->cuotas              = $rangos->dias;
-									 $creditos->valor_cuotas        =  round(($total_credito/$rangos->dias));
+									 $creditos->valor_cuotas        = round(($total_credito/$rangos->dias),2);
 									 $creditos->total_credito       = $total_credito;
 									 $creditos->porcentaje          = $emp->porcentaje;
 									 //Flash::error($cons->desde);
@@ -333,9 +333,9 @@
 									
 								
 		
-							if( $total_credito_detalles <> $total_credito ){ 
+							if( round($total_credito_detalles) <> $total_credito ){ 
 								
-								$dif = $total_credito - $_REQUEST["total_credito"];
+								$dif = round($total_credito_detalles) - $total_credito;
 													  $syslogger = new Syslogger();
 													 $syslogger->username          = '';
 													 $syslogger->module            = Router::getModule();
