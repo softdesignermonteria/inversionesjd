@@ -18,7 +18,12 @@
 		public function extraer_carteraAction(){
 			$condicion = "";
 
-		   if($_REQUEST["cobradores_id"]!=''){ $condicion .= "  and creditos.cobradores_id = '".$_REQUEST["cobradores_id"]."'"; }
+		   if(isset($_REQUEST["cobradores_id"])){
+			   	if($_REQUEST["cobradores_id"]!=''){ $condicion .= "  and creditos.cobradores_id = '".$_REQUEST["cobradores_id"]."'"; }
+			}
+		   if(isset($_REQUEST["creditos_id"])){
+			   if($_REQUEST["creditos_id"]!=''  ){ $condicion .= "  and creditos.id = '".$_REQUEST["creditos_id"]."'"; } 
+			 }
 
 			
 			$groupFields = "Group by 
@@ -27,6 +32,7 @@
 							{#Creditos}.clientes_id,
 							{#Clientes}.nit,
 							{#Creditos}.cobradores_id,
+							{#Creditos}.total_credito,
 							{#Cobradores}.nit ,
 							{#DetalleCxc}.vencimiento,
 							{#DetalleCxc}.valor
@@ -40,6 +46,7 @@
 						"{#Creditos}.clientes_id",
 						"{#Clientes}.nit",
 						"{#Creditos}.cobradores_id",
+						"{#Creditos}.total_credito",
 						"{#Cobradores}.nit as nit_cobrador",
 						"{#DetalleCxc}.vencimiento",
 						"sum(detalle_cxc.valor * detalle_cxc.multiplicar) AS valor_cuota",

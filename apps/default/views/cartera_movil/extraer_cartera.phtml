@@ -14,7 +14,8 @@ foreach($detalles as $detalles):
 						"cobradores_id"=>$detalles->clientes_id,
 						"cedula_cobrador"=>$detalles->nit_cobrador,
 						"vencimiento"=>$detalles->vencimiento,
-						"valor"=>($detalles->valor_cuota-$detalles->valor_pagado-$detalles->valor_nota_credito)
+						"valor"=>($detalles->valor_cuota-$detalles->valor_pagado-$detalles->valor_nota_credito),
+						"total_credito"=>$detalles->total_credito
 					); 						
 	$i++;
 endforeach;
