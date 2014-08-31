@@ -56,6 +56,7 @@
 										$cli->apellido2      = trim($clientes->apellido2);
 										$cli->razon_social   = trim($clientes->nombre1 . " " . $clientes->nombre2 . " " . $clientes->apellido1 . " " . $clientes->apellido2);
 										$cli->direccion      = $clientes->direccion;
+										$cli->telefono        = "0";
 										$cli->celular        = $clientes->telefono;
 										$cli->departamentos_id     = 23;
 										$cli->municipios_id        = 108;
