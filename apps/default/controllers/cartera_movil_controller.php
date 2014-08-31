@@ -22,8 +22,12 @@
 			   	if($_REQUEST["cobradores_id"]!=''){ $condicion .= "  and creditos.cobradores_id = '".$_REQUEST["cobradores_id"]."'"; }
 			}
 		   if(isset($_REQUEST["creditos_id"])){
-			   if($_REQUEST["creditos_id"]!=''  ){ $condicion .= "  and creditos.id = '".$_REQUEST["creditos_id"]."'"; } 
+			   if($_REQUEST["creditos_id"]!=''  ){ $condicion .= "  and {#Creditos}.id = '".$_REQUEST["creditos_id"]."'"; } 
 			 }
+			 
+			 if(isset($_REQUEST["clientes_id"])){
+			   if($_REQUEST["clientes_id"]!=''  ){ $condicion .= "  and {#Clientes}.id = '".$_REQUEST["clientes_id"]."'"; } 
+			 } 
 
 			
 			$groupFields = "Group by 
@@ -126,7 +130,7 @@
 											"ifnull((SELECT sum(nc.valor) AS valor FROM detalle_notas_credito nc WHERE nc.detalle_cxc_id = detalle_cxc.id and nc.anulado = 0), 0) AS valor_nota_credito"
 										),*/
 					"conditions" => " {#DetalleCxc}.anulado = 0 
-										and clientes_id = '$encabezado->clientes_id' 
+										and {#Creditos}.clientes_id = '$encabezado->clientes_id' 
 										and date_format({#DetalleCxc}.vencimiento, '%w') = 2 
 										$condicion 
 										$groupFields ",
