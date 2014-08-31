@@ -4,9 +4,9 @@ header('Expires: 0');
 header('Content-Type: application/json');
 $clientes = new Clientes();
 $i=0;
-$condicion=" 1= 1 ";
+$condicion=" 1 = 1 ";
 if(isset($_REQUEST["nit"])){
-		$condicion=" and nit = '".$_REQUEST["nit"]."' ";
+		$condicion .=" and nit = '".$_REQUEST["nit"]."' ";
 	}
 foreach($clientes->find($condicion) as $clientes):
 	$responce[]=array(
