@@ -9,7 +9,7 @@ jQuery(document).ready(function(){
 			ajaxGridOptions : {type:"POST"},
 			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar/?<?php echo $_REQUEST["opcion"]; ?>=<?php echo $_REQUEST["valor"]; ?>', 
 			datatype: "json", 
-			colNames:['Id','Cedula','Nombre Completo','Fecha','Prefijo','Consecutivo','Saldo Credito','Saldo'], 
+			colNames:['Id','Identificación','Nombre Completo','Fecha','Número Crédito','Valor Crédito','Saldo'], 
 			colModel:[ 
 				{ name:'id',index:'id', width:50},
 				{ name:'nit',index:'nit', width:10}, 

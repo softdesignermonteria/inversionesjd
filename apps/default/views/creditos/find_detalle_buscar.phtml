@@ -73,7 +73,7 @@ if ($page > $total_pages) $page=$total_pages;
 	while( $row = $db->fetchArray($result) ) { 
 		 $responce->rows[$i]['id']=$row[id]; 
 		 $nombre_cliente = $row[nombre1]." ".$row[nombre2]." ".$row[apellido1]." ".$row[apellido2];
-		 $responce->rows[$i]['cell']=array($row[id],utf8_encode($row[nit]),$nombre_cliente,$row[fecha],$row[prefijo],$row[consecutivo],$row[total_credito],$row[saldo]); 	
+		 $responce->rows[$i]['cell']=array($row[id],utf8_encode($row[nit]),$nombre_cliente,$row[fecha],$row[prefijo]."-".$row[consecutivo],$row[total_credito],$row[saldo]); 	
 		 $i++; 
 	} 
 	
