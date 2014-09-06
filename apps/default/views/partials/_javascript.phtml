@@ -105,6 +105,51 @@ jQuery(document).ready(function(){
 	
 });
 
+function UploadFileOk(url){
+	jQuery("#archivos").val(url);
+	
+}
+
+
+function uploadFileFunction(){ 
+
+
+	var archivos = document.getElementById("archivosxls"); //Damos el valor del input tipo file
+	var archivo = archivos.files; //Obtenemos el valor del input (los arcchivos) en modo de arreglo
+	/* Creamos el objeto que hara la petición AJAX al servidor, debemos de validar 
+		si existe el objeto “ XMLHttpRequest” ya que en internet explorer viejito no esta, 
+	y si no esta usamos “ActiveXObject” */
+	 if(window.XMLHttpRequest) {  
+		 var Req = new XMLHttpRequest(); 
+	 }else if(window.ActiveXObject) {  
+		 var Req = new ActiveXObject("Microsoft.XMLHTTP");  
+	 } 
+		//El objeto FormData nos permite crear un formulario pasandole clave/valor para poder enviarlo,  \n";
+		//este tipo de objeto ya tiene la propiedad multipart/form-data para poder subir archivos \n";
+	var data = new FormData();
+		//Como no sabemos cuantos archivos subira el usuario, iteramos la variable y al \n";
+		//objeto de FormData con el metodo \"append\" le pasamos calve/valor, usamos el indice \"i\" para \n";
+		//que no se repita, si no lo usamos solo tendra el valor de la ultima iteración \n";
+	for(i=0; i<archivo.length; i++){
+	   data.append('archivo'+i,archivo[i]); console.log(archivo[i]); 
+	} 
+	//Pasándole la url a la que haremos la petición \n";
+	Req.open("POST", "<?php echo core::getInstancePath(); ?>clientes_temp/upload", true); 
+	/* Le damos un evento al request, esto quiere decir que cuando termine de hacer la petición, \n";
+	se ejecutara este fragmento de código */  
+	Req.onload = function(Event) { 
+		//Validamos que el status http sea ok \n";
+		if (Req.status == 200) {  
+		  //Recibimos la respuesta de php 
+		  var msg = Req.responseText; 
+		  jQuery("#cargados").append(msg); 
+		} else {  
+		  console.log(Req.status); //Vemos que paso. 
+		}  
+	}; 
+		 //Enviamos la petición  \n";
+ 	Req.send(data) 
+} 
 
 
 </script>
@@ -188,7 +233,7 @@ function aplicar_css(nombre){
 
 						,data:{
 								opcion: opc,
-								 valor: valor
+								valor: valor
 							}
 
 						,success: function(data){
@@ -231,9 +276,9 @@ function aplicar_css(nombre){
 		}
 		
 	
-		function buscar_imagenes(campo){
+		function buscar_archivos(campo){
 					
-					controlador='imagen';
+					controlador='clientes_temp';
 					
 					jQuery("#dialogo_"+controlador).html("");
 					//alert(opc);
@@ -243,7 +288,44 @@ function aplicar_css(nombre){
 
 						type:"POST"
 
-						,url:"<?php echo core::getInstancePath(); ?>imagenes/buscar_imagenes/?campo="+campo
+						,url:"<?php echo core::getInstancePath(); ?>clientes_temp/buscar_archivos/?campo="+campo
+
+						,async:true
+
+						,success: function(data){
+
+								jQuery("#dialogo_"+controlador).html(data);
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_"+controlador).html("Error Cargando este Elemento");
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}	
+
+					});		
+
+
+		}
+		
+	function buscar_upload(campo){
+					
+					controlador='clientes_temp';
+					
+					jQuery("#dialogo_"+controlador).html("");
+					//alert(opc);
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php echo core::getInstancePath(); ?>clientes_temp/buscar_upload/?campo="+campo
 
 						,async:true
 

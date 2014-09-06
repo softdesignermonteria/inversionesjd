@@ -1,0 +1,42 @@
+<div align="center">
+<h1>ESCOJA UNA IMAGEN O ICONO</h1>
+<?php
+//$dir    = '/tmp';
+
+$archivos1 = scandir($_SERVER['DOCUMENT_ROOT'].core::getInstancePath()."public/files/archivos_cargados");
+//$archivos2 = scandir($_SERVER['DOCUMENT_ROOT'].core::getInstancePath()."public/img", 1);
+
+if(count($archivos1)==2){
+	
+	Flash::error("NO SE ENCONTRO NINGUNA IMAGEN EL EL DIRECTORIO LOGO...");
+
+}
+
+//print_r($archivos1);
+
+for($i=0;$i<=count($archivos1)-1;$i++){
+	
+	if($i%10==0){
+		
+		echo "<br />";
+		echo "<br />";
+	
+	}
+	
+	if($archivos1[$i]!='.' && $archivos1[$i]!='..'){
+		echo Tag::image("archivos_cargados/".$archivos1[$i],"width: 50px","heigth: 50px","border: 1","style: padding: 5px;","onClick: escoger('iconos/".$archivos1[$i]."');"); 
+	}
+
+?>
+
+<?php	
+}
+ 
+//print_r($archivos1);
+//print_r($archivos2);
+?>
+
+
+<?php echo view::getContent(); ?>
+
+</div>

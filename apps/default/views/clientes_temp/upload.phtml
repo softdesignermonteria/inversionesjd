@@ -1,0 +1,174 @@
+
+<?php echo view::getContent();
+//Como no sabemos cuantos archivos van a llegar, iteramos la variable $_FILES
+	$path = $_SERVER['DOCUMENT_ROOT'];
+	$ruta=$path.core::getInstancePath().'public/files/archivos_cargados/';
+	$path_class = $path.core::getInstancePath()."public/Excel/";/*Ruta libreria para recorrer archivo en excel*/
+	
+	include_once($path_class."reader.php");
+
+  
+    foreach ($_FILES as $key) {
+   
+     if($key['error'] == UPLOAD_ERR_OK ){//Verificamos si se subio correctamente
+       $nombre = $key['name'];//Obtenemos el nombre del archivo
+	   $tipo = $key['type'];//Obtenemos el nombre del archivo
+       $temporal = $key['tmp_name']; //Obtenemos el nombre del archivo temporal
+       $tamano= ($key['size'] / 4000)."Kb"; //Obtenemos el tamaño en KB
+	
+  	  if(!move_uploaded_file($temporal, $ruta.$nombre)){
+		  	
+      		Flash::error("Error al subir el archivo: ".$ruta.$nombre);
+			
+	  }else{
+
+			$data = new Spreadsheet_Excel_Reader();
+			// Set output Encoding.
+			$data->setOutputEncoding('CP1251');
+			$data->read($ruta.$nombre);
+			error_reporting(E_ALL ^ E_NOTICE);
+			
+			$host = "";
+			$user = "";
+			$psw  = "";
+			$bd   = "";
+			$config = CoreConfig::readEnviroment();
+					
+			foreach($config->development as $key=>$val):
+				if($key == "database.host"     ){ $host = $val; }
+				if($key == "database.username" ){ $user = $val; }
+				if($key == "database.password" ){ $psw  = $val; }
+				if($key == "database.name"     ){ $bd   = $val; }
+			endforeach;
+			
+			/*Creamos una nueva conexión a la BD*/
+			$conn = mysql_connect($host,$user,$psw);
+			mysql_select_db($bd,$conn);
+			
+			$sw = 0;
+			for ($x = 2; $x <= count($data->sheets[0]['cells']); $x++) {
+										
+			 $cedula = $data->sheets[0]["cells"][$x][1];
+    		 $nombre1 = $data->sheets[0]["cells"][$x][2];
+			 $nombre2 = $data->sheets[0]["cells"][$x][3];
+			 $apellido1 = $data->sheets[0]["cells"][$x][4];
+			 $apellido2 = $data->sheets[0]["cells"][$x][5];
+			 $razon_social = $data->sheets[0]["cells"][$x][2]." ".$data->sheets[0]["cells"][$x][3]." ".$data->sheets[0]["cells"][$x][4];
+			 $direccion = $data->sheets[0]["cells"][$x][7];
+			 $telefono = $data->sheets[0]["cells"][$x][8];
+			 $celular = $data->sheets[0]["cells"][$x][9];
+			 $referencia_id = $data->sheets[0]["cells"][$x][10];
+			 $departamento_id = $data->sheets[0]["cells"][$x][11];
+			 $municipio_id = $data->sheets[0]["cells"][$x][12];
+			 $cobrador_id = $data->sheets[0]["cells"][$x][13];
+			 $saldo = $data->sheets[0]["cells"][$x][14];
+			 $cuotas = $data->sheets[0]["cells"][$x][15];
+			 $valor_cuota = $data->sheets[0]["cells"][$x][16];
+			 $total_credito = $data->sheets[0]["cells"][$x][17];
+			 $interes = $data->sheets[0]["cells"][$x][18];
+			 
+							
+			 $sql="insert into clientes_temp(cedula,nombre1,nombre2,apellido1,apellido2,razon_social,direccion,
+			 telefono,celular,referencia_id,departamento_id,municipio_id,cobrador_id,saldo,cuotas,
+			 valor_cuota,total_credito,interes) VALUES ('$cedula','$nombre1','$nombre2','$apellido1','$apellido2',
+			 '$razon_social','$direccion','$telefono','$celular','$referencia_id','$departamento_id','$municipio_id',
+			 '$cobrador_id','$saldo','$cuotas','$valor_cuota','$total_credito','$interes')";
+			 $result=mysql_query($sql,$conn);
+			
+							
+			 if($result){
+						
+				$sw=1;						
+				Flash::success("Se han insertado correctamente los registros en la tabla clientes_temp");
+						
+						
+			}else{
+						
+		
+				Flash::error("Error al insertar los registros: ".mysql_error($conn));
+
+											
+			}//end else
+												   
+					
+		 }//end else
+				
+		echo "\n";
+	 
+      }//end for
+    
+	}else{
+		
+      	Flash::error("Error al subir el archivo: ".$key['error']); //Si no se cargo mostramos el error
+    }
+	
+  }
+  
+ ?> 
+  
+  <?php 
+
+	    $sql="select * from clientes_temp";
+  		$resultado=mysql_query($sql,$conn);
+		if($sw==1){ 
+   ?>
+	  
+	  <table width="96%" bordercolor="#000000" class="ui-corner-all ui-content">
+		<tr>
+            <td>Id</td>
+            <td>C&eacute;dula</td>
+            <td>Primer Nombre</td>
+            <td>Segundo Nombre</td>
+            <td>Primer Apellido</td>
+            <td>Segundo Apellido</td>
+            <td>Raz&oacute;n Social</td>
+            <td>Direcci&oacute;n</td>
+            <td>Tel&eacute;fono</td>
+            <td>Celular</td>
+            <td>Referencia</td>
+            <td>Depto</td>
+            <td>Mpio</td>
+            <td>Cobrador</td>
+            <td>Saldo</td>
+            <td>Nro Cuotas</td>
+            <td>Vr Cuotas</td>
+            <td>Total Cr&eacute;dito</td>
+            <td>Intereses</td>
+            <td>Estado</td>
+		</tr>
+        <?php while($fila=mysql_fetch_array($resultado)){ ?>
+		
+		<tr>
+			<td><?php echo $fila['id']; ?></td>
+            <td><?php echo $fila['cedula']; ?></td>
+			<td><?php echo $fila['nombre1']; ?></td>
+			<td><?php echo $fila['nombre2']; ?></td>
+			<td><?php echo $fila['apellido1']; ?></td>
+			<td><?php echo $fila['apellido2']; ?></td>
+			<td><?php echo $fila['razon_social']; ?></td>
+			<td><?php echo $fila['direccion']; ?></td>
+			<td><?php echo $fila['telefono']; ?></td>
+			<td><?php echo $fila['celular']; ?></td>
+			<td><?php echo $fila['referencia_id']; ?></td>
+			<td><?php echo $fila['departamento_id']; ?></td>
+			<td><?php echo $fila['municipio_id']; ?></td>
+			<td><?php echo $fila['cobrador_id']; ?></td>
+			<td><?php echo $fila['saldo']; ?></td>
+			<td><?php echo $fila['cuotas']; ?></td>
+			<td><?php echo $fila['valor_cuota']; ?></td>
+			<td><?php echo $fila['total_credito']; ?></td>
+			<td><?php echo $fila['interes']; ?></td>
+            <td><?php  ?></td>
+		 </tr>
+         <?php } ?>
+         <tr>
+		  <td colspan="20"><div align="center"><button type="submit" id="enviar" name="enviar">Procesar Registros</button></div></td>
+	    </tr>
+	</table>
+    <div id="mensajes"></div>
+
+<?php  } ?>
+  
+<script type="text/javascript">
+	if( jQuery( "#enviar")){ jQuery("#enviar").button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+</script>

@@ -1,0 +1,24 @@
+<h4>FORMULARIO AGREGAR CLIENTES</h5>
+
+<?php echo Tag::formRemote(Router::getController()."/upload", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="233" height="0" align="right" valign="middle" >Cargue el archivo en formato XLS</td>
+    <td width="146" height="0" align="left" valign="middle" scope="col"><?php echo Tag::uploadFile("archivos", "maxlength: 200","size: 50") ?>
+           <div class="showFile"></div>
+    <td width="92" align="right" scope="col"></td>
+    <td width="349" scope="col">&nbsp;</td>
+    </tr>
+</table>
+
+<div id="mensajes"></div>
+
+<?php echo Tag::endForm() ?>
+
+<br />
+<br />
+	
+
+	
+    

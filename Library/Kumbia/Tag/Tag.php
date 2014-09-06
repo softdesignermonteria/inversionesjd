@@ -2242,6 +2242,68 @@ abstract class Tag {
 		$code.=" />\r\n";
 		return $code;
 	}
+	
+		public static function uploadFile(){
+		$code = '';
+		$numberArguments = func_num_args();
+		$params = Utils::getParams(func_get_args(), $numberArguments);
+		if(!isset($params['name'])){
+			$params['name'] = $params[0];
+		}
+		if(!isset($params['value'])){
+			$params['value'] = '';
+		}
+		if(!isset($params['ancho'])){
+			$params['ancho'] = '1300';
+		}
+		if(!isset($params['size'])){
+			$params['size'] = '100';
+		}
+		if(!isset($params['alto'])){
+			$params['alto'] = '600';
+		}
+		
+		$code.= " ";
+		$code.= Tag::textField($params['name'],"readOnly: readOnly","size: ".$params['size']);
+		$code.= " \n";
+		$code.= "<button id=\"btn_archivo\" type=\"button\">Subir Archivo</button> \n";
+		$code.= "<div id='upload_archivo_div'> \n";
+		$code.= " <h4>Selecciones un Archivo</h4> \n";
+		$code.= " <div id=\"subir\"> \n";
+		$code.= "  <input id=\"archivosxls\" type=\"file\" name=\"archivos[]\" multiple=\"multiple\" onchange=\"uploadFileFunction();\" /> \n";
+		$code.= " </div> \n";
+		$code.= " <div id=\"cargados\"> \n ";
+		$code.= "  <!-- Aqui van los archivos cargados --> \n";
+		$code.= " </div> \n";
+		$code.= "</div> \n";
+		$code.= " ";
+		$code.= "<script> \n";
+		$code.= " jQuery(document).ready(function(){ \n ";
+		$code.= "   jQuery(\"#upload_archivo_div\").dialog({ \n";
+		$code.= " 	   autoOpen: false \n";
+		$code.= " 	  ,width:  ".$params['ancho']." \n";
+		$code.= " 	  ,height: ".$params['alto'] ." \n";
+		$code.= " 	  ,title: 'Upload de Archivos' \n";
+		$code.= " 	  ,modal: true \n";
+		$code.= "     ,buttons: { \n";
+		$code.= "			'Cerrar': function() { \n";
+		$code.= "					jQuery( this ).dialog( 'close' ); \n";
+		$code.= "				} \n";
+		$code.= "		} \n ";
+		$code.= "    } );\n";
+		$code.= "   \n";
+		$code.= "      jQuery(\"#btn_archivo\").click(function(){ jQuery('#upload_archivo_div').dialog('open'); });  \n";
+		$code.= "      jQuery( \"#btn_archivo\"  ).button({ icons: {primary:'ui-icon ui-icon-search' ,secondary:'ui-icon ui-icon-newwin'} }); \n";
+		$code.= "  \n";
+		
+		$code.= "  \n";
+		$code.= "  \n";
+		$code.= "  \n";
+		$code.= "  }); //fin jquery document \n";
+		$code.= "</script>\n";
+
+		return $code;
+	}
 
 	/**
 	 * Crea un input tipo Radio
