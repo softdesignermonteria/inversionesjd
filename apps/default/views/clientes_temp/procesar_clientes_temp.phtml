@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+ <?php 
+	   
+	   $host = "";
+	   $user = "";
+	   $psw  = "";
+	   $bd   = "";
+	   
+	   $config = CoreConfig::readEnviroment();
+					
+	   foreach($config->development as $key=>$val):
+			if($key == "database.host"     ){ $host = $val; }
+			if($key == "database.username" ){ $user = $val; }
+			if($key == "database.password" ){ $psw  = $val; }
+			if($key == "database.name"     ){ $bd   = $val; }
+		endforeach;
+		
+		/*Creamos una nueva conexión a la BD*/
+		$conn = mysql_connect($host,$user,$psw);
+		mysql_select_db($bd,$conn);
+
+		$sql="insert into clientes(nit,nombre1,nombre2,apellido1,apellido2,razon_social,direccion,
+		telefono,celular,referencia_id,departamentos_id,municipios_id) select nit,nombre1,nombre2,apellido1,apellido2,
+		razon_social,direccion,telefono,celular,referencia_id,departamentos_id,municipios_id 
+		from clientes_temp where estado_clientes='0'";
+		$result=mysql_query($sql,$conn);
+
+		if(mysql_affected_rows()){
+			
+		$sql1="update clientes_temp set estado_clientes='1' where estado_clientes='0'";
+		$result1=mysql_query($sql1,$conn);
+		
+		Flash::success("Se han insertado: ".mysql_affected_rows()." registros en la tabla clientes");
+		  
+		$sql3="SELECT * FROM clientes_temp where estado_clientes='1'";
+  		$result3=mysql_query($sql3,$conn);
+		
+		?>
+	
+        <table width="96%" bordercolor="#000000" class="ui-corner-all ui-content">
+		  <tr>
+		     <td colspan="20">Clientes insertados</td>
+	      </tr>
+		  <tr>
+            <td>Id</td>
+            <td>C&eacute;dula</td>
+            <td>Primer Nombre</td>
+            <td>Segundo Nombre</td>
+            <td>Primer Apellido</td>
+            <td>Segundo Apellido</td>
+            <td>Raz&oacute;n Social</td>
+            <td>Direcci&oacute;n</td>
+            <td>Tel&eacute;fono</td>
+            <td>Celular</td>
+            <td>Referencia</td>
+            <td>Depto</td>
+            <td>Mpio</td>
+            <td>Cobrador</td>
+            <td>Saldo</td>
+            <td>Nro Cuotas</td>
+            <td>Vr Cuotas</td>
+            <td>Total Cr&eacute;dito</td>
+            <td>Intereses</td>
+            <td>Estado</td>
+		</tr>
+        <?php while($fila=mysql_fetch_array($result3)){ ?>
+		
+		<tr>
+			<td><?php echo $fila['id']; ?></td>
+            <td><?php echo $fila['nit']; ?></td>
+			<td><?php echo $fila['nombre1']; ?></td>
+			<td><?php echo $fila['nombre2']; ?></td>
+			<td><?php echo $fila['apellido1']; ?></td>
+			<td><?php echo $fila['apellido2']; ?></td>
+			<td><?php echo $fila['razon_social']; ?></td>
+			<td><?php echo $fila['direccion']; ?></td>
+			<td><?php echo $fila['telefono']; ?></td>
+			<td><?php echo $fila['celular']; ?></td>
+			<td><?php echo $fila['referencia_id']; ?></td>
+			<td><?php echo $fila['departamentos_id']; ?></td>
+			<td><?php echo $fila['municipios_id']; ?></td>
+			<td><?php echo $fila['cobrador_id']; ?></td>
+			<td><?php echo $fila['saldo']; ?></td>
+			<td><?php echo $fila['cuotas']; ?></td>
+			<td><?php echo $fila['valor_cuota']; ?></td>
+			<td><?php echo $fila['total_credito']; ?></td>
+			<td><?php echo $fila['interes']; ?></td>
+            <td><?php echo Tag::image("iconos/ok.png","border: 0","width: 32px");  ?></td>
+         </tr>
+         <?php }//endwhile ?>
+       </table>
+       
+		<?php }//endif
+		  
+		  else{
+			
+		  Flash::error("Los registros no se pudieron insertar porque ya existen".mysql_error());
+			
+	      $sql2="SELECT DISTINCT id,nit,nombre1,nombre2,apellido1,apellido2,razon_social,direccion,
+		  telefono,celular,referencia_id,departamentos_id,municipios_id,cobrador_id,saldo,cuotas,
+		  valor_cuota,total_credito,interes FROM clientes_temp
+		  WHERE EXISTS (SELECT * FROM clientes WHERE nit = clientes_temp.nit)";
+  		  $result2=mysql_query($sql2,$conn);
+		
+		  if(mysql_num_rows($result2)>=1){
+
+          ?>
+	  
+          <table width="96%" bordercolor="#000000" class="ui-corner-all ui-content">
+            <tr>
+              <td colspan="20">Clientes no insertados</td>
+            </tr>
+            <tr>
+                <td>Id</td>
+                <td>C&eacute;dula</td>
+                <td>Primer Nombre</td>
+                <td>Segundo Nombre</td>
+                <td>Primer Apellido</td>
+                <td>Segundo Apellido</td>
+                <td>Raz&oacute;n Social</td>
+                <td>Direcci&oacute;n</td>
+                <td>Tel&eacute;fono</td>
+                <td>Celular</td>
+                <td>Referencia</td>
+                <td>Depto</td>
+                <td>Mpio</td>
+                <td>Cobrador</td>
+                <td>Saldo</td>
+                <td>Nro Cuotas</td>
+                <td>Vr Cuotas</td>
+                <td>Total Cr&eacute;dito</td>
+                <td>Intereses</td>
+                <td>Estado</td>
+            </tr>
+            <?php while($fila=mysql_fetch_array($result2)){ ?>
+            
+            <tr>
+                <td><?php echo $fila['id']; ?></td>
+                <td><?php echo $fila['nit']; ?></td>
+                <td><?php echo $fila['nombre1']; ?></td>
+                <td><?php echo $fila['nombre2']; ?></td>
+                <td><?php echo $fila['apellido1']; ?></td>
+                <td><?php echo $fila['apellido2']; ?></td>
+                <td><?php echo $fila['razon_social']; ?></td>
+                <td><?php echo $fila['direccion']; ?></td>
+                <td><?php echo $fila['telefono']; ?></td>
+                <td><?php echo $fila['celular']; ?></td>
+                <td><?php echo $fila['referencia_id']; ?></td>
+                <td><?php echo $fila['departamentos_id']; ?></td>
+                <td><?php echo $fila['municipios_id']; ?></td>
+                <td><?php echo $fila['cobrador_id']; ?></td>
+                <td><?php echo $fila['saldo']; ?></td>
+                <td><?php echo $fila['cuotas']; ?></td>
+                <td><?php echo $fila['valor_cuota']; ?></td>
+                <td><?php echo $fila['total_credito']; ?></td>
+                <td><?php echo $fila['interes']; ?></td>
+                <td><?php echo Tag::linkTo("clientes_temp/eliminar/$fila[id]",Tag::image("iconos/Banned_sign.png","border: 0","width: 32px"),"target: _blank"); 
+                ?>
+                </td>
+             </tr>
+             <?php }//endwhile ?>
+           <?php }//endif ?>
+        <?php }//endelse?>
+        </table>
+  
+</body>
+</html>

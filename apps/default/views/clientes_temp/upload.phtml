@@ -48,7 +48,7 @@
 			$sw = 0;
 			for ($x = 2; $x <= count($data->sheets[0]['cells']); $x++) {
 										
-			 $cedula = $data->sheets[0]["cells"][$x][1];
+			 $nit = $data->sheets[0]["cells"][$x][1];
     		 $nombre1 = $data->sheets[0]["cells"][$x][2];
 			 $nombre2 = $data->sheets[0]["cells"][$x][3];
 			 $apellido1 = $data->sheets[0]["cells"][$x][4];
@@ -58,8 +58,8 @@
 			 $telefono = $data->sheets[0]["cells"][$x][8];
 			 $celular = $data->sheets[0]["cells"][$x][9];
 			 $referencia_id = $data->sheets[0]["cells"][$x][10];
-			 $departamento_id = $data->sheets[0]["cells"][$x][11];
-			 $municipio_id = $data->sheets[0]["cells"][$x][12];
+			 $departamentos_id = $data->sheets[0]["cells"][$x][11];
+			 $municipios_id = $data->sheets[0]["cells"][$x][12];
 			 $cobrador_id = $data->sheets[0]["cells"][$x][13];
 			 $saldo = $data->sheets[0]["cells"][$x][14];
 			 $cuotas = $data->sheets[0]["cells"][$x][15];
@@ -68,10 +68,10 @@
 			 $interes = $data->sheets[0]["cells"][$x][18];
 			 
 							
-			 $sql="insert into clientes_temp(cedula,nombre1,nombre2,apellido1,apellido2,razon_social,direccion,
-			 telefono,celular,referencia_id,departamento_id,municipio_id,cobrador_id,saldo,cuotas,
-			 valor_cuota,total_credito,interes) VALUES ('$cedula','$nombre1','$nombre2','$apellido1','$apellido2',
-			 '$razon_social','$direccion','$telefono','$celular','$referencia_id','$departamento_id','$municipio_id',
+			 $sql="insert into clientes_temp(nit,nombre1,nombre2,apellido1,apellido2,razon_social,direccion,
+			 telefono,celular,referencia_id,departamentos_id,municipios_id,cobrador_id,saldo,cuotas,
+			 valor_cuota,total_credito,interes) VALUES ('$nit','$nombre1','$nombre2','$apellido1','$apellido2',
+			 '$razon_social','$direccion','$telefono','$celular','$referencia_id','$departamentos_id','$municipios_id',
 			 '$cobrador_id','$saldo','$cuotas','$valor_cuota','$total_credito','$interes')";
 			 $result=mysql_query($sql,$conn);
 			
@@ -85,7 +85,7 @@
 			}else{
 						
 		
-				Flash::error("Error al insertar los registros: ".mysql_error($conn));
+				Flash::error("Error al insertar los registros: ".mysql_error());
 
 											
 			}//end else
@@ -150,8 +150,8 @@
 			<td><?php echo $fila['telefono']; ?></td>
 			<td><?php echo $fila['celular']; ?></td>
 			<td><?php echo $fila['referencia_id']; ?></td>
-			<td><?php echo $fila['departamento_id']; ?></td>
-			<td><?php echo $fila['municipio_id']; ?></td>
+			<td><?php echo $fila['departamentos_id']; ?></td>
+			<td><?php echo $fila['municipios_id']; ?></td>
 			<td><?php echo $fila['cobrador_id']; ?></td>
 			<td><?php echo $fila['saldo']; ?></td>
 			<td><?php echo $fila['cuotas']; ?></td>
@@ -162,7 +162,7 @@
 		 </tr>
          <?php } ?>
          <tr>
-		  <td colspan="20"><div align="center"><button type="submit" id="enviar" name="enviar">Procesar Registros</button></div></td>
+		  <td colspan="20"><div align="center"><button type="submit" id="enviar" name="enviar" onclick="javascript:redireccionar_action('clientes_temp/procesar_clientes_temp')">Procesar Registros</button></div></td>
 	    </tr>
 	</table>
     <div id="mensajes"></div>

@@ -39,6 +39,12 @@
 		
 		}
 		
+		public function procesar_clientes_tempAction(){
+		
+			//$this->setResponse("ajax");
+		
+		}
+		
 		
    }
 ?>
