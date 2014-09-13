@@ -1,11 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
-</head>
-
-<body>
  <?php 
 	   
 	   $host = "";
@@ -141,7 +133,7 @@
             </tr>
             <?php while($fila=mysql_fetch_array($result2)){ ?>
             
-            <tr>
+            <tr id="tr_<?php echo $fila[id]; ?>">
                 <td><?php echo $fila['id']; ?></td>
                 <td><?php echo $fila['nit']; ?></td>
                 <td><?php echo $fila['nombre1']; ?></td>
@@ -161,14 +153,51 @@
                 <td><?php echo $fila['valor_cuota']; ?></td>
                 <td><?php echo $fila['total_credito']; ?></td>
                 <td><?php echo $fila['interes']; ?></td>
-                <td><?php echo Tag::linkTo("clientes_temp/eliminar/$fila[id]",Tag::image("iconos/Banned_sign.png","border: 0","width: 32px"),"target: _blank"); 
-                ?>
-                </td>
+                <td><a href="javascript: void(0);" onClick="eliminar_clientes('<?php echo $fila[id]; ?>');">
+				<?php echo Tag::image("iconos/Banned_sign.png","border: 0","width: 32px"); ?></a>
+	            </td>
              </tr>
              <?php }//endwhile ?>
            <?php }//endif ?>
         <?php }//endelse?>
         </table>
-  
-</body>
-</html>
+
+<div id="mensajes"></div>
+
+<script type="text/javascript">
+
+function eliminar_clientes(id_cliente){
+	
+
+		var jqXHR = jQuery.ajax({
+				type: "POST",
+				url: "<?php echo core::getInstancePath(); ?>clientes_temp/eliminar_clientes",
+				data: {
+						id_cliente:      id_cliente
+		
+				},
+				success: function(data) {
+					jQuery( '#mensajes' ).html("");
+					jQuery( '#mensajes' ).html(data);
+				},
+				error: function(data) {
+					jQuery('#dialogo_mensajes').html("Error Enviando parametros....." + data);
+					jQuery('#dialogo_mensajes').dialog("open");
+				}
+	
+			});
+	
+			 jqXHR.done(function(data){
+				 
+				 jQuery("#tr_"+id_cliente).fadeOut(600,function() { 
+					 jQuery("#tr_"+id_cliente).remove();
+					  quitar_mensajes();
+				 });
+				
+				//jQuery( "#progressbar" ).progressbar({ value: 0 });
+				   
+			});
+	
+	}
+	
+</script>
