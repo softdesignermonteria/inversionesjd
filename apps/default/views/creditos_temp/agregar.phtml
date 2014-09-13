@@ -1,0 +1,118 @@
+<?php $ctemp = new ClientesTemp();	?>
+<style>
+
+/*Estilo para las tablas en los reportes*/
+#gridtable {
+	font-family: arial;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #217ec4;
+	border-collapse: collapse;
+	border-style: solid;
+}
+#gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #70a9d2;
+}
+#gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #217ec4;
+	background-color: #e8f4fd;
+}
+
+</style>
+<table width="100%" bordercolor="#00"  id="gridtable">
+  <tr>
+     <td colspan="20">Clientes insertados</td>
+  </tr>
+  <tr>
+    <td>Id</td>
+    <td>C&eacute;dula</td>
+    <td>Raz&oacute;n Social</td>
+    <td>Cobrador</td>
+    <td>Saldo(capital)</td>
+    <td>Nro Cuotas</td>
+    <td>Vr Cuotas</td>
+    <td>Total Cr&eacute;dito</td>
+    <td>Intereses</td>
+    <td>Opcion</td>
+    <td>descripcion</td>
+</tr>
+<?php foreach($ctemp->find(" estado_clientes = 1 and estado_credito = 0 ") as $ctemp): ?>
+<tr>
+    <td><?php echo $ctemp->id; ?></td>
+    <td><?php echo $ctemp->nit; ?></td>
+    <td><?php echo $ctemp->razon_social; ?></td>
+    <td><?php echo $ctemp->cobrador_id; ?></td>
+    <td><?php echo $ctemp->saldo; ?></td>
+    <td><?php echo $ctemp->cuotas; ?></td>
+    <td><?php echo $ctemp->valor_cuota; ?></td>
+    <td><?php echo $ctemp->total_credito; ?></td>
+    <td><?php echo $ctemp->interes; ?></td>
+    <td id="estado<?php echo $ctemp->id ?>" >
+    	<button id="button<?php echo $ctemp->id ?>" type="button" onClick="javascript:generar('<?php echo $ctemp->id; ?>','<?php echo $ctemp->nit; ?>','<?php echo $ctemp->cobrador_id; ?>','<?php echo $ctemp->saldo; ?>','<?php echo $ctemp->cuotas; ?>','<?php echo $ctemp->valor_cuota; ?>','<?php echo $ctemp->interes; ?>');">Generar Credito</button>
+    </td>
+    <td>
+    	<div id="progressbar<?php echo $ctemp->id; ?>" style="width:200px"></div>
+    	<div id="mensajes<?php echo $ctemp->id ?>"></div>
+    </td>
+   
+</tr>
+<?php endforeach; //endwhile ?>
+</table>
+
+<script>
+
+
+function generar(id,cedula,cobradores_id,capital,cuotas,valor_cuotas,interes){
+	var datos = "";
+	
+	jQuery('#mensaje'+id).html();
+	jQuery('#button'+id).attr("disabled","disabled");
+	//jQuery('#mensaje'+id).html("<div id='progressbar"+id+"'></div>");
+	//datos = jQuery("#compras").serialize();
+	jQuery( "#progressbar"+id ).progressbar({ value: 50 });	
+		//$('#resumen').html('Cargando....');
+		var jqXHR = jQuery.ajax({
+			type: "POST",
+			url: "<?php echo core::getInstancePath(); ?><?php echo Router::getController(); ?>/add",
+			data: {
+					id:                 id,
+					cedula:             cedula,
+					cobradores_id:      cobradores_id,
+ 					capital:            capital,
+					cuotas:             cuotas,
+					valor_cuotas:       valor_cuotas,
+					interes:            interes
+			},
+
+			success: function(data) {
+				jQuery( '#mensajes' +id ).html("");
+				jQuery( "#progressbar" + id ).progressbar({ value: 90 });
+				jQuery( '#mensajes' + id ).html(data);
+				jQuery('#button'+id).attr("disabled","disabled");
+
+			},
+
+			error: function(data) {
+				jQuery('#dialogo_mensajes').html("Error Enviando parametros....." + data);
+				jQuery( "#progressbar"+id ).progressbar({ value: 0 });
+				jQuery('#dialogo_mensajes').dialog("open");
+				jQuery('#button'+id).removeAttr("disabled");
+			}
+		});
+
+		 jqXHR.done(function(data){
+			jQuery( "#progressbar"+id ).progressbar({ value: 0 });
+		});
+
+}
+
+</script>
+       
